@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>attention注意力机制的通俗理解 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="“弱水三千，只取一瓢饮”。  《红楼梦》中这句话很好地反映了我们在面对纷繁复杂的世界时的一种态度和选择方式。这个世界纷繁复杂，而我们的认知有限，在看待世界的时候，我们通常会主动选择对我们重要的信息。 以日常生活中的一个场景为例：比如眼前有一本书、一杯水、一副麻将、几片饼干、以及一个鲜红色的玩偶，当我们口渴时会刻意去找一杯水，当朋友来了想娱乐一下时，会刻意去找麻将。而当无所事事时，可能会首先关注到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="attention注意力机制的通俗理解">
+<meta property="og:url" content="https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="“弱水三千，只取一瓢饮”。  《红楼梦》中这句话很好地反映了我们在面对纷繁复杂的世界时的一种态度和选择方式。这个世界纷繁复杂，而我们的认知有限，在看待世界的时候，我们通常会主动选择对我们重要的信息。 以日常生活中的一个场景为例：比如眼前有一本书、一杯水、一副麻将、几片饼干、以及一个鲜红色的玩偶，当我们口渴时会刻意去找一杯水，当朋友来了想娱乐一下时，会刻意去找麻将。而当无所事事时，可能会首先关注到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/img-%E5%BF%83%E7%90%86%E5%AD%A6%E6%B3%A8%E6%84%8F%E5%8A%9B.png">
+<meta property="article:published_time" content="2026-03-08T05:25:04.000Z">
+<meta property="article:modified_time" content="2026-03-08T05:32:28.414Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="attention">
+<meta property="article:tag" content="注意力">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/img-%E5%BF%83%E7%90%86%E5%AD%A6%E6%B3%A8%E6%84%8F%E5%8A%9B.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "attention注意力机制的通俗理解",
+  "url": "https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/",
+  "image": "https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/img-%E5%BF%83%E7%90%86%E5%AD%A6%E6%B3%A8%E6%84%8F%E5%8A%9B.png",
+  "datePublished": "2026-03-08T05:25:04.000Z",
+  "dateModified": "2026-03-08T05:32:28.414Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'attention注意力机制的通俗理解',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">22</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">attention注意力机制的通俗理解</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">attention注意力机制的通俗理解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-08T05:25:04.000Z" title="发表于 2026-03-08 13:25:04">2026-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-08T05:32:28.414Z" title="更新于 2026-03-08 13:32:28">2026-03-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">注意力机制</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>“弱水三千，只取一瓢饮”。</p>
+</blockquote>
+<p>《红楼梦》中这句话很好地反映了我们在面对纷繁复杂的世界时的一种态度和选择方式。这个世界纷繁复杂，而我们的认知有限，在看待世界的时候，我们通常会主动选择对我们重要的信息。<br>
+以日常生活中的一个场景为例：比如眼前有一本书、一杯水、一副麻将、几片饼干、以及一个鲜红色的玩偶，当我们口渴时会刻意去找一杯水，当朋友来了想娱乐一下时，会刻意去找麻将。而当无所事事时，可能会首先关注到那个鲜红色的玩偶–因为它足够引人注目。</p>
+<p><img src="img-%E5%BF%83%E7%90%86%E5%AD%A6%E6%B3%A8%E6%84%8F%E5%8A%9B.png" alt="心理学注意力"></p>
+<p>这在心理学上可以理解为自主性提示和非自主性提示，区别是主动有意识去寻找的，和客观环境中比较显眼的内容。</p>
+<p>在注意力机制（attention mechanism）之前，深度学习模型中常用的MLP、CNN、RNN等网络都没有主动找寻线索的设计。但这个机制其实是一个很有用的机制，比如在机器要翻译某个词时，需要关联上下文，用这个词去找对翻译它有用的相关词，就是一个主动选择的过程。在神经网络中让模型能够主动动态地、有选择性地关注输入数据中最重要部分的技术就是深度学习中的注意力机制。</p>
+<p>注意力机制是深度学习发展过程中极为重要的一个里程碑，首先在2014年由bahdanau，bengio等在论文 《Neural Machine Translation by Jointly Learning to Align and Translate》中提出，在机器翻译领域首次引入了注意力机制，解决当时序列到序列（Seq2Seq）模型在处理长序列时性能下降的关键问题 。随后google的研究人员在2017年提出的transformer（论文 《attention is all your need》），引起了atrention机制的广泛应用。再之后依赖transformer的大模型，更是再次引爆整个AI行业。</p>
+<p>深度学习中的注意力机制是想让模型能够学会关注当前更重要的信息，比如在机器翻译中要把中文 “我喜欢苹果” 翻译成英文，在翻译完成&quot;I like&quot;后，需要输出下一个词，这时希望模型更关注原文中的&quot;苹果&quot;，让模型更有可能输出&quot;apple&quot;。这个过程在注意力机制中设计为Query、Key、Value，主动意图在注意力机制中称之为query，环境信息称之为key value对，注意力就是依据query有偏向性的选择输入key value。</p>
+<p><img src="img-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A1%86%E6%9E%B6.png" alt="注意力框架"></p>
+<p>具体实现上，计算query和keys的注意力权重，再用该权重对values做加权</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mo>∑</mo><mi>i</mi></munder><mi>a</mi><mo stretchy="false">(</mo><mi>q</mi><mo separator="true">,</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>×</mo><msub><mi>v</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{i}a(q,k_i) \times v_i
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/attention/">attention</a><a class="post-meta__tags" href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B/">注意力</a></div><div class="post-share"><div class="social-share" data-image="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/attention%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/img-%E5%BF%83%E7%90%86%E5%AD%A6%E6%B3%A8%E6%84%8F%E5%8A%9B.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E6%95%B0%E7%9A%84%E8%AE%BE%E8%AE%A1/" title="注意力分数的设计"><img class="cover" src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E6%95%B0%E7%9A%84%E8%AE%BE%E8%AE%A1/img-cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">注意力分数的设计</div></div><div class="info-2"><div class="info-item-1">注意力机制中，主动意图在注意力机制中称之为query，环境信息称之为key value对，注意力就是依据query有偏向性的选择输入key value。即计算query和keys的注意力权重，再用该权重对values做加权求和 attention=∑ia(q,ki)×vi\text{attention} = \sum_{i}a(q,k_i) \times v_i attention=i∑​a(q,ki​)×vi​  那么如何来计算注意力呢？  注意力分数（attention scores），计算query和key的分数，比如query和key的相似度 注意力权重（attention weights），一个 0 到 1 之间的概率分布，权重之和为1，一般t通过softmax将注意力分数转成注意力权重。  ∑isoftmax(a_score(q,ki))×vi\sum_{i} \text{softmax}(\text{a\_score} (q, k_i)) \times v_i  i∑​softmax(a_score(q,ki​))×vi​ 那么如何计算注意力分数呢？  相似度：直接...</div></div></div></a><a class="pagination-related" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/RNN/%E5%9F%BA%E4%BA%8ERNN%E7%9A%84Seq2Seq%E6%A8%A1%E5%9E%8B/" title="基于RNN的Seq2Seq模型"><img class="cover" src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/RNN/%E5%9F%BA%E4%BA%8ERNN%E7%9A%84Seq2Seq%E6%A8%A1%E5%9E%8B/img-cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">基于RNN的Seq2Seq模型</div></div><div class="info-2"><div class="info-item-1">seq2seq在广义上指将序列数据转换为另一个序列数据的深度学习任务或架构，包括基于 Transformer 的模型、甚至某些结合了 CNN 的序列模型。狭义上则指基于编码器解码器架构的一个机器翻译模型，在2014年由Ilya Sutskever 等人在论文《Sequence to Sequence Learning with Neural Networks》中提出，是一个基于 LSTM/GRU 的 Encoder-Decoder 架构，用在机器翻译任务上。 se2seq模型以RNN构建编码器和解码器，大概模型结构如下：  .hlbqltsjdzcv{width: 500px; max-width: 100%; height: 120px; max-width: 100%;}  在该模型结构下，输入序列经过RNN编码器（一般会用双向RNN）后得到最后的隐藏状态向量；然后RNN解码器再基于该状态向量生成翻译结果。 seq2seq模型在机器翻译任务下，decoder在训练和推理时是不一致的。  训练时，使用参考翻译结果作为翻译下一个词的输入（Teacher Forcing）   .t...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E6%95%B0%E7%9A%84%E8%AE%BE%E8%AE%A1/" title="注意力分数的设计"><img class="cover" src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E6%95%B0%E7%9A%84%E8%AE%BE%E8%AE%A1/img-cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-08</div><div class="info-item-2">注意力分数的设计</div></div><div class="info-2"><div class="info-item-1">注意力机制中，主动意图在注意力机制中称之为query，环境信息称之为key value对，注意力就是依据query有偏向性的选择输入key value。即计算query和keys的注意力权重，再用该权重对values做加权求和 attention=∑ia(q,ki)×vi\text{attention} = \sum_{i}a(q,k_i) \times v_i attention=i∑​a(q,ki​)×vi​  那么如何来计算注意力呢？  注意力分数（attention scores），计算query和key的分数，比如query和key的相似度 注意力权重（attention weights），一个 0 到 1 之间的概率分布，权重之和为1，一般t通过softmax将注意力分数转成注意力权重。  ∑isoftmax(a_score(q,ki))×vi\sum_{i} \text{softmax}(\text{a\_score} (q, k_i)) \times v_i  i∑​softmax(a_score(q,ki​))×vi​ 那么如何计算注意力分数呢？  相似度：直接...</div></div></div></a><a class="pagination-related" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/Transformer%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%90/" title="Transformer模型解析"><img class="cover" src="https://cdn.hailuoai.com/matrix_agent/20260324/image_tool/output/095629_06ad/workspace/images/transformer-article-cover-v4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-27</div><div class="info-item-2">Transformer模型解析</div></div><div class="info-2"><div class="info-item-1"> “Attention Is All You Need”，Transformer重塑AI领域  1. Transformer基础框架 1.1 里程碑式论文 2017 年，Google 研究团队发表了论文 《Attention Is All You Need》，提出了 Transformer 架构。这篇论文彻底改变了序列建模的方式，是现代大语言模型的奠基之作。  📄 论文信息： Vaswani et al., “Attention Is All You Need”, NeurIPS 2017 论文地址：https://arxiv.org/abs/1706.03762  1.2 整体架构概览  Transformer 是一个典型的 Encoder-Decoder（编码器-解码器） 架构，也是一个 Seq2Seq（序列到序列） 模型。 整体结构分为左右两部分：    部分 组成 层数 作用     编码器（Encoder） 6 个相同层堆叠 N = 6 理解输入序列，提取特征   解码器（Decoder） 6 个相同层堆叠 N = 6 生成输出序列    编码器部分，每层包含两个子模...</div></div></div></a><a class="pagination-related" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E4%BD%BF%E7%94%A8attention%E6%9C%BA%E5%88%B6%E7%9A%84seq2seq%E6%A8%A1%E5%9E%8B/" title="使用attention机制的seq2seq模型"><img class="cover" src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/%E4%BD%BF%E7%94%A8attention%E6%9C%BA%E5%88%B6%E7%9A%84seq2seq%E6%A8%A1%E5%9E%8B/img-cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-08</div><div class="info-item-2">使用attention机制的seq2seq模型</div></div><div class="info-2"><div class="info-item-1">基于RNN的Seq2Seq模型通过RNN编码器（Encoder）将整个输入序列压缩成一个固定长度的向量（通常是最后一个时间步的隐藏状态 hidden state），然后RNN解码器（Decoder）基于该状态向量生成翻译结果。  存在问题：  在该模型结构下，输入句子较长时，仅依赖编码器向量很难容纳所有信息，导致长距离依赖丢失，翻译质量会严重下降。 Seq2Seq是只用了最后一个时间步的输出，但在翻译时，希望在翻译某个词时能够关注原句子中对应的词。比如翻译“hello，world”成“你好，世界”时，“你好”想要更关注“hello”，而这在Seq2Seq未做建模  故尝试将注意力机制引入到seq2seq模型中，以解决仅靠单个编码向量无法准确建模的问题。  在编码器阶段输出每个时间步的隐藏状态集合：H=(h1,h2,h3,...,hT)H=(h_1, h_2, h_3,...,h_T)H=(h1​,h2​,h3​,...,hT​) 在解码器阶段预测第ttt个输出yty_tyt​时  利用解码器上一时刻的状态st−1s_{t-1}st−1​（作为 Query）和编码器的所有隐藏状态H...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">22</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/" title="推荐系统与Embedding"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推荐系统与Embedding"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/" title="推荐系统与Embedding">推荐系统与Embedding</a><time datetime="2026-04-03T06:03:02.000Z" title="发表于 2026-04-03 14:03:02">2026-04-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%8F%8C%E5%A1%94%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/" title="推荐系统双塔召回模型详解"><img src="https://cdn.hailuoai.com/cdn_upload/20260401/487432426591133703/376935125328179/141556_bf9f/workspace/images/tower-article-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推荐系统双塔召回模型详解"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%8F%8C%E5%A1%94%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/" title="推荐系统双塔召回模型详解">推荐系统双塔召回模型详解</a><time datetime="2026-04-03T05:20:43.000Z" title="发表于 2026-04-03 13:20:43">2026-04-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3MF%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/" title="矩阵分解MF推荐算法详解"><img src="https://cdn.hailuoai.com/cdn_upload/20260331/487432426591133703/376935125328179/100524_dd0a/workspace/images/mf-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="矩阵分解MF推荐算法详解"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3MF%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/" title="矩阵分解MF推荐算法详解">矩阵分解MF推荐算法详解</a><time datetime="2026-03-31T15:18:07.000Z" title="发表于 2026-03-31 23:18:07">2026-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E6%8E%A8%E8%8D%90%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4UserCF%E7%AE%97%E6%B3%95/" title="推荐协同过滤UserCF算法"><img src="https://cdn.hailuoai.com/cdn_upload/20260329/487432426591133703/376935125328179/135826_a686/workspace/images/usercf-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推荐协同过滤UserCF算法"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E6%8E%A8%E8%8D%90%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4UserCF%E7%AE%97%E6%B3%95/" title="推荐协同过滤UserCF算法">推荐协同过滤UserCF算法</a><time datetime="2026-03-29T10:22:02.000Z" title="发表于 2026-03-29 18:22:02">2026-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E6%8E%A8%E8%8D%90%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4ItemCF%E7%AE%97%E6%B3%95/" title="推荐协同过滤ItemCF算法"><img src="https://cdn.hailuoai.com/cdn_upload/20260329/487432426591133703/376935125328179/120739_50de/workspace/images/itemcf-cover-v2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推荐协同过滤ItemCF算法"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/%E6%8E%A8%E8%8D%90%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4ItemCF%E7%AE%97%E6%B3%95/" title="推荐协同过滤ItemCF算法">推荐协同过滤ItemCF算法</a><time datetime="2026-03-29T04:56:54.000Z" title="发表于 2026-03-29 12:56:54">2026-03-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
