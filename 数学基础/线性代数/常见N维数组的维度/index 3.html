@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>常见N维数组的维度 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="N维数组是机器学习中最为常见和基础的数据结构。其中维度的含义是指：向量或轴的维度被用来表示向量的长度，即向量的元素数量。张量的维度用来表示张量具有的轴数。一些常见的数据维度举例如下：  0维（标量）：比如一个人的身高（170cm），或者是今天走的步数（18967步），当前的温度（26℃） 1维（向量）：比如一个人体检时的身体各项指标[身高、体重、心率、血压]等 2维（矩阵）：比如一张256x256">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见N维数组的维度">
+<meta property="og:url" content="https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="N维数组是机器学习中最为常见和基础的数据结构。其中维度的含义是指：向量或轴的维度被用来表示向量的长度，即向量的元素数量。张量的维度用来表示张量具有的轴数。一些常见的数据维度举例如下：  0维（标量）：比如一个人的身高（170cm），或者是今天走的步数（18967步），当前的温度（26℃） 1维（向量）：比如一个人体检时的身体各项指标[身高、体重、心率、血压]等 2维（矩阵）：比如一张256x256">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/img-cover.png">
+<meta property="article:published_time" content="2026-04-07T14:45:55.000Z">
+<meta property="article:modified_time" content="2026-04-08T15:08:46.660Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="维度">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/img-cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "常见N维数组的维度",
+  "url": "https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/",
+  "image": "https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/img-cover.png",
+  "datePublished": "2026-04-07T14:45:55.000Z",
+  "dateModified": "2026-04-08T15:08:46.660Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '常见N维数组的维度',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">常见N维数组的维度</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">常见N维数组的维度</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-07T14:45:55.000Z" title="发表于 2026-04-07 22:45:55">2026-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-08T15:08:46.660Z" title="更新于 2026-04-08 23:08:46">2026-04-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>N维数组是机器学习中最为常见和基础的数据结构。其中维度的含义是指：向量或轴的维度被用来表示向量的长度，即向量的元素数量。张量的维度用来表示张量具有的轴数。一些常见的数据维度举例如下：</p>
+<ul>
+<li>0维（标量）：比如一个人的身高（170cm），或者是今天走的步数（18967步），当前的温度（26℃）</li>
+<li>1维（向量）：比如一个人体检时的身体各项指标[身高、体重、心率、血压]等</li>
+<li>2维（矩阵）：比如一张256x256的黑白图片</li>
+<li>3维：有RGB3个通道的彩色图片，通道数x宽x高。比如rgb3通道，宽高分别为1024x1024的图片，有rgb 3个通道</li>
+<li>4维：视频片段，相比于图片，增加了时间这个维度，比如一段30s（约720帧）的视频就包含720张图片</li>
+<li>5维：一个batch（比如128）的视频片段</li>
+</ul>
+<div align="center">
+<style>.buvtgxfbozyh{width: 300px; max-width: 100%; height: auto;}</style><img src="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/img-%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E7%BB%B4%E5%BA%A6.png" class="buvtgxfbozyh" alt="多维数组维度">
+</div></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BB%B4%E5%BA%A6/">维度</a></div><div class="post-share"><div class="social-share" data-image="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%B8%B8%E8%A7%81N%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6/img-cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%BC%A0%E9%87%8F-%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6-%E8%BD%B4/" title="张量/数组的维度/轴"><img class="cover" src="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%BC%A0%E9%87%8F-%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6-%E8%BD%B4/img-cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">张量/数组的维度/轴</div></div><div class="info-2"><div class="info-item-1">numpy中的ndarray、pytorch中的tensor，在表示N维数据的时候，最外围的“[]”表示最小轴，即轴0，以此类推，分别表示轴1，轴2等。维度(2,3,4)的张量表示最外围框包含2个，次外围框包含3个，最里层框包含4个元素。 比如维度分别为(2,3,4)的张量形状为 123456789torch.randn(2,3,4)tensor([[[-0.8719,  0.7128, -1.7098, -0.3258],         [-0.4059,  0.3219,  0.2983,  1.5855],         [ 1.0651, -1.0692, -0.9809,  1.4717]],        [[ 0.0487, -0.8794, -0.9644,  1.9940],         [ 0.4164, -1.2294,  3.3065, -0.7713],         [-0.4702, -1.0119, -0.1602, -1.0892]]]) 再比如 tensor([[[1,2]]])表示(1,1,2)形状的张量 123torch.tens...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E9%87%8D%E6%8E%92/%E6%8E%A8%E8%8D%90%E9%87%8D%E6%8E%92%E5%A4%9A%E6%A0%B7%E6%80%A7/" title="推荐重排多样性"><img class="cover" src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1775444575_31d45343.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">推荐重排多样性</div></div><div class="info-2"><div class="info-item-1"> 推荐结果既要精准，也要多样。本篇会介绍推荐系统中重排阶段多样性问题的定义、衡量方式，以及从规则 到 MMR 再到 DPP 的核心算法演进。   1. 为什么需要推荐多样性 推荐同质化问题 在电商平台上，你是否有过这样的体验：搜索&quot;收纳用品&quot;后，推荐页出现了大量相似的垃圾袋？或者刷短视频时，连续多条内容都是同一类型的短视频？ 这就是推荐系统中的同质化问题。当推荐系统以预估单个物品的效率做建模，并以此打分做排序时，推荐结果会向某一类高频、高相关物品集中，用户看到的永远是自己&quot;已知感兴趣&quot;的内容，新品类和新品牌难以获得曝光机会。      同质化不仅损害用户体验（新鲜感下降），长期还会导致用户兴趣固化、流失风险上升。 根源：排序模型的贪心本质 推荐系统的漏斗中，精排阶段负责对候选物品逐一打分，按分数从高到低截取 Top-K 列表。这个过程是贪心（Greedy） 的——每个物品独立根据自身的 CTR/CVR 预估分参与排序。 这种贪心策略的问题是：优化的是&quot;单品最优&quot;，而非&quot;列表最优&quot;（Listwise）。...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%BC%A0%E9%87%8F-%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6-%E8%BD%B4/" title="张量&#x2F;数组的维度&#x2F;轴"><img class="cover" src="/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/%E5%BC%A0%E9%87%8F-%E6%95%B0%E7%BB%84%E7%9A%84%E7%BB%B4%E5%BA%A6-%E8%BD%B4/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-07</div><div class="info-item-2">张量&#x2F;数组的维度&#x2F;轴</div></div><div class="info-2"><div class="info-item-1">numpy中的ndarray、pytorch中的tensor，在表示N维数据的时候，最外围的“[]”表示最小轴，即轴0，以此类推，分别表示轴1，轴2等。维度(2,3,4)的张量表示最外围框包含2个，次外围框包含3个，最里层框包含4个元素。 比如维度分别为(2,3,4)的张量形状为 123456789torch.randn(2,3,4)tensor([[[-0.8719,  0.7128, -1.7098, -0.3258],         [-0.4059,  0.3219,  0.2983,  1.5855],         [ 1.0651, -1.0692, -0.9809,  1.4717]],        [[ 0.0487, -0.8794, -0.9644,  1.9940],         [ 0.4164, -1.2294,  3.3065, -0.7713],         [-0.4702, -1.0119, -0.1602, -1.0892]]]) 再比如 tensor([[[1,2]]])表示(1,1,2)形状的张量 123torch.tens...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理"><img src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1777200221_4de2c058.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="几十行代码拆解Agent核心原理"/></a><div class="content"><a class="title" href="/agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理">几十行代码拆解Agent核心原理</a><time datetime="2026-04-26T12:17:56.000Z" title="发表于 2026-04-26 20:17:56">2026-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pythonic风格刷leetcode"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode">pythonic风格刷leetcode</a><time datetime="2026-04-25T03:22:25.000Z" title="发表于 2026-04-25 11:22:25">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的zip函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数">python中的zip函数</a><time datetime="2026-04-24T23:21:20.000Z" title="发表于 2026-04-25 07:21:20">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的列表推导式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式">python中的列表推导式</a><time datetime="2026-04-24T22:51:01.000Z" title="发表于 2026-04-25 06:51:01">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的三元表达式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式">python中的三元表达式</a><time datetime="2026-04-24T13:51:48.000Z" title="发表于 2026-04-24 21:51:48">2026-04-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

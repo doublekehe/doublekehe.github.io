@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>python常用关键字 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Python 中的关键字是python语言内置的特殊标识符，不能用作变量名、函数名等标识。比如我们常用的if、while、True、and等等。 可以用过keyword类来查看当前python版本下对应的关键字（在该版本下，一共是35个关键字） 12345import  print(keyword.kwlist)output: [&#x27;False&#x27;, &#x27;None&amp;#x27">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python常用关键字">
+<meta property="og:url" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="Python 中的关键字是python语言内置的特殊标识符，不能用作变量名、函数名等标识。比如我们常用的if、while、True、and等等。 可以用过keyword类来查看当前python版本下对应的关键字（在该版本下，一共是35个关键字） 12345import  print(keyword.kwlist)output: [&#x27;False&#x27;, &#x27;None&amp;#x27">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/img-cover.png">
+<meta property="article:published_time" content="2026-04-22T15:00:39.000Z">
+<meta property="article:modified_time" content="2026-04-22T23:27:16.372Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="关键字">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/img-cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "python常用关键字",
+  "url": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/",
+  "image": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/img-cover.png",
+  "datePublished": "2026-04-22T15:00:39.000Z",
+  "dateModified": "2026-04-22T23:27:16.372Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'python常用关键字',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">python常用关键字</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">python常用关键字</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-22T15:00:39.000Z" title="发表于 2026-04-22 23:00:39">2026-04-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-22T23:27:16.372Z" title="更新于 2026-04-23 07:27:16">2026-04-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/">代码编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/">python</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>Python 中的关键字是python语言内置的特殊标识符，不能用作变量名、函数名等标识。比如我们常用的if、while、True、and等等。</p>
+<p>可以用过keyword类来查看当前python版本下对应的关键字（在该版本下，一共是35个关键字）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>  </span><br><span class="line"><span class="built_in">print</span>(keyword.kwlist)</span><br><span class="line"></span><br><span class="line">output: [<span class="string">&#x27;False&#x27;</span>, <span class="string">&#x27;None&#x27;</span>, <span class="string">&#x27;True&#x27;</span>, <span class="string">&#x27;and&#x27;</span>, <span class="string">&#x27;as&#x27;</span>, <span class="string">&#x27;assert&#x27;</span>, <span class="string">&#x27;async&#x27;</span>, <span class="string">&#x27;await&#x27;</span>, <span class="string">&#x27;break&#x27;</span>, <span class="string">&#x27;class&#x27;</span>, <span class="string">&#x27;continue&#x27;</span>, <span class="string">&#x27;def&#x27;</span>, <span class="string">&#x27;del&#x27;</span>, <span class="string">&#x27;elif&#x27;</span>, <span class="string">&#x27;else&#x27;</span>, <span class="string">&#x27;except&#x27;</span>, <span class="string">&#x27;finally&#x27;</span>, <span class="string">&#x27;for&#x27;</span>, <span class="string">&#x27;from&#x27;</span>, <span class="string">&#x27;global&#x27;</span>, <span class="string">&#x27;if&#x27;</span>, <span class="string">&#x27;import&#x27;</span>, <span class="string">&#x27;in&#x27;</span>, <span class="string">&#x27;is&#x27;</span>, <span class="string">&#x27;lambda&#x27;</span>, <span class="string">&#x27;nonlocal&#x27;</span>, <span class="string">&#x27;not&#x27;</span>, <span class="string">&#x27;or&#x27;</span>, <span class="string">&#x27;pass&#x27;</span>, <span class="string">&#x27;raise&#x27;</span>, <span class="string">&#x27;return&#x27;</span>, <span class="string">&#x27;try&#x27;</span>, <span class="string">&#x27;while&#x27;</span>, <span class="string">&#x27;with&#x27;</span>, <span class="string">&#x27;yield&#x27;</span>]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>对这些关键字做分类</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>流程控制</td>
+<td><code>if</code> — 条件判断<br><code>elif</code> — 否则如果<br><code>else</code> — 否则<br><code>for</code> — 循环<br><code>while</code> — 循环<br><code>break</code> — 跳出循环<br><code>continue</code> — 跳过本次循环<br><code>pass</code> — 空操作（占位符）</td>
+</tr>
+<tr>
+<td>逻辑运算</td>
+<td><code>and</code> — 逻辑与<br><code>or</code> — 逻辑或<br><code>not</code> — 逻辑非<br><code>True</code> — 布尔真<br><code>False</code> — 布尔假<br><code>None</code> — 空值（类似其他语言的 null）</td>
+</tr>
+<tr>
+<td>函数与类定义</td>
+<td><code>def</code> — 定义函数<br><code>class</code> — 定义类<br><code>return</code> — 返回值<br><code>yield</code> — 生成器返回值<br><code>lambda</code> — 匿名函数</td>
+</tr>
+<tr>
+<td>异常处理</td>
+<td><code>try</code> — 尝试执行<br><code>except</code> — 捕获异常<br><code>finally</code> — 无论是否异常都执行<br><code>raise</code> — 抛出异常<br><code>assert</code> — 断言</td>
+</tr>
+<tr>
+<td>模块与导入</td>
+<td><code>import</code> — 导入模块<br><code>from</code> — 从…导入<br><code>as</code> — 别名</td>
+</tr>
+<tr>
+<td>变量作用域</td>
+<td><code>global</code> — 声明全局变量<br><code>nonlocal</code> — 声明非局部变量（闭包中使用）</td>
+</tr>
+<tr>
+<td>异步编程</td>
+<td><code>async</code> — 定义异步函数<br><code>await</code> — 等待异步操作</td>
+</tr>
+<tr>
+<td>上下文管理</td>
+<td><code>with</code> — 上下文管理器</td>
+</tr>
+<tr>
+<td>模式匹配</td>
+<td><code>match</code> — 模式匹配（类似 switch-case）<br><code>case</code> — 匹配分支</td>
+</tr>
+<tr>
+<td>其它关键字</td>
+<td><code>del</code> — 删除对象<br><code>in</code> — 成员检查（也用于 for 循环）<br><code>is</code> — 身份检查（比较对象 id）</td>
+</tr>
+</tbody>
+</table>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/%E5%85%B3%E9%94%AE%E5%AD%97/">关键字</a></div><div class="post-share"><div class="social-share" data-image="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97/img-cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%B8%B8%E9%87%8F/" title="python常用内置常量"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%B8%B8%E9%87%8F/img-cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">python常用内置常量</div></div><div class="info-2"><div class="info-item-1">内置常量是 Python 预定义的变量，具有固定的值，但可以作为标识符（但强烈不建议）。  区别于关键字，关键字是 Python 语言中具有特殊语法意义的保留字，不能用作标识符（变量名、函数名等）。  None、True、False既是关键字（keywords）也是内置常量（built-in constants）。 12345678910111213141516# 1. 布尔常量True    # 布尔真False   # 布尔假# 2. 空值常量None    # 表示空值或无# 3. 省略号常量...     # Ellipsis，用于切片等Ellipsis  # 同上# 4. 未实现常量NotImplemented  # 用于比较运算# 5. 调试常量__debug__  # Python 是否以调试模式运行 </div></div></div></a><a class="pagination-related" href="/%E6%97%A5%E5%B8%B8%E5%8A%9E%E5%85%AC/mac%E4%BD%BF%E7%94%A8/%E6%89%93%E5%BC%80mac%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6/" title="打开mac隐藏文件"><img class="cover" src="/%E6%97%A5%E5%B8%B8%E5%8A%9E%E5%85%AC/mac%E4%BD%BF%E7%94%A8/%E6%89%93%E5%BC%80mac%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6/img-cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">打开mac隐藏文件</div></div><div class="info-2"><div class="info-item-1"> 你的 Mac 里藏着一个神秘世界。本文教你用最简单的方式找到并打开那些「看不见」的文件夹。   1. 什么是隐藏文件夹？ 在 macOS 中，以 .（英文句点）开头的文件夹默认是隐藏的，比如：  ~/.ssh — SSH 密钥目录 ~/.bash_profile — 命令行配置文件 ~/Library — 应用支持数据目录 .Trash — 废纸篓  Finder 一开始不会显示它们，但它们确实存在。有时候你需要修改配置、清理缓存、查看日志，都得先找到它们。  2. 方法一：让 Finder 显示所有隐藏文件 如果你想彻底让 Finder 显示所有 . 开头的文件和文件夹，用这条命令：  打开Finder 按快捷键 Command + Shift + .，显示隐藏文件夹   ⚠️ 注意：显示隐藏文件后，桌面上会出现一些系统配置文件（如 .DS_Store），视觉上会有点乱，用完记得关掉。   2. 方法二：Terminal 命令行打开 这是最通用、最精确的方式，适合任何 macOS 版本。 Step 1：打开 Terminal 按 Command + Space 调出 Spot...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/" title="python常用关键字yield"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-24</div><div class="info-item-2">python常用关键字yield</div></div><div class="info-2"><div class="info-item-1">yield是Python中用于定义生成器(Generator)的关键字，主要区别于return关键字，yield可以将普通函数转换为生成器函数，从而能够按需生成值，而不是一次性计算所有值。 与普通函数使用 return 返回一个值并结束不同，yield 可以在函数执行过程中暂停并返回一个值，下次调用时从上次暂停的地方继续执行。 让函数有如下特性：  惰性求值：只有当使用  next()  函数或者  for  循环遍历这个生成器对象时，函数才会开始执行。   状态保持：函数执行到  yield  语句时，会暂停并返回一个值。此时，函数的所有局部变量和执行位置都会被“冻结”保存起来。当下次调用  next()  时，函数会从上次暂停的地方继续执行，而不是从头开始 。  yield和return的区别：   普通函数：调用一次，执行完就结束，返回一个结果。 生成器函数：调用后返回一个 生成器对象，可以多次“产出”（yield）值，状态被保存。  yield会让函数每次执行到yield处，并返回当次结果，一般可以用多个yield或者是for循环，多次执行。比如： 用多个yield关键字...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-25</div><div class="info-item-2">python中的zip函数</div></div><div class="info-2"><div class="info-item-1">Python 中的 zip() 函数是一个内置函数，可以将多个可迭代对象（如列表、元组、字符串等）“打包”成一个迭代器，该迭代器会生成由各输入可迭代对象中对应位置元素组成的元组。 基础用法 123zip(*iterables)# *iterables：可以是任意数量的可迭代对象（如 list, tuple, str 等）。 应用举例 123456789101112131415a = [1, 2, 3]b = [&#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;]zipped = zip(a, b)print(list(zipped))# 输出: [(1, &#x27;x&#x27;), (2, &#x27;y&#x27;), (3, &#x27;z&#x27;)]# zip() 会在最短的可迭代对象耗尽时停止a = [1, 2, 3, 4]b = [&#x27;a&#x27;, &#x27;b&#x27;]print(list(zip(a, b)))# 输出: [(1, &#x27;a&#x27;), (2, &#x27;b&#x27;)] 核...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/" title="python判断list中的值是否完全一样"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/img-cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-23</div><div class="info-item-2">python判断list中的值是否完全一样</div></div><div class="info-2"><div class="info-item-1">对于一个python的list 1a = [1, 2, 3, 1, 1, 1] 需要判断该list中的值是否完全一样，可以通过for循环遍历的方式来判断，只要有值不一致，则返回false 这里给出一种简便的方式，通过将list转变成set，判断set的长度是否为1 123a = [1, 1, 1, 1, 1, 1]if len(set(a)) == 1:    print(&quot;list has same value&quot;) </div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/" title="python中的matchcase用法"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-23</div><div class="info-item-2">python中的matchcase用法</div></div><div class="info-2"><div class="info-item-1">Python 3.10 引入了 match-case 语句，这是 Python 语言的一个重要更新，提供了强大的模式匹配功能。类似于其他语言中的 switch-case，但功能更强大，可以根据数据的“模式”或“结构”来执行不同的代码块，匹配更复杂的模式。 基本用法：值匹配 在最简单的场景下，match-case 可以用来替代冗长的 if-elif-else 链，使代码更清晰。 1234567891011status_code = 404match status_code:case 200:    print(&quot;成功 (OK)&quot;)case 404:    print(&quot;未找到 (Not Found)&quot;)case 500:    print(&quot;服务器内部错误&quot;)case _:  # 通配符，类似于 else    print(&quot;未知状态码&quot;) 要点：  match 后面跟着一个表达式（如变量 status_code）。 case 后面跟着一个模式（如字面值 200）。 程序会从上到下依次尝试匹配，一旦找到...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%B8%B8%E9%87%8F/" title="python常用内置常量"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%B8%B8%E9%87%8F/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-22</div><div class="info-item-2">python常用内置常量</div></div><div class="info-2"><div class="info-item-1">内置常量是 Python 预定义的变量，具有固定的值，但可以作为标识符（但强烈不建议）。  区别于关键字，关键字是 Python 语言中具有特殊语法意义的保留字，不能用作标识符（变量名、函数名等）。  None、True、False既是关键字（keywords）也是内置常量（built-in constants）。 12345678910111213141516# 1. 布尔常量True    # 布尔真False   # 布尔假# 2. 空值常量None    # 表示空值或无# 3. 省略号常量...     # Ellipsis，用于切片等Ellipsis  # 同上# 4. 未实现常量NotImplemented  # 用于比较运算# 5. 调试常量__debug__  # Python 是否以调试模式运行 </div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-25</div><div class="info-item-2">python中的列表推导式</div></div><div class="info-2"><div class="info-item-1">Python 的列表推导式（List Comprehension）可以用一行代码替代多行的 for 循环和条件判断，使代码简洁优雅。 123456789# 表达式：对每个元素进行的操作（如 x * 2、x.upper() 等）# 变量：遍历可迭代对象时的当前元素# 可迭代对象：如列表、元组、字符串、range 等[表达式 for 变量 in 可迭代对象]# 带条件过滤[表达式 for 变量 in 可迭代对象 if 条件] 简单的基本用法 1234567891011121314# 列表推导式squares = [x ** 2 for x in range(5)]print(squares)  # [0, 1, 4, 9, 16]# 带条件过滤even_squares = [x ** 2 for x in range(10) if x % 2 == 0]print(even_squares)  # [0, 4, 16, 36, 64]# 嵌套循环# 生成两个列表的笛卡尔积a = [1, 2]b = [&#x27;x&#x27;, &#x27;y&#x27;]result = [(i,...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pythonic风格刷leetcode"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode">pythonic风格刷leetcode</a><time datetime="2026-04-25T03:22:25.000Z" title="发表于 2026-04-25 11:22:25">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的zip函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数">python中的zip函数</a><time datetime="2026-04-24T23:21:20.000Z" title="发表于 2026-04-25 07:21:20">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的列表推导式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式">python中的列表推导式</a><time datetime="2026-04-24T22:51:01.000Z" title="发表于 2026-04-25 06:51:01">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的三元表达式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式">python中的三元表达式</a><time datetime="2026-04-24T13:51:48.000Z" title="发表于 2026-04-24 21:51:48">2026-04-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%85%B3%E9%94%AE%E5%AD%97lambda/" title="python关键字lambda"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%85%B3%E9%94%AE%E5%AD%97lambda/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python关键字lambda"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%85%B3%E9%94%AE%E5%AD%97lambda/" title="python关键字lambda">python关键字lambda</a><time datetime="2026-04-24T13:32:44.000Z" title="发表于 2026-04-24 21:32:44">2026-04-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

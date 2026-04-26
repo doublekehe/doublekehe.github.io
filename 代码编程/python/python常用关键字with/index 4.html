@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>python常用关键字with | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="with 是 Python 中用于上下文管理（Context Management）的关键字，它的主要作用是确保资源被正确地获取和释放，即使在代码执行过程中发生异常。比如一些成对使用的操作：  打开文件 → 关闭文件 获取锁 → 释放锁 连接数据库 → 断开连接 进入网络连接 → 关闭连接  如果手动管理，容易忘记关闭，或在异常时漏掉清理，导致资源泄漏。with 语句通过 上下文管理器（Conte">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python常用关键字with">
+<meta property="og:url" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="with 是 Python 中用于上下文管理（Context Management）的关键字，它的主要作用是确保资源被正确地获取和释放，即使在代码执行过程中发生异常。比如一些成对使用的操作：  打开文件 → 关闭文件 获取锁 → 释放锁 连接数据库 → 断开连接 进入网络连接 → 关闭连接  如果手动管理，容易忘记关闭，或在异常时漏掉清理，导致资源泄漏。with 语句通过 上下文管理器（Conte">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/img-cover.png">
+<meta property="article:published_time" content="2026-04-23T23:30:28.000Z">
+<meta property="article:modified_time" content="2026-04-23T23:47:39.838Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="with">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/img-cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "python常用关键字with",
+  "url": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/",
+  "image": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/img-cover.png",
+  "datePublished": "2026-04-23T23:30:28.000Z",
+  "dateModified": "2026-04-23T23:47:39.838Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'python常用关键字with',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">python常用关键字with</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">python常用关键字with</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-23T23:30:28.000Z" title="发表于 2026-04-24 07:30:28">2026-04-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-23T23:47:39.838Z" title="更新于 2026-04-24 07:47:39">2026-04-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/">代码编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/">python</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>with 是 Python 中用于上下文管理（Context Management）的关键字，它的主要作用是确保资源被正确地获取和释放，即使在代码执行过程中发生异常。比如一些成对使用的操作：</p>
+<ul>
+<li>打开文件 → 关闭文件</li>
+<li>获取锁 → 释放锁</li>
+<li>连接数据库 → 断开连接</li>
+<li>进入网络连接 → 关闭连接</li>
+</ul>
+<p>如果手动管理，容易忘记关闭，或在异常时漏掉清理，导致资源泄漏。with 语句通过 上下文管理器（Context Manager） 自动处理这些“进入”和“退出”逻辑。当进入 with 块时，自动调用上下文管理器的 <strong>enter</strong>() 方法；当退出 with 块时（无论正常结束还是抛出异常），自动调用 <strong>exit</strong>() 方法。</p>
+<p>一个经典的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 不推荐这样子来打开文件</span><br><span class="line">f = open(&#x27;file.txt&#x27;, &#x27;r&#x27;)</span><br><span class="line">data = f.read()</span><br><span class="line">f.close()  # 如果 read() 报错，可能不会执行到这！</span><br><span class="line"></span><br><span class="line"># 推荐使用with</span><br><span class="line"></span><br><span class="line">with open(&#x27;file.txt&#x27;, &#x27;r&#x27;) as f:</span><br><span class="line">    data = f.read()</span><br><span class="line"># 文件在此自动关闭，即使 read() 出错，f.close() 也会被调用。</span><br></pre></td></tr></table></figure>
+<p>with 的本质是把&quot;配对操作&quot;绑定在一起——打开就要关闭，加锁就要解锁，进入就要退出。它让资源管理从&quot;靠程序员记住&quot;变成了&quot;语言层面的保证&quot;，代码更短、更安全、更 Pythonic。</p>
+<p>如果你发现自己在写 try/finally 来清理资源，大概率可以用 with 替代。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/with/">with</a></div><div class="post-share"><div class="social-share" data-image="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/img-cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/" title="python常用关键字yield"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/img-cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">python常用关键字yield</div></div><div class="info-2"><div class="info-item-1">yield是Python中用于定义生成器(Generator)的关键字，主要区别于return关键字，yield可以将普通函数转换为生成器函数，从而能够按需生成值，而不是一次性计算所有值。 与普通函数使用 return 返回一个值并结束不同，yield 可以在函数执行过程中暂停并返回一个值，下次调用时从上次暂停的地方继续执行。 让函数有如下特性：  惰性求值：只有当使用  next()  函数或者  for  循环遍历这个生成器对象时，函数才会开始执行。   状态保持：函数执行到  yield  语句时，会暂停并返回一个值。此时，函数的所有局部变量和执行位置都会被“冻结”保存起来。当下次调用  next()  时，函数会从上次暂停的地方继续执行，而不是从头开始 。  yield和return的区别：   普通函数：调用一次，执行完就结束，返回一个结果。 生成器函数：调用后返回一个 生成器对象，可以多次“产出”（yield）值，状态被保存。  yield会让函数每次执行到yield处，并返回当次结果，一般可以用多个yield或者是for循环，多次执行。比如： 用多个yield关键字...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/" title="python中的matchcase用法"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/img-cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">python中的matchcase用法</div></div><div class="info-2"><div class="info-item-1">Python 3.10 引入了 match-case 语句，这是 Python 语言的一个重要更新，提供了强大的模式匹配功能。类似于其他语言中的 switch-case，但功能更强大，可以根据数据的“模式”或“结构”来执行不同的代码块，匹配更复杂的模式。 基本用法：值匹配 在最简单的场景下，match-case 可以用来替代冗长的 if-elif-else 链，使代码更清晰。 1234567891011status_code = 404match status_code:case 200:    print(&quot;成功 (OK)&quot;)case 404:    print(&quot;未找到 (Not Found)&quot;)case 500:    print(&quot;服务器内部错误&quot;)case _:  # 通配符，类似于 else    print(&quot;未知状态码&quot;) 要点：  match 后面跟着一个表达式（如变量 status_code）。 case 后面跟着一个模式（如字面值 200）。 程序会从上到下依次尝试匹配，一旦找到...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%85%B3%E9%94%AE%E5%AD%97lambda/" title="python关键字lambda"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%85%B3%E9%94%AE%E5%AD%97lambda/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-24</div><div class="info-item-2">python关键字lambda</div></div><div class="info-2"><div class="info-item-1">lambda 是 Python 中用于创建匿名函数的关键字。可以定义一个简单、单行的函数，而无需使用 def 语句命名。lambda 不是为了替代 def，而是为了在需要短小函数对象时提供便利。  只能包含一个表达式（不能是多条语句或复杂逻辑） 自动返回表达式的值 没有函数名  1lambda 参数1, 参数2, ... : 表达式 lambda的简单用法举例： 123456789# 普通函数def add(x, y):    return x + y# 等价的 lambdaadd_lambda = lambda x, y: x + yprint(add(2, 3))        # 5print(add_lambda(2, 3)) # 5 lambda 返回的是函数对象，可以赋值给变量，也可以直接调用。 lambda与高阶函数配合使用（如 map, filter, sorted）  map 示例：对列表每个元素平方  123numbers = [1, 2, 3, 4]squares = list(map(lambda x: x ** 2, numbers))print(squ...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E7%AC%A6/" title="python常用操作符"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E7%AC%A6/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-02</div><div class="info-item-2">python常用操作符</div></div><div class="info-2"><div class="info-item-1">Python 提供了丰富的操作符，分为以下几大类：  算术操作符：+、-、*、/、//、%、** 比较操作符：==、!=、&lt;、&gt;、&lt;=、&gt;=、 赋值操作符：=、+=、-=、/=、*=、**= 逻辑操作符：and、or 位操作符：&amp;、^、|、~、&lt;&lt;、&gt;&gt; 成员操作符：in、not in  1. 算术操作符 1234567891011# 基本算术运算a = 10b = 3print(a + b)   # 13, 加法print(a - b)   # 7,  减法print(a * b)   # 30, 乘法print(a / b)   # 3.333..., 除法（返回浮点数）print(a // b)  # 3,  整除（向下取整）print(a % b)   # 1,  取模（求余数）print(a ** b)  # 1000, 幂运算 2. 比较操作符 1234567891011121314151617181920212223# 比较操作符返回布尔值x = 10y = 5print(x == y)   # False, ...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-25</div><div class="info-item-2">python中的zip函数</div></div><div class="info-2"><div class="info-item-1">Python 中的 zip() 函数是一个内置函数，可以将多个可迭代对象（如列表、元组、字符串等）“打包”成一个迭代器，该迭代器会生成由各输入可迭代对象中对应位置元素组成的元组。 基础用法 123zip(*iterables)# *iterables：可以是任意数量的可迭代对象（如 list, tuple, str 等）。 应用举例 123456789101112131415a = [1, 2, 3]b = [&#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;]zipped = zip(a, b)print(list(zipped))# 输出: [(1, &#x27;x&#x27;), (2, &#x27;y&#x27;), (3, &#x27;z&#x27;)]# zip() 会在最短的可迭代对象耗尽时停止a = [1, 2, 3, 4]b = [&#x27;a&#x27;, &#x27;b&#x27;]print(list(zip(a, b)))# 输出: [(1, &#x27;a&#x27;), (2, &#x27;b&#x27;)] 核...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/" title="python判断list中的值是否完全一样"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/img-cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-23</div><div class="info-item-2">python判断list中的值是否完全一样</div></div><div class="info-2"><div class="info-item-1">对于一个python的list 1a = [1, 2, 3, 1, 1, 1] 需要判断该list中的值是否完全一样，可以通过for循环遍历的方式来判断，只要有值不一致，则返回false 这里给出一种简便的方式，通过将list转变成set，判断set的长度是否为1 123a = [1, 1, 1, 1, 1, 1]if len(set(a)) == 1:    print(&quot;list has same value&quot;) </div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-24</div><div class="info-item-2">python中的三元表达式</div></div><div class="info-2"><div class="info-item-1">Python 的三元表达式（Ternary Expression），也称为条件表达式（Conditional Expression），是一种在一行代码中实现简单 if-else 逻辑的简洁语法。和C++/JAVA中的语法 condition ? a : b 类似 123value_if_true if condition else value_if_false# 如果 condition 为 True，整个表达式返回 value_if_true 否则返回 value_if_false 举个例子 123456789# 判断一个数是奇数还是偶数num = 5result = &quot;奇数&quot; if num % 2 == 1 else &quot;偶数&quot;print(result)  # 输出: 奇数# 判断一个数是否大于10num = 15result = &quot;大于10&quot; if num &gt; 10 else &quot;小于等于10&quot;print(result)  # 输出: 大于10</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/" title="python中的matchcase用法"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84matchcase%E7%94%A8%E6%B3%95/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-23</div><div class="info-item-2">python中的matchcase用法</div></div><div class="info-2"><div class="info-item-1">Python 3.10 引入了 match-case 语句，这是 Python 语言的一个重要更新，提供了强大的模式匹配功能。类似于其他语言中的 switch-case，但功能更强大，可以根据数据的“模式”或“结构”来执行不同的代码块，匹配更复杂的模式。 基本用法：值匹配 在最简单的场景下，match-case 可以用来替代冗长的 if-elif-else 链，使代码更清晰。 1234567891011status_code = 404match status_code:case 200:    print(&quot;成功 (OK)&quot;)case 404:    print(&quot;未找到 (Not Found)&quot;)case 500:    print(&quot;服务器内部错误&quot;)case _:  # 通配符，类似于 else    print(&quot;未知状态码&quot;) 要点：  match 后面跟着一个表达式（如变量 status_code）。 case 后面跟着一个模式（如字面值 200）。 程序会从上到下依次尝试匹配，一旦找到...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理"><img src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1777200221_4de2c058.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="几十行代码拆解Agent核心原理"/></a><div class="content"><a class="title" href="/agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理">几十行代码拆解Agent核心原理</a><time datetime="2026-04-26T12:17:56.000Z" title="发表于 2026-04-26 20:17:56">2026-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pythonic风格刷leetcode"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode">pythonic风格刷leetcode</a><time datetime="2026-04-25T03:22:25.000Z" title="发表于 2026-04-25 11:22:25">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的zip函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数">python中的zip函数</a><time datetime="2026-04-24T23:21:20.000Z" title="发表于 2026-04-25 07:21:20">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的列表推导式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式">python中的列表推导式</a><time datetime="2026-04-24T22:51:01.000Z" title="发表于 2026-04-25 06:51:01">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的三元表达式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式">python中的三元表达式</a><time datetime="2026-04-24T13:51:48.000Z" title="发表于 2026-04-24 21:51:48">2026-04-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
