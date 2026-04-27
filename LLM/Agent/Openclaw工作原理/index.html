@@ -1,0 +1,567 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Openclaw🦞 AI Agent工作原理 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 引言：当科幻逐步成为现实  从电影走进现实——AI助手开始真正&quot;干活&quot;  在科幻电影《钢铁侠》中，托尼·斯塔克的智能助手贾维斯（J.A.R.V.I.S.，Just A Rather Very Intelligent System）不仅能与钢铁侠流畅对话，还能控制战甲、分析数据、管理家庭系统；在《流浪地球》系列中，量子计算机MOSS冷静、理性，甚至拥有自我意识，以“延续人类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openclaw🦞 AI Agent工作原理">
+<meta property="og:url" content="https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="1. 引言：当科幻逐步成为现实  从电影走进现实——AI助手开始真正&quot;干活&quot;  在科幻电影《钢铁侠》中，托尼·斯塔克的智能助手贾维斯（J.A.R.V.I.S.，Just A Rather Very Intelligent System）不仅能与钢铁侠流畅对话，还能控制战甲、分析数据、管理家庭系统；在《流浪地球》系列中，量子计算机MOSS冷静、理性，甚至拥有自我意识，以“延续人类">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/cover.jpg">
+<meta property="article:published_time" content="2026-03-13T15:04:24.000Z">
+<meta property="article:modified_time" content="2026-04-27T13:49:15.826Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="OpenClaw">
+<meta property="article:tag" content="agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Openclaw🦞 AI Agent工作原理",
+  "url": "https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/",
+  "image": "https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/cover.jpg",
+  "datePublished": "2026-03-13T15:04:24.000Z",
+  "dateModified": "2026-04-27T13:49:15.826Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Openclaw🦞 AI Agent工作原理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Openclaw🦞 AI Agent工作原理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Openclaw🦞 AI Agent工作原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-13T15:04:24.000Z" title="发表于 2026-03-13 23:04:24">2026-03-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-27T13:49:15.826Z" title="更新于 2026-04-27 21:49:15">2026-04-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/Agent/">Agent</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-引言：当科幻逐步成为现实">1. 引言：当科幻逐步成为现实</h2>
+<blockquote>
+<p><em>从电影走进现实——AI助手开始真正&quot;干活&quot;</em></p>
+</blockquote>
+<p>在科幻电影《钢铁侠》中，托尼·斯塔克的智能助手贾维斯（J.A.R.V.I.S.，Just A Rather Very Intelligent System）不仅能与钢铁侠流畅对话，还能控制战甲、分析数据、管理家庭系统；在《流浪地球》系列中，量子计算机MOSS冷静、理性，甚至拥有自我意识，以“延续人类文明”这一终极目标默默守护着人类的火种。这些科幻电影中的AI形象，都是拥有超级大脑、极强的动手能力和长期记忆的完整智能体。</p>
+<div class="bilibili-container">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV13A411P7m6&t=0.0&autoplay=0&autoplay=false" width="100%" height="500pxscrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+</div>
+<p>这些曾经只存在于电影中的人工智能，正在逐步成为现实。而实现这一切的核心技术，就是我们今天要深入探讨的主题—— <strong>AI Agent OpenClaw</strong>。</p>
+<hr>
+<h2 id="2-AI-Agent的基础概念">2. AI Agent的基础概念</h2>
+<p>Openclaw这类AI Agent是一种能够自主感知环境、做出决策并执行动作的智能体。它与传统的AI工具（如聊天机器人）有本质区别：聊天机器人只能&quot;思考&quot;和&quot;说话&quot;，而AI Agent则能&quot;思考+行动&quot;，简单来说，AI Agent = ** 超级大脑 + 记忆系统 + 工具能力 + 行动力。** 这种能力的组合使得AI Agent能够像人类助手一样，主动完成复杂任务，而非仅仅停留在信息交流层面。</p>
+<p>钢铁侠中的贾维斯和流量地球中的MOSS，AI Agent都具备三大核心要素：超级大脑（思考能力）、动手能力（执行能力）、记忆系统（经验存储能力）。这和人类自身的能力也类似：</p>
+<p><img src="agent_vs_human.jpg" alt="agent vs human image"></p>
+<table>
+<thead>
+<tr>
+<th>人类能力</th>
+<th>对应AI Agent组件</th>
+<th>OpenClaw中的实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大脑（思考与决策）</td>
+<td>大语言模型（LLM）</td>
+<td>对接云端或本地LLM</td>
+</tr>
+<tr>
+<td>记忆系统（经验存储）</td>
+<td>记忆层（Memory）</td>
+<td>长期MD文件（<a target="_blank" rel="noopener" href="http://MEMORY.md">MEMORY.md</a>）+<br>短期Memory文件 +<br>临时会话上下文</td>
+</tr>
+<tr>
+<td>手脚（执行动作）</td>
+<td>工具技能层（工具/Skills）</td>
+<td>命令执行、文件操作、浏览器控制、IM交互等原子化操作</td>
+</tr>
+<tr>
+<td>社交能力（沟通与协作）</td>
+<td>网关层（Gateway）</td>
+<td>多平台消息路由与统一交互</td>
+</tr>
+</tbody>
+</table>
+<p><strong>表1：OpenClaw Agent与人类能力的类比</strong></p>
+<p>在Agent有了LLM作为大脑，拥有记忆系统，并配备丰富的工具和skills后，能够帮我们做很多的工作，包括写文档、做视频等，一个很直观的体感就是，这篇文章几乎都是OpenClaw按照一定的行文思路、章节大纲来写的，并配上了各类插图。</p>
+<h2 id="3-AI-Agent的发展历史">3. AI Agent的发展历史</h2>
+<p>AI Agent的发展历程，本质上是大语言模型（LLM）从&quot;大脑&quot;进化为&quot;完整体&quot;的过程。OpenClaw并不是第一个agent，在openclaw之前已经有autogpt、claude code、manus等相关agent产品。</p>
+<p><img src="agent_his.jpg" alt="agent history"></p>
+<p><strong>大语言模型时代（2022-2023）</strong></p>
+<p>2022年11月，OpenAI发布ChatGPT，标志着LLM时代的正式到来。GPT-4、Claude、Gemini、Qwen、DeepSeek、Kimi等模型相继问世，它们拥有强大的推理能力和知识储备。</p>
+<blockquote>
+<p>💡 <strong>一个有趣的比喻</strong>：LLM就像是学生（读书时）的指导教授，牛马（工作时）的老板——<strong>高瞻远瞩，深谋远虑，但只动嘴不动手</strong>。你可以和它讨论任何问题，但它无法帮你完成实际的任务。</p>
+</blockquote>
+<p><strong>AutoGPT：第一个吃螃蟹的人（2023年）</strong></p>
+<p>AutoGPT的出现让人们第一次看到了&quot;自主AI&quot;的可能性。它能够自己给自己提示（self-prompting），自动分解任务并执行。虽然功能还比较基础，但开启了AI Agent的探索之路。</p>
+<p><strong>Claude Code：程序员的编码助手（2025年2月）</strong></p>
+<p>Anthropic推出的Claude Code是专注于编程的AI Agent，能够理解代码库、编写代码、运行测试、处理Git操作。它是&quot;能干活&quot;的编程工具代表。但claude code也已经从编程助手发展为agent智能体，可能命名上可能让人误导。</p>
+<p><strong>Manus：通用Agent的诞生（2025年）</strong></p>
+<p>2025年3月，中国团队Monica.im发布的Manus被誉为&quot;AI Agent的GPT时刻&quot;。它是全球第一款通用型AI Agent产品，能够自主执行复杂任务并交付成果。</p>
+<p><strong>OpenClaw：个人AI助手的集大成者（2025年底）</strong></p>
+<p>2025年11月，奥地利程序员Peter Steinberger发起了OpenClaw项目。最初只是为了做一个能在终端聊天的机器人，后来逐渐发展为功能强大的个人AI助手。</p>
+<hr>
+<h3 id="3-1-OpenClaw与其他Agent的区别">3.1 OpenClaw与其他Agent的区别</h3>
+<p>而OpenClaw之所以能在短短两三个月内风靡全球，其GitHub Star数（31w+）甚至超过Linux和TensorFlow等经典项目多年的积累，已经排到了前10，关键在于它实现了两项重大突破。</p>
+<p><img src="openclaw_github_stars.jpg" alt="openclaw github stars"></p>
+<p><strong>社交代理能力</strong>：OpenClaw通过网关层（Gateway）可以深度集成QQ、企业微信等个人即时通讯工具，让用户可以通过日常聊天应用与AI Agent交互。这与Claude Code等工具仅支持命令行或Slack等专业协作平台形成鲜明对比。<strong>社交代理使OpenClaw更像是一个&quot;个人助理&quot;，而非一个需要专门学习使用的工具</strong>。</p>
+<p><strong>本地优先设计</strong>：OpenClaw采用&quot;数据主权归用户&quot;的设计理念，所有用户数据（对话记录、文件、交互日志）均存储在用户本地设备，不依赖第三方云服务。仅在调用云端大模型API时联网，且支持切换为本地模型实现零联网运行，从根源上保障数据隐私与主权。这种设计哲学使OpenClaw能够保护用户隐私。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>OpenClaw</th>
+<th>Claude Code</th>
+<th>Manus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>定位</strong></td>
+<td>个人AI助手</td>
+<td>编程辅助工具</td>
+<td>通用任务执行</td>
+</tr>
+<tr>
+<td><strong>交互方式</strong></td>
+<td>多平台消息</td>
+<td>终端CLI</td>
+<td>网页/云端</td>
+</tr>
+<tr>
+<td><strong>本地部署</strong></td>
+<td>✅ 支持</td>
+<td>✅ 支持</td>
+<td>❌ 云端</td>
+</tr>
+<tr>
+<td><strong>多通道接入</strong></td>
+<td>微信/飞书/Telegram等</td>
+<td>终端</td>
+<td>网页</td>
+</tr>
+<tr>
+<td><strong>主动执行</strong></td>
+<td>✅ Heartbeat</td>
+<td>❌</td>
+<td>部分</td>
+</tr>
+<tr>
+<td><strong>记忆系统</strong></td>
+<td>完整长期/短期记忆</td>
+<td>有限</td>
+<td>部分</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心区别</strong>：OpenClaw更像是你的<strong>个人助理</strong>，可以通过各种聊天软件随时随地联系它帮你做事；而Claude Code更像是<strong>专业工具</strong>。OpenClaw的社交属性更强，让AI真正成为了一个&quot;活生生&quot;的助手。</p>
+<hr>
+<h2 id="4-OpenClaw的整体架构">4. OpenClaw的整体架构</h2>
+<p>OpenClaw是一个很强的AI智能体，非常的聪明能干，能完成很多复杂的任务，但其实<strong>OpenClaw本身是没有智能的，是AI Agent中非AI的部分</strong>。OpenClaw是&quot;躯干&quot;——负责感知、规划、工具调用和记忆存储，而LLM才是&quot;大脑&quot;（比如GPT/Gemini/Claude/Qwen/Kimi/Deepseek等），OpenClaw具体做什么全都需要听从LLM的指挥，<strong>通过Prompt工程将LLM的思考转化为可执行的行动</strong>。</p>
+<p><img src="openclaw_architecture.jpg" alt="openclaw architecture"></p>
+<p>具体，OpenClaw在和LLM的交互以及动手执行、记忆系统、心跳机制上的是如何来设计和工作的，我们将在下文做详细的介绍。</p>
+<hr>
+<h2 id="5-OpenClaw的工作过程">5. OpenClaw的工作过程</h2>
+<blockquote>
+<p>_当你对OpenClaw说&quot;帮我写一篇介绍openclaw工作原理的文章&quot;，它究竟在做发生？和 <strong>LLM交互，调用工具，使用skills，更新记忆</strong>，是怎么进行的？</p>
+</blockquote>
+<h3 id="5-1-OpenClaw的一次完整交互">5.1 OpenClaw的一次完整交互</h3>
+<p>🔄 <strong>5.1.1 第1轮：理解任务</strong></p>
+<p><strong>OpenClaw → LLM：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│           System Prompt                   │</span><br><span class="line">├─────────────────────────────────────────┤</span><br><span class="line">│  基础指令：你是一个有用的AI助手...        │</span><br><span class="line">│  身份定义：我是OpenClaw...              │</span><br><span class="line">│  长期记忆：主人的职业、偏好...          │</span><br><span class="line">│  Skills：写作助手、搜索工具...          │</span><br><span class="line">├─────────────────────────────────────────┤</span><br><span class="line">│  用户消息：                             │</span><br><span class="line">│  &quot;帮我写一篇关于OpenClaw的文章&quot;          │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>用户需要一篇关于OpenClaw的文章。我是OpenClaw，对自己很了解。但要写出有深度的好文章，我需要：<strong>行动：调用写作Skill制定大纲</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Thought: 用户需要OpenClaw文章</span><br><span class="line">Action: invoke_skill</span><br><span class="line">Action Input: </span><br><span class="line">&#123;</span><br><span class="line">  &quot;skill&quot;: &quot;writing-assistant&quot;,</span><br><span class="line">  &quot;operation&quot;: &quot;plan&quot;,</span><br><span class="line">  &quot;params&quot;: &#123;</span><br><span class="line">    &quot;title&quot;: &quot;OpenClaw AI Agent工作原理详解&quot;,</span><br><span class="line">    &quot;sections&quot;: [&quot;引言&quot;, &quot;什么是Agent&quot;, &quot;OpenClaw架构&quot;, &quot;核心能力&quot;, &quot;如何使用&quot;],</span><br><span class="line">    &quot;target&quot;: &quot;AI算法工程师&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行Skill（📋 Skills执行）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  📋 调用 Skill: writing-assistant       │</span><br><span class="line">│                                          │</span><br><span class="line">│  📝 写作助手 - 制定大纲                 │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✅ 大纲制定完成：                       │</span><br><span class="line">│  1. 引言：从电影走进现实的AI             │</span><br><span class="line">│  2. 什么是AI Agent？                     │</span><br><span class="line">│  3. OpenClaw的整体架构                   │</span><br><span class="line">│  4. OpenClaw的核心能力                   │</span><br><span class="line">│  5. 如何使用OpenClaw                     │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.2 第2轮：收集资料</strong></p>
+<p><strong>OpenClaw将第1轮内容累积，再次发送给LLM：</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>大纲制定好了。我需要搜索最新资料，了解OpenClaw有什么新特性。<strong>行动：调用搜索工具</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Thought: 需要搜索最新资料</span><br><span class="line">Action: search</span><br><span class="line">Action Input: &quot;OpenClaw AI Agent 最新特性 2026&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行工具（🔧 工具调用）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  🔧 调用工具: search                     │</span><br><span class="line">│                                          │</span><br><span class="line">│  📋 搜索关键词: OpenClaw AI Agent        │</span><br><span class="line">│                                          │</span><br><span class="line">│  📥 搜索结果：                           │</span><br><span class="line">│  1. OpenClaw GitHub stars突破24.8万     │</span><br><span class="line">│  2. OpenClaw支持多平台消息接入           │</span><br><span class="line">│  3. OpenClaw的Heartbeat机制解析           │</span><br><span class="line">│  4. 社区热议：如何养好一只龙虾           │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw → LLM：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Observation: 搜索完成，获取到4条相关结果</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.3 第3-5轮：写入文件</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>获取到最新资料了。现在开始写文章。<strong>行动：调用写作Skill创建文件</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Thought: 开始写入引言</span><br><span class="line">Action: invoke_skill</span><br><span class="line">Action Input:</span><br><span class="line">&#123;</span><br><span class="line">  &quot;skill&quot;: &quot;writing-assistant&quot;,</span><br><span class="line">  &quot;operation&quot;: &quot;write&quot;,</span><br><span class="line">  &quot;params&quot;: &#123;</span><br><span class="line">    &quot;filename&quot;: &quot;openclaw-intro.md&quot;,</span><br><span class="line">    &quot;content&quot;: &quot;# OpenClaw AI Agent工作原理详解\n\n&gt; *从电影走进现实——让你的AI助手真正&#x27;干活&#x27;*\n\n在科幻电影《钢铁侠》中...&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行Skill（📋 Skills执行）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  📋 调用 Skill: writing-assistant        │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✍️  执行写作操作：创建文件              │</span><br><span class="line">│                                          │</span><br><span class="line">│  📄 文件名: openclaw-intro.md           │</span><br><span class="line">│  📝 内容: 引言 + 大纲                    │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✅ 写入成功                            │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw → LLM：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Observation: 文件创建成功，引言已写入</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>LLM继续思考下一段内容：</strong></p>
+<blockquote>
+<p>引言写好了，现在写第一章。<strong>行动：追加写入</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Thought: 引言完成，继续写第一章</span><br><span class="line">Action: invoke_skill</span><br><span class="line">Action Input:</span><br><span class="line">&#123;</span><br><span class="line">  &quot;skill&quot;: &quot;writing-assistant&quot;,</span><br><span class="line">  &quot;operation&quot;: &quot;append&quot;,</span><br><span class="line">  &quot;params&quot;: &#123;</span><br><span class="line">    &quot;filename&quot;: &quot;openclaw-intro.md&quot;,</span><br><span class="line">    &quot;content&quot;: &quot;\n## 1. 什么是AI Agent？\n\nAI Agent是...&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.4 第6轮：自我检查</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>已经写了引言和第一章。我需要检查内容质量。<strong>行动：调用文件读取工具</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Thought: 检查已写内容</span><br><span class="line">Action: read</span><br><span class="line">Action Input: &quot;openclaw-intro.md&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行工具（🔧 工具调用）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  🔧 调用工具: read                      │</span><br><span class="line">│                                          │</span><br><span class="line">│  📖 读取文件: openclaw-intro.md         │</span><br><span class="line">│                                          │</span><br><span class="line">│  📋 检查结果：                           │</span><br><span class="line">│  ✅ 引言：内容准确，有趣味性             │</span><br><span class="line">│  ✅ 第一章：结构清晰，表达清楚           │</span><br><span class="line">│  💡 建议：补充一些代码示例               │</span><br><span class="line">│  💡 建议：增加配图说明                  │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.5 第7-N轮：继续完善 + 记忆更新</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>检查完成。我需要补充代码示例和配图说明。同时，用户要求写OpenClaw的文章，这是一个重要信息，我应该更新记忆。<strong>行动1：继续写入代码示例行动2：更新记忆</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Thought: 补充代码示例和配图说明</span><br><span class="line">Action: invoke_skill</span><br><span class="line">Action Input:</span><br><span class="line">&#123;</span><br><span class="line">  &quot;skill&quot;: &quot;writing-assistant&quot;,</span><br><span class="line">  &quot;operation&quot;: &quot;append&quot;,</span><br><span class="line">  &quot;params&quot;: &#123;</span><br><span class="line">    &quot;filename&quot;: &quot;openclaw-intro.md&quot;,</span><br><span class="line">    &quot;content&quot;: &quot;\n## 4. 核心能力示例\n\n```python\n# OpenClaw调用示例\nimport openclaw\n\nagent = OpenClaw()\nresult = agent.run(\&quot;帮我写一篇文章\&quot;)\n```&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Action: update_memory</span><br><span class="line">Action Input:</span><br><span class="line">&#123;</span><br><span class="line">  &quot;memory_type&quot;: &quot;short_term&quot;,</span><br><span class="line">  &quot;content&quot;: &quot;用户要求撰写OpenClaw技术文章，面向AI算法工程师，需要包含原理讲解和代码示例。&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行（📋 Skills + 🧠 记忆更新）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  📋 Skill执行 + 🧠 记忆更新             │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✅ 代码示例已追加到文章                 │</span><br><span class="line">│                                          │</span><br><span class="line">│  🧠 记忆更新：                           │</span><br><span class="line">│  ┌─────────────────────────────────┐   │</span><br><span class="line">│  │ 文件: memory/2026-03-18.md       │   │</span><br><span class="line">│  │ 内容: 用户正在撰写OpenClaw文章   │   │</span><br><span class="line">│  │ 时间: 2026-03-18 19:00         │   │</span><br><span class="line">│  └─────────────────────────────────┘   │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✅ 记忆更新成功                        │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.6 第8轮：更新长期记忆</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>文章基本完成了。用户在撰写关于我的技术博客，这是一个重要事件，我应该把这件事记录到长期记忆中。<strong>行动：更新长期记忆</strong></p>
+</blockquote>
+<p><strong>LLM返回：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Thought: 重要事件，记录到长期记忆</span><br><span class="line">Action: update_memory</span><br><span class="line">Action Input:</span><br><span class="line">&#123;</span><br><span class="line">  &quot;memory_type&quot;: &quot;long_term&quot;,</span><br><span class="line">  &quot;content&quot;: &quot;用户在撰写OpenClaw技术博客，主题为&#x27;OpenClaw AI Agent工作原理详解&#x27;，目标读者是AI算法工程师。文章包含引言、Agent概念、OpenClaw架构、核心能力、使用方法等内容。&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>OpenClaw执行（🧠 记忆更新）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  🧠 更新长期记忆 (MEMORY.md)            │</span><br><span class="line">│                                          │</span><br><span class="line">│  📝 追加内容：                           │</span><br><span class="line">│  - 2026-03-18: 用户撰写OpenClaw文章    │</span><br><span class="line">│    - 主题：OpenClaw AI Agent工作原理     │</span><br><span class="line">│    - 目标：AI算法工程师                  │</span><br><span class="line">│    - 内容：引言、Agent概念、架构、核心    │</span><br><span class="line">│                                          │</span><br><span class="line">│  ✅ 长期记忆更新成功                    │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<p>🔄 <strong>5.1.7 最终轮：返回结果</strong></p>
+<p><strong>LLM思考（🤖 LLM交互）：</strong></p>
+<blockquote>
+<p>文章已完成所有章节。任务完成！<strong>最终回复</strong></p>
+</blockquote>
+<p><strong>OpenClaw执行结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  ✅ 文章撰写完成！                       │</span><br><span class="line">│                                          │</span><br><span class="line">│  📄 文件名：openclaw-intro.md           │</span><br><span class="line">│                                          │</span><br><span class="line">│  📋 包含内容：                           │</span><br><span class="line">│  1. 引言：从电影走进现实的AI             │</span><br><span class="line">│  2. 什么是AI Agent？                     │</span><br><span class="line">│  3. OpenClaw的整体架构                   │</span><br><span class="line">│  4. OpenClaw的核心能力                   │</span><br><span class="line">│  5. 如何使用OpenClaw                     │</span><br><span class="line">│                                          │</span><br><span class="line">│  📊 写作数据：                           │</span><br><span class="line">│  - 字数：约5000字                        │</span><br><span class="line">│  - 配图：建议5张                         │</span><br><span class="line">│  - 代码示例：3个                         │</span><br><span class="line">│                                          │</span><br><span class="line">│  🧠 记忆已更新：                         │</span><br><span class="line">│  - 短期记忆：本次写作记录                 │</span><br><span class="line">│  - 长期记忆：文章主题概要                │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>经过多轮的交互，最终完成任务。</p>
+<p><img src="multi_session.jpg" alt="multi session"></p>
+<h3 id="5-2-为什么消耗token很快-及如何优化">5.2 为什么消耗token很快?及如何优化</h3>
+<p>在多轮交互中，每次发送给LLM的内容都会包含历史对话：</p>
+<p><img src="token_multi_session.jpg" alt="token_multi session"></p>
+<p><img src="token_arise.jpg" alt="token arise"></p>
+<p>OpenClaw内置token优化相关策略：</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>会话压缩</strong></td>
+<td>通过LLM对绘话内容做摘要，压缩过长的历史会话</td>
+</tr>
+<tr>
+<td><strong>Skill按需加载</strong></td>
+<td>Skills仅确定使用技能后再加载详情</td>
+</tr>
+<tr>
+<td><strong>Sub-agent分流</strong></td>
+<td>子任务由子Agent处理</td>
+</tr>
+<tr>
+<td><strong>相关记忆加载</strong></td>
+<td>只加载相关记忆</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-养龙虾-是怎么一回事？">6. &quot;养龙虾&quot;是怎么一回事？</h2>
+<blockquote>
+<p><em>养龙虾，不是在养一只虾，而是在养一个越来越懂你的AI伙伴</em></p>
+</blockquote>
+<h3 id="6-1-什么是-养龙虾-？">6.1 什么是&quot;养龙虾&quot;？</h3>
+<p>OpenClaw的用户亲切地称使用它的过程为&quot;养龙虾&quot;（因为项目名OpenClaw意为&quot;打开爪子&quot;，谐音&quot;龙虾&quot;）。</p>
+<ul>
+<li>
+<p>🦞 <strong>龙虾</strong>是慢慢长大的，需要时间和耐心</p>
+</li>
+<li>
+<p>🤖 <strong>OpenClaw</strong> 也是如此，需要你不断地&quot;喂养&quot;它内容</p>
+</li>
+</ul>
+<p>所以，“养龙虾&quot;就是指：通过不断积累记忆、添加技能、扩展工具，让你的OpenClaw从一个&quot;新手&quot;逐渐成长为一个&quot;经验丰富的老手”。</p>
+<p><img src="lobster_baby.jpg" alt="lobster baby"></p>
+<h3 id="6-2-养的是什么？">6.2 养的是什么？</h3>
+<p>你养的其实不是&quot;龙虾&quot;，而是<strong>一个不断成长的AI助手</strong>：</p>
+<ol>
+<li>
+<p><strong>丰富Skills</strong> → 学会更多技能</p>
+</li>
+<li>
+<p><strong>积累记忆</strong> → 越来越了解你</p>
+</li>
+<li>
+<p><strong>增加工具</strong> → 能完成更多任务</p>
+</li>
+<li>
+<p><strong>优化配置</strong> → 变得更聪明、更贴心</p>
+</li>
+</ol>
+<p><img src="lobster_growth.jpg" alt="lobster growth"></p>
+<h4 id="6-2-1-养记忆——让它越来越懂你">6.2.1 养记忆——让它越来越懂你</h4>
+<p>记忆是龙虾的<strong>大脑</strong>，决定着它对你的了解程度。</p>
+<p><strong>龙虾的记忆存储在哪里？</strong></p>
+<table>
+<thead>
+<tr>
+<th>记忆类型</th>
+<th>存储位置</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>长期记忆</strong></td>
+<td><code>MEMORY.md</code></td>
+<td>持久保存的个人信息、偏好、习惯</td>
+</tr>
+<tr>
+<td><strong>短期记忆</strong></td>
+<td><code>memory/日期.md</code></td>
+<td>最近几天的会话记录</td>
+</tr>
+<tr>
+<td><strong>临时记忆</strong></td>
+<td>当前Context</td>
+<td>本次对话的上下文</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>核心记忆文件</strong>：<code>MEMORY.md</code> 和 <code>memory/</code> 目录就是龙虾的&quot;大脑&quot;，精心照料它们，龙虾就会越来越聪明！</p>
+</blockquote>
+<p><strong>养记忆的方法：</strong></p>
+<ul>
+<li>
+<p>多和龙虾聊天，让它了解你的工作、生活、喜好</p>
+</li>
+<li>
+<p>重要信息主动告诉它，比如&quot;我最近在学习Python&quot;</p>
+</li>
+<li>
+<p>纠正它的错误，让它记住正确的认知</p>
+</li>
+</ul>
+<h4 id="6-2-2-养技能——让它越来越能干">6.2.2 养技能——让它越来越能干</h4>
+<p>技能是龙虾的<strong>双手</strong>，决定着它能帮你做什么。</p>
+<p><strong>龙虾能学哪些技能？</strong></p>
+<table>
+<thead>
+<tr>
+<th>技能类型</th>
+<th>示例</th>
+<th>能做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>搜索技能</strong></td>
+<td>搜索工具</td>
+<td>帮你查找信息、资料</td>
+</tr>
+<tr>
+<td><strong>写作技能</strong></td>
+<td>写作助手</td>
+<td>帮你写文章、文案</td>
+</tr>
+<tr>
+<td><strong>编程技能</strong></td>
+<td>代码助手</td>
+<td>帮你写代码、调试</td>
+</tr>
+<tr>
+<td><strong>办公技能</strong></td>
+<td>日程管理</td>
+<td>帮你安排日程、提醒事项</td>
+</tr>
+<tr>
+<td><strong>生活技能</strong></td>
+<td>天气查询</td>
+<td>告诉你天气、穿衣建议</td>
+</tr>
+</tbody>
+</table>
+<p><strong>养技能的方法：</strong></p>
+<ul>
+<li>
+<p>给它学习新的Skill（技能文档）</p>
+</li>
+<li>
+<p>告诉它新技能的使用方式</p>
+</li>
+<li>
+<p>不断扩展它的能力边界</p>
+</li>
+</ul>
+<blockquote>
+<p>💡 <strong>想象一下</strong>，你的龙虾刚来时只会基础操作，但随着你教它越来越多的技能，它变得越来越能干——既会写代码，又会做分析，还能帮你管日程。</p>
+</blockquote>
+<hr>
+<h4 id="6-2-3-养工具——让它越来越强大">6.2.3 养工具——让它越来越强大</h4>
+<p>工具是龙虾的<strong>装备</strong>，决定了它能触达多深多广。</p>
+<p><strong>OpenClaw能用的工具：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│              OpenClaw 工具箱              │</span><br><span class="line">├─────────────────────────────────────────┤</span><br><span class="line">│  🔍 搜索工具    │  📝 文件工具          │</span><br><span class="line">│  🌐 浏览器控制  │  💬 消息发送          │</span><br><span class="line">│  ⏰ 定时任务    │  📊 数据分析          │</span><br><span class="line">│  🖥️ Shell执行   │  📦 CDN上传            │</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>养工具的方法：</strong></p>
+<ul>
+<li>
+<p>配置更多的工具权限</p>
+</li>
+<li>
+<p>扩展它能访问的平台和系统</p>
+</li>
+<li>
+<p>丰富它与外部世界交互的方式</p>
+</li>
+</ul>
+<p>关于OpenClaw的一些基础介绍就到这里啦，有关OpenClaw的记忆系统、Context Engeering、Skill系统、工具系统等相关介绍，将在后续文章中逐步展开。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/agent/">agent</a><a class="post-meta__tags" href="/tags/OpenClaw/">OpenClaw</a></div><div class="post-share"><div class="social-share" data-image="/LLM/Agent/Openclaw%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/hexo/hexo%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/" title="hexo常用操作命令"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/hexo/hexo%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/img-cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">hexo常用操作命令</div></div><div class="info-2"><div class="info-item-1">基础命令 12345678910# 新建文章hexo --version # 查看版本号，简写 hexo -vhexo init 		# 初始化博客hexo help [command]			# 查看帮助hexo list post	# 列出所有文章hexo list page	# 列出所有页面 创作内容 基础语法 hexo new [layout] &lt;title&gt; layout可以是page、post、draft，一般默认是post 123456789101112131415161718192021222324252627# 新建文章# 创建一篇标题为“文章1”的文章hexo new post &quot;文章1&quot;# 简写hexo new &quot;文章2&quot; # 在_config.yml配置文件中默认是post，故这里可以省略hexo n &quot;文章3&quot;# 新建页面# 生成 about/tags页面hexo new page abouthexo new page tags# 草稿管理# 创建草稿hexo new draft &q...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/git/git%E4%B8%8A%E4%BD%BF%E7%94%A8ssh-key/" title="git上使用ssh key"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/git/git%E4%B8%8A%E4%BD%BF%E7%94%A8ssh-key/img-cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">git上使用ssh key</div></div><div class="info-2"><div class="info-item-1">在git中使用SSH密钥是为了安全地连接到远程仓库，而不需要在每次推送或拉取时输入用户名和密码。 1. 查看是否已有ssh key 1ls -al ~/.ssh 如果看到以下文件之一，说明你已有密钥：  id_rsa 和 id_rsa.pub（传统 RSA） id_ed25519 和 id_ed25519.pub（更安全的 Ed25519，推荐使用）   .jmdgtqmuesyk{width: 500px; max-width: 100%; height: 100px; max-width: 100%;}  2. 生成密钥 1ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot; 参数说明：  -t rsa：指定密钥的类型为RSA -b 4096：指定密钥的位长度为4096位（这是一个安全的长度） -C：后面是你的电子邮件地址，用于标识密钥  默认会在目录 ~/.ssh/ 中生成两个文件：id_rsa 和 id_rsa.pub。 3. 添加公钥 1cat ~/.ssh/id_rsa.pub 将公钥在GitH...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/LLM/Agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理"><img class="cover" src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1777200221_4de2c058.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-26</div><div class="info-item-2">几十行代码拆解Agent核心原理</div></div><div class="info-2"><div class="info-item-1"> 将 AI Agent 拆解为&quot;超级大脑 + 记忆力 + 执行能力&quot;，本文通过四段 Python 代码由浅入深，演示如何从零构建一个简易的Agent。  1. 开篇：Agent 是什么 在聊 Agent 之前，先把它的结构拆解清楚。当前主流范式下，Agent 可以理解为两个核心组件的组合： Agent=Harness⏟执行框架+LLM⏟推理大脑\text{Agent} = \underbrace{\text{Harness}}_{\text{执行框架}} + \underbrace{\text{LLM}}_{\text{推理大脑}} Agent=执行框架Harness​​+推理大脑LLM​​    组件 名称 职责     LLM 推理大脑 理解用户意图，进行决策和生成   Harness 执行框架 提供记忆管理、工具调用、循环控制等能力    本文接下来的四个 Step，将从最简单的单轮对话，到拥有记忆，再到能够执行命令，最后引入 Skill 规范行为，来说明如何一步步构建一个简易的 AI Agent。 完整代码可详见：https://github.com/...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">66</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80%EF%BC%9A%E5%BD%93%E7%A7%91%E5%B9%BB%E9%80%90%E6%AD%A5%E6%88%90%E4%B8%BA%E7%8E%B0%E5%AE%9E"><span class="toc-text">1. 引言：当科幻逐步成为现实</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-AI-Agent%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">2. AI Agent的基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-AI-Agent%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="toc-text">3. AI Agent的发展历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-OpenClaw%E4%B8%8E%E5%85%B6%E4%BB%96Agent%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">3.1 OpenClaw与其他Agent的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-OpenClaw%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-text">4. OpenClaw的整体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-OpenClaw%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-text">5. OpenClaw的工作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-OpenClaw%E7%9A%84%E4%B8%80%E6%AC%A1%E5%AE%8C%E6%95%B4%E4%BA%A4%E4%BA%92"><span class="toc-text">5.1 OpenClaw的一次完整交互</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B6%88%E8%80%97token%E5%BE%88%E5%BF%AB-%E5%8F%8A%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96"><span class="toc-text">5.2 为什么消耗token很快?及如何优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%85%BB%E9%BE%99%E8%99%BE-%E6%98%AF%E6%80%8E%E4%B9%88%E4%B8%80%E5%9B%9E%E4%BA%8B%EF%BC%9F"><span class="toc-text">6. &quot;养龙虾&quot;是怎么一回事？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%BB%80%E4%B9%88%E6%98%AF-%E5%85%BB%E9%BE%99%E8%99%BE-%EF%BC%9F"><span class="toc-text">6.1 什么是&quot;养龙虾&quot;？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%85%BB%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">6.2 养的是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-1-%E5%85%BB%E8%AE%B0%E5%BF%86%E2%80%94%E2%80%94%E8%AE%A9%E5%AE%83%E8%B6%8A%E6%9D%A5%E8%B6%8A%E6%87%82%E4%BD%A0"><span class="toc-text">6.2.1 养记忆——让它越来越懂你</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-2-%E5%85%BB%E6%8A%80%E8%83%BD%E2%80%94%E2%80%94%E8%AE%A9%E5%AE%83%E8%B6%8A%E6%9D%A5%E8%B6%8A%E8%83%BD%E5%B9%B2"><span class="toc-text">6.2.2 养技能——让它越来越能干</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-3-%E5%85%BB%E5%B7%A5%E5%85%B7%E2%80%94%E2%80%94%E8%AE%A9%E5%AE%83%E8%B6%8A%E6%9D%A5%E8%B6%8A%E5%BC%BA%E5%A4%A7"><span class="toc-text">6.2.3 养工具——让它越来越强大</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/LLM/Agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理"><img src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1777200221_4de2c058.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="几十行代码拆解Agent核心原理"/></a><div class="content"><a class="title" href="/LLM/Agent/%E5%87%A0%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3Agent%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" title="几十行代码拆解Agent核心原理">几十行代码拆解Agent核心原理</a><time datetime="2026-04-26T12:17:56.000Z" title="发表于 2026-04-26 20:17:56">2026-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pythonic风格刷leetcode"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/%E5%88%B7%E9%A2%98/pythonic%E9%A3%8E%E6%A0%BC%E5%88%B7leetcode/" title="pythonic风格刷leetcode">pythonic风格刷leetcode</a><time datetime="2026-04-25T03:22:25.000Z" title="发表于 2026-04-25 11:22:25">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的zip函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数">python中的zip函数</a><time datetime="2026-04-24T23:21:20.000Z" title="发表于 2026-04-25 07:21:20">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的列表推导式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F/" title="python中的列表推导式">python中的列表推导式</a><time datetime="2026-04-24T22:51:01.000Z" title="发表于 2026-04-25 06:51:01">2026-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的三元表达式"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/python%E4%B8%AD%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="python中的三元表达式">python中的三元表达式</a><time datetime="2026-04-24T13:51:48.000Z" title="发表于 2026-04-24 21:51:48">2026-04-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
