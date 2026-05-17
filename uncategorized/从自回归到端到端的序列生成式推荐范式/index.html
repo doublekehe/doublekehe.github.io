@@ -1,0 +1,1072 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>从自回归到端到端的序列生成式推荐范式 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从自回归到端到端的序列生成式推荐范式  当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从自回归到端到端的序列生成式推荐范式">
+<meta property="og:url" content="https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="从自回归到端到端的序列生成式推荐范式  当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png">
+<meta property="article:published_time" content="2026-05-17T14:17:16.000Z">
+<meta property="article:modified_time" content="2026-05-17T14:26:56.477Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="AI算法, 推荐系统，大模型，机器学习，深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "从自回归到端到端的序列生成式推荐范式",
+  "url": "https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/",
+  "image": "https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png",
+  "datePublished": "2026-05-17T14:17:16.000Z",
+  "dateModified": "2026-05-17T14:26:56.477Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '从自回归到端到端的序列生成式推荐范式',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">36</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">从自回归到端到端的序列生成式推荐范式</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">从自回归到端到端的序列生成式推荐范式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-17T14:26:56.477Z" title="更新于 2026-05-17 22:26:56">2026-05-17</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>从自回归到端到端的序列生成式推荐范式</h1>
+<blockquote>
+<p>当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。</p>
+</blockquote>
+<hr>
+<h2 id="1-从-打分-到-生成-——推荐范式的转变">1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变</h2>
+<h3 id="1-1-传统推荐的瓶颈">1.1 传统推荐的瓶颈</h3>
+<p>长期以来，推荐系统的核心范式是<strong>打分（Scoring）</strong>——给定用户特征和候选物品，通过一个判别模型预测点击/转化概率。这种方式催生了召回→粗排→精排的多级级联架构：</p>
+<ul>
+<li><strong>召回（Recall）</strong>：从百万级候选库中快速拉回千级相关候选</li>
+<li><strong>粗排（Ranking）</strong>：对召回结果做初步排序</li>
+<li><strong>精排（Re-rank）</strong>：综合多目标（点击、时长、互动等）做最终决策</li>
+</ul>
+<p><img src="fig0_cascade.png" alt="推荐系统多级级联架构"></p>
+<p>这套架构的问题在于：</p>
+<ol>
+<li><strong>各阶段独立优化，目标函数相互冲突</strong>，导致整体未必最优</li>
+<li><strong>强依赖 ID Embedding</strong>，冷启动场景表现差</li>
+<li><strong>逐-item 判别，无法建模 item 之间的依赖关系</strong></li>
+<li><strong>算力效率低</strong>，精排模型的 MFU（模型浮点运算利用率）长期在个位数徘徊</li>
+</ol>
+<h3 id="1-2-生成式推荐的核心理念">1.2 生成式推荐的核心理念</h3>
+<p>生成式推荐将推荐问题<strong>重新建模为序列生成任务</strong>——不再逐个 item 打分，而是让模型直接生成下一个（或多个）推荐结果。</p>
+<p>这背后的思想来自 NLP 领域：当 GPT 能够逐 token 生成文本时，为什么不能逐 item 生成推荐列表？</p>
+<p>从 SASRec 到 OneRec，我们看到了这条技术路径的完整演进：</p>
+<ul>
+<li><strong>自回归生成</strong>（SASRec、BERT4Rec）：用 Next Token Prediction 替代点估计</li>
+<li><strong>语义 ID 生成</strong>（TIGER）：把随机 item ID 替换为有语义的离散 token</li>
+<li><strong>大模型赋能</strong>（HSTU、HLLM）：将异质特征统一建模，验证 Scaling Law</li>
+<li><strong>端到端统一</strong>（OneRec）：彻底打破召回→精排级联，一个模型输出推荐列表</li>
+</ul>
+<hr>
+<h2 id="2-自回归路线——SASRec">2. 自回归路线——SASRec</h2>
+<p><strong>论文</strong>：<em>Self-Attentive Sequential Recommendation</em>, ICDM 2018<br>
+<strong>引用</strong>：Wang-Cheng Kang, Julian McAuley. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1808.09781">arXiv:1808.09781</a></p>
+<h3 id="2-1-动机：平衡稀疏与稠密数据">2.1 动机：平衡稀疏与稠密数据</h3>
+<p>传统序列推荐方法面临两难：</p>
+<ul>
+<li><strong>马尔可夫链（MC）</strong>：在稀疏数据上表现好（仅依赖最近 1-2 个行为），但无法捕捉长期依赖</li>
+<li><strong>RNN</strong>：在稠密数据上效果好，但训练慢、难以并行</li>
+</ul>
+<p>SASRec 的目标是：<strong>在稀疏和稠密数据集上都能捕捉长期语义，同时保持基于少量 action 做预测的能力</strong>。</p>
+<h3 id="2-2-核心架构：因果-Transformer">2.2 核心架构：因果 Transformer</h3>
+<p>SASRec 的核心是将 Transformer 的 self-attention 机制引入序列推荐，但做了关键的因果性改造。</p>
+<div style="text-align:center">
+  <style>.xrtdjmjdgbvq{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig1_sasrec.png" class="xrtdjmjdgbvq" alt="SASRec 架构图">
+</div>
+<p>如图所示，SASRec 由以下部分组成：</p>
+<p><strong>（1）Embedding Layer</strong></p>
+<p>输入为用户交互的 item 序列 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mo stretchy="false">(</mo><msub><mi>s</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>s</mi><mn>2</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>s</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">s = (s_1, s_2, ..., s_n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">...</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，如果序列长度超过<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>则做截断，如果长度小于<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>，则通过padding零向量的方式补齐。再通过 item embedding 矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi mathvariant="normal">∣</mi><mi>I</mi><mi mathvariant="normal">∣</mi><mo>×</mo><mi>d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{M} \in \mathbb{R}^{|I| \times d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7252em;vertical-align:-0.0391em;"></span><span class="mord mathbf">M</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∣</span><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span><span class="mord mtight">∣</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight">d</span></span></span></span></span></span></span></span></span></span></span></span> 将每个 item 映射为向量。同时引入可学习的位置 embedding <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">P</mi></mrow><annotation encoding="application/x-tex">\mathbf{P}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">P</span></span></span></span>，让模型感知序列中 item 的顺序。最终的输入表示为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">S</mi><mo>=</mo><mo stretchy="false">[</mo><msub><mi mathvariant="bold">M</mi><msub><mi>s</mi><mn>1</mn></msub></msub><mo>+</mo><msub><mi mathvariant="bold">P</mi><mn>1</mn></msub><mo separator="true">;</mo><msub><mi mathvariant="bold">M</mi><msub><mi>s</mi><mn>2</mn></msub></msub><mo>+</mo><msub><mi mathvariant="bold">P</mi><mn>2</mn></msub><mo separator="true">;</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">;</mo><msub><mi mathvariant="bold">M</mi><msub><mi>s</mi><mi>n</mi></msub></msub><mo>+</mo><msub><mi mathvariant="bold">P</mi><mi>n</mi></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\mathbf{S} = [\mathbf{M}_{s_1} + \mathbf{P}_1; \mathbf{M}_{s_2} + \mathbf{P}_2; ...; \mathbf{M}_{s_n} + \mathbf{P}_n]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0001em;vertical-align:-0.2501em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9362em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathbf">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9362em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathbf">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">...</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span></p>
+<p><strong>（2）Self-Attention Block</strong></p>
+<p>标准的 Scaled Dot-Product Attention：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Attention</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">Q</mi><mo separator="true">,</mo><mi mathvariant="bold">K</mi><mo separator="true">,</mo><mi mathvariant="bold">V</mi><mo stretchy="false">)</mo><mo>=</mo><mtext>softmax</mtext><mrow><mo fence="true">(</mo><mfrac><mrow><mi mathvariant="bold">Q</mi><msup><mi mathvariant="bold">K</mi><mi>T</mi></msup></mrow><msqrt><mi>d</mi></msqrt></mfrac><mo fence="true">)</mo></mrow><mi mathvariant="bold">V</mi></mrow><annotation encoding="application/x-tex">\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d}}\right)\mathbf{V}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Attention</span></span><span class="mopen">(</span><span class="mord mathbf">Q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbf">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">V</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4684em;vertical-align:-0.95em;"></span><span class="mord text"><span class="mord">softmax</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5183em;"><span style="top:-2.1778em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">d</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathbf">Q</span><span class="mord"><span class="mord mathbf">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">V</span></span></span></span></span></p>
+<p>关键改造是<strong>因果掩码（Causal Mask）</strong>：预测第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 个 item 时，只能看到前 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个 item 的信息，不能&quot;偷看&quot;未来。这是通过修改 attention 矩阵实现的——将 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>&gt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">j &gt; i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 的位置置为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">-\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">∞</span></span></span></span>。</p>
+<p><strong>（3）Point-wise Feed-Forward Network</strong></p>
+<p>每个位置独立经过两层 DNN，增加非线性表达能力：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold">F</mi><mi>i</mi></msub><mo>=</mo><mtext>FFN</mtext><mo stretchy="false">(</mo><msub><mi mathvariant="bold">S</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mtext>ReLU</mtext><mo stretchy="false">(</mo><msub><mi mathvariant="bold">S</mi><mi>i</mi></msub><msup><mi mathvariant="bold">W</mi><mrow><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup><mo>+</mo><msup><mi mathvariant="bold">b</mi><mrow><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup><mo stretchy="false">)</mo><msup><mi mathvariant="bold">W</mi><mrow><mo stretchy="false">(</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></msup><mo>+</mo><msup><mi mathvariant="bold">b</mi><mrow><mo stretchy="false">(</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{F}_i = \text{FFN}(\mathbf{S}_i) = \text{ReLU}(\mathbf{S}_i \mathbf{W}^{(1)} + \mathbf{b}^{(1)})\mathbf{W}^{(2)} + \mathbf{b}^{(2)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8361em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">FFN</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathbf">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">ReLU</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathbf">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">2</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathbf">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">2</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><strong>（4）Stacking &amp; Normalization</strong></p>
+<p>与标准 Transformer 一样，使用残差连接和 Layer Normalization 稳定训练。多层堆叠能让模型学习更复杂的行为转移模式。</p>
+<p><strong>（5）Prediction Layer</strong></p>
+<p>最终取序列 Encoder 最后一个位置的输出 hidden state（包含完整历史上下文的 context embedding，记为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="bold">F</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></msubsup></mrow><annotation encoding="application/x-tex">\mathbf{F}_t^{(b)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2906em;vertical-align:-0.2458em;"></span><span class="mord"><span class="mord mathbf">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4542em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">b</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span></span></span></span>），与所有候选 item 的 embedding 做内积，得到下一个 item 的预测分布：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>r</mi><mo>^</mo></mover><mrow><mi>i</mi><mo separator="true">,</mo><mi>t</mi></mrow></msub><mo>=</mo><msubsup><mi mathvariant="bold">F</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></msubsup><msubsup><mi mathvariant="bold">M</mi><mi>i</mi><mi>T</mi></msubsup></mrow><annotation encoding="application/x-tex">\hat{r}_{i,t} = \mathbf{F}_t^{(b)} \mathbf{M}_i^T
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2918em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathbf">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.4542em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">b</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>使用共享的 item embedding（输入输出共用 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">M</mi></mrow><annotation encoding="application/x-tex">\mathbf{M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">M</span></span></span></span>），实验证明这能显著提升效果。</p>
+<h3 id="2-3-训练目标">2.3 训练目标</h3>
+<p>标准负采样交叉熵损失：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="script">L</mi><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mrow><msub><mi>S</mi><mi>u</mi></msub><mo>∈</mo><mi mathvariant="script">S</mi></mrow></munder><munder><mo>∑</mo><mrow><mi>t</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo></mrow></munder><mrow><mo fence="true">[</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">(</mo><msub><mi>r</mi><mrow><msub><mi>o</mi><mi>t</mi></msub><mo separator="true">,</mo><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>+</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo mathvariant="normal">∉</mo><msub><mi>S</mi><mi>u</mi></msub></mrow></munder><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo stretchy="false">(</mo><msub><mi>r</mi><mrow><mi>j</mi><mo separator="true">,</mo><mi>t</mi></mrow></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L} = -\sum_{S_u \in \mathcal{S}} \sum_{t \in [1,2,...,n]} \left[ \log(\sigma(r_{o_t,t})) + \sum_{j \notin S_u} \log(1 - \sigma(r_{j,t})) \right]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathcal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8557em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.0576em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mrel mtight">∈</span><span class="mord mathcal mtight" style="margin-right:0.075em;">S</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.809em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">∈</span><span class="mopen mtight">[</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mtight">2</span><span class="mpunct mtight">,</span><span class="mord mtight">...</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">n</span><span class="mclose mtight">]</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.516em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.667em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.667em" height="3.600em" viewBox="0 0 667 3600"><path d="M403 1759 V84 H666 V0 H319 V1759 v0 v1759 h347 v-84
+H403z M403 1759 V0 H319 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2963em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.809em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight"><span class="mord mtight"><span class="mrel mtight">∈</span></span><span class="mord vbox mtight"><span class="thinbox mtight"><span class="llap mtight"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="inner"><span class="mord mtight"><span class="mord mtight">/</span><span class="mspace mtight" style="margin-right:0.0651em;"></span></span></span><span class="fix"></span></span></span></span></span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.0576em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.516em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">))</span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.667em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.667em" height="3.600em" viewBox="0 0 667 3600"><path d="M347 1759 V0 H0 V84 H263 V1759 v0 v1759 H0 v84 H347z
+M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="2-4-效果与局限">2.4 效果与局限</h3>
+<p>实验在 Amazon（Beauty、Games）、Steam、MovieLens 数据集上进行，HR@10 和 NDCG@10 相比 MC/RNN/CNN 方法提升显著。</p>
+<p><strong>工业落地定位</strong>：SASRec 在工业界的实际用法与学术评估有所不同：</p>
+<ol>
+<li><strong>召回/粗排</strong>：SASRec 最常用于<strong>召回</strong>或<strong>粗排</strong>阶段。将用户序列的最后一个 hidden state <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">h_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 作为 query，通过 ANN（如 HNSW）等近似检索手段快速召回相关候选，避免遍历全量 item 做内积</li>
+<li><strong>精排</strong>：SASRec 的 embedding 也可以作为<strong>精排模型的额外输入特征</strong>（序列侧 user representation），而非直接承担精排打分职责——精排通常由含大量交叉特征（user×item）的 DeepFM、DIN 等模型完成</li>
+<li><strong>计算效率</strong>：内积打分在大候选集下延迟高，工业通常需要结合 ANN 近似检索或双塔结构优化</li>
+</ol>
+<p>这种分工反映了一个通用规律：<strong>序列模型擅长捕捉行为模式，但不擅长处理高维交叉特征</strong>。因此工业上 SASRec 往往作为 user-side 的序列表征提供者，与精排模型协作，而非单独扛起推荐全流程。</p>
+<p><strong>局限</strong>：SASRec 是<strong>纯自回归</strong>的，预测时只能利用单向（从左到右）信息。用户的双向偏好信号（过去与未来的 item 都能暗示当前兴趣）被忽略了。这为 BERT4Rec 的诞生埋下了伏笔。</p>
+<hr>
+<h2 id="3-双向化探索——BERT4Rec">3. 双向化探索——BERT4Rec</h2>
+<p><strong>论文</strong>：<em>BERT4Rec: Sequential Recommendation with Bidirectional Encoder Representations from Transformer</em>, CIKM 2019<br>
+<strong>引用</strong>：Fei Sun et al., Alibaba. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.06690">arXiv:1904.06690</a></p>
+<h3 id="3-1-核心问题：单向结构的局限">3.1 核心问题：单向结构的局限</h3>
+<p>SASRec 等自左向右的模型存在两个根本局限：</p>
+<ol>
+<li><strong>用户行为序列不需要严格有序</strong>：用户行为的时序不一定严格反映兴趣——比如三个口红无论什么顺序点击，推荐结果应该相似</li>
+<li><strong>单向结构限制表达能力</strong>：预测当前 item 时，无法利用序列中&quot;后面&quot; item 的信息</li>
+</ol>
+<p>BERT 在 NLP 中证明了双向 Transformer 的强大，那能不能迁移到推荐系统？</p>
+<div style="text-align:center">
+  <style>.pghomrrozwml{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig2_bert4rec_hq.png" class="pghomrrozwml" alt="BERT4Rec Cloze Task 示意">
+</div>
+<h3 id="3-2-训练目标：Cloze-Task（完形填空）">3.2 训练目标：Cloze Task（完形填空）</h3>
+<p>如果直接训练双向 Transformer，<strong>信息泄露</strong>是最大问题——预测某个 item 时，模型可以直接看到它的真实值。BERT 解决这个问题的方法是<strong>Masked Language Model（MLM）</strong>，BERT4Rec 将其引入推荐系统：</p>
+<p>随机遮盖序列中一定比例（如 15%）的 item，用双向 Transformer 的输出预测被遮盖的 item。训练时不使用 [CLS] 分类 token，而是对每个位置做 item 预测。</p>
+<div style="text-align:center">
+  <style>.cjviskohkyjo{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig2_bert4rec.png" class="cjviskohkyjo" alt="BERT4Rec 架构图">
+</div>
+<p><strong>Cloze Task 的优势</strong>：</p>
+<ul>
+<li>避免了信息泄露——被遮盖 item 的真实值不出现在输入中</li>
+<li>每个序列可以产生多个训练样本（随机遮盖位置不同），数据利用率高</li>
+<li>双向 attention 能同时利用左右上下文</li>
+</ul>
+<h3 id="3-3-推理：转换为自回归生成">3.3 推理：转换为自回归生成</h3>
+<p>BERT4Rec 训练时用 Cloze Task，但<strong>推理时需要做生成</strong>——预测下一个推荐的 item。论文采用了一种巧妙的策略：</p>
+<ol>
+<li>在序列末尾添加一个特殊 token <code>[mask]</code></li>
+<li>用训练好的双向 Transformer 处理序列</li>
+<li>取出 <code>[mask]</code> 位置的输出向量</li>
+<li>预测下一个 item</li>
+</ol>
+<p>可以看到，推理时是从左到右逐个生成的，这与 SASRec 的解码方式一致。但<strong>训练时</strong>的双向上下文让 BERT4Rec 学到了比 SASRec 更丰富的序列表示。</p>
+<h3 id="3-4-架构细节">3.4 架构细节</h3>
+<ul>
+<li><strong>位置编码</strong>：使用可学习的位置 embedding（而非 Transformer 原版的固定三角函数），在推荐数据上效果更好</li>
+<li><strong>激活函数</strong>：用 GELU 替代 ReLU（与 BERT 一致）</li>
+<li><strong>Layer Normalization</strong>：确保深层堆叠时训练收敛</li>
+</ul>
+<h3 id="3-5-效果与意义">3.5 效果与意义</h3>
+<p>BERT4Rec 在 Beauty、Steam、MovieLens 数据集上显著超越 SASRec 等单向模型，证明了双向表示对序列推荐的价值。</p>
+<p><strong>核心贡献</strong>：首次将完形填空训练目标引入推荐系统，打通了 NLP 预训练模型（BERT）与推荐系统的桥梁。后续大量工作（如 BERT4Rec 的各种变体、S3-Rec 等预训练推荐模型）都建立在这一思路之上。</p>
+<hr>
+<h2 id="4-Token-化一切——TIGER">4. Token 化一切——TIGER</h2>
+<p><strong>论文</strong>：<em>Recommender Systems with Generative Retrieval</em>, NeurIPS 2023<br>
+<strong>引用</strong>：Shijie Geng et al., Google DeepMind. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.05065">arXiv:2305.05065</a></p>
+<h3 id="4-1-生成式检索的核心理念">4.1 生成式检索的核心理念</h3>
+<p>SASRec 和 BERT4Rec 的预测目标仍然是&quot;预测下一个 item 的概率分布&quot;，最终依赖候选集上的排序打分。TIGER 提出了一个更激进的问题：</p>
+<p><strong>能不能让模型直接&quot;生成&quot;目标物品的标识符，而不是在候选集中做匹配？</strong></p>
+<p>传统推荐依赖&quot;用户向量 - 物品向量&quot;的近邻搜索（ANN/MIPS），存在以下问题：</p>
+<ul>
+<li>依赖独立的 item embedding 表和 ANN 索引</li>
+<li>item ID 是随机的原子 ID，没有语义</li>
+<li>冷启动物品难以推荐</li>
+<li>流行度偏置和反馈闭环</li>
+</ul>
+<p>TIGER 的解决方案：<strong>用语义化的离散 token 表示物品，用 Transformer 直接生成下一个物品的 token 序列</strong>。</p>
+<h3 id="4-2-Semantic-ID：让物品-ID-有语义">4.2 Semantic ID：让物品 ID 有语义</h3>
+<p>TIGER 的核心创新是<strong>Semantic ID（语义 ID）</strong>——不再是随机的原子 ID，而是由多个离散 token 组成的、有语义结构的表示。</p>
+<div style="text-align:center">
+  <style>.thcaptjivrkq{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig3_tiger.png" class="thcaptjivrkq" alt="TIGER Encoder-Decoder 架构图">
+</div>
+<p>Semantic ID 的生成使用 <strong>RQ-VAE（Residual Quantized VAE）</strong>：</p>
+<ol>
+<li>
+<p><strong>物品内容编码</strong>：用预训练文本编码器（如 Sentence-T5）把物品的标题、品牌、价格、类别等文本转为 768 维语义向量</p>
+</li>
+<li>
+<p><strong>残差量化</strong>：将连续向量量化为多级离散 codeword</p>
+<ul>
+<li>第 1 层：在 codebook 中找到最接近向量 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">z</mi></mrow><annotation encoding="application/x-tex">\mathbf{z}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em;"></span><span class="mord mathbf">z</span></span></span></span> 的码字 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">c_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+<li>第 2 层：计算残差 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">r</mi><mn>1</mn></msub><mo>=</mo><mi mathvariant="bold">z</mi><mo>−</mo><mi mathvariant="bold">e</mi><mo stretchy="false">(</mo><msub><mi>c</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{r}_1 = \mathbf{z} - \mathbf{e}(c_0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5944em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathbf">z</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">e</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，量化残差得到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">c_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+<li>第 3 层：继续量化，得到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">c_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+<li>
+<p>最终 Semantic ID 为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>c</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>c</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>c</mi><mn>2</mn></msub><mo separator="true">,</mo><mtext>collision_token</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(c_0, c_1, c_2, \text{collision\_token})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.06em;vertical-align:-0.31em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">collision_token</span></span><span class="mclose">)</span></span></span></span>——前三个 token 表示语义层级，第四个 token 保证唯一性</p>
+</li>
+</ol>
+<p><strong>为什么是层级结构？</strong> 因为语义相近的物品会共享前缀：</p>
+<ul>
+<li>物品 A → <code>(12, 24, 52, 0)</code> → “高端手机”</li>
+<li>物品 B → <code>(12, 24, 78, 0)</code> → “中端手机”</li>
+<li>物品 C → <code>(12, 25, 31, 0)</code> → “平板电脑”</li>
+</ul>
+<p>第一层 codeword 通常对应大类目，第二层对应细分类目。这为后续的生成和检索提供了结构化基础。</p>
+<h3 id="4-3-生成式推荐模型">4.3 生成式推荐模型</h3>
+<p>有了 Semantic ID，推荐任务被转化为 seq2seq 任务：</p>
+<p><strong>输入</strong>：用户历史交互物品对应的 Semantic ID 序列，展开为 token 序列</p>
+<p><strong>输出</strong>：下一个物品的 Semantic ID（多个 token 逐个生成）</p>
+<div style="text-align:center">
+  <style>.dnnfvtpyhcyq{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig3_tiger_poster.png" class="dnnfvtpyhcyq" alt="TIGER 框架图">
+</div>
+<p>模型使用 <strong>Transformer Encoder-Decoder</strong>，标准自回归解码.</p>
+<h3 id="4-4-关键优势">4.4 关键优势</h3>
+<ol>
+<li><strong>无需 ANN 索引</strong>：Transformer 参数本身承担了索引功能，检索不需要额外的向量数据库</li>
+<li><strong>冷启动友好</strong>：新物品没有交互历史，但其内容可以生成 Semantic ID，且该 Semantic ID 与已有物品共享语义结构</li>
+<li><strong>多样性可控</strong>：解码时调节 temperature，可以控制推荐的分散程度</li>
+<li><strong>语义相似物品共享统计强度</strong>：层级结构使模型能更好地泛化</li>
+</ol>
+<h3 id="4-5-实验结果">4.5 实验结果</h3>
+<p>在 Amazon Beauty、Sports and Outdoors、Toys and Games 数据集上，TIGER 在 Recall@5、NDCG@5 上显著超越 SASRec、BERT4Rec 等序列推荐模型。</p>
+<p>消融实验证明：Semantic ID 的质量比随机 ID 好很多，RQ-VAE 量化的 Semantic ID 效果最佳。</p>
+<hr>
+<h2 id="5-高效长序列——HSTU">5. 高效长序列——HSTU</h2>
+<p><strong>论文</strong>：<em>Actions Speak Louder than Words: Trillion-Parameter Sequential Transducers for Generative Recommendations</em>, Meta 2024<br>
+<strong>引用</strong>：Yang Li et al., Meta. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2402.17152">arXiv:2402.17152</a></p>
+<h3 id="5-1-生成式推荐的工业化挑战">5.1 生成式推荐的工业化挑战</h3>
+<p>TIGER 打开了&quot;生成式检索&quot;的大门，但要在大规模工业场景落地，需要解决几个核心问题：</p>
+<ol>
+<li><strong>高基数异质特征</strong>：用户行为序列包含 item ID、用户特征、上下文特征等多种类型</li>
+<li><strong>长序列处理</strong>：用户终身行为可能达到数万条</li>
+<li><strong>算力效率</strong>：DLRM（Deep Learning Recommendation Model）的 MFU 长期在个位数（训练 4.6%，推理 11.2%）</li>
+<li><strong>Scaling Law</strong>：能不能像 LLM 一样，增大模型规模就能提升效果？</li>
+</ol>
+<p>Meta 的 HSTU 是回答这些问题的一次系统性尝试。</p>
+<h3 id="5-2-核心架构：Hierarchical-Sequential-Transduction-Units">5.2 核心架构：Hierarchical Sequential Transduction Units</h3>
+<div style="text-align:center">
+  <style>.ztbovnflysss{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig4_hstu.png" class="ztbovnflysss" alt="HSTU 架构图">
+</div>
+<p>HSTU 将推荐问题表述为<strong>序列转导（Sequential Transduction）任务</strong>，将异质特征统一建模为 token 序列，然后用层级 Transformer 处理。</p>
+<p><strong>层级设计</strong>（对应名称中的 “Hierarchical”）：</p>
+<ul>
+<li>第一层处理原始行为序列（item + action + context）</li>
+<li>通过逐层聚合，压缩到固定长度的表示</li>
+</ul>
+<h3 id="5-3-注意力机制的针对性改造">5.3 注意力机制的针对性改造</h3>
+<p>标准 Transformer 的 attention 对推荐场景效率不高，HSTU 对其做了三项关键改造：</p>
+<p><strong>（1）去掉 Softmax 的归一化</strong></p>
+<p>标准 attention 的 softmax 归一化适合语言建模（概率分布），但不适合推荐（特征融合）。HSTU 使用无归一化的 attention：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">A</mi><mo>=</mo><mi>ϕ</mi><mo stretchy="false">(</mo><mi mathvariant="bold">Q</mi><mo stretchy="false">)</mo><mi>ϕ</mi><mo stretchy="false">(</mo><mi mathvariant="bold">K</mi><msup><mo stretchy="false">)</mo><mi>T</mi></msup><mo separator="true">,</mo><mspace width="1em"/><mi mathvariant="bold">O</mi><mo>=</mo><mi mathvariant="bold">A</mi><mi>ψ</mi><mo stretchy="false">(</mo><mi mathvariant="bold">V</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{A} = \phi(\mathbf{Q})\phi(\mathbf{K})^T, \quad \mathbf{O} = \mathbf{A}\psi(\mathbf{V})
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6861em;"></span><span class="mord mathbf">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ϕ</span><span class="mopen">(</span><span class="mord mathbf">Q</span><span class="mclose">)</span><span class="mord mathnormal">ϕ</span><span class="mopen">(</span><span class="mord mathbf">K</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathbf">O</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">A</span><span class="mord mathnormal" style="margin-right:0.03588em;">ψ</span><span class="mopen">(</span><span class="mord mathbf" style="margin-right:0.01597em;">V</span><span class="mclose">)</span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi></mrow><annotation encoding="application/x-tex">\phi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ϕ</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi></mrow><annotation encoding="application/x-tex">\psi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">ψ</span></span></span></span> 是非线性投影（ReLU MLP + 线性层），不再需要 softmax。</p>
+<p><strong>（2）用 ReLU 替代 Softmax 激活</strong></p>
+<p>去掉 softmax 后，使用 ReLU 激活函数实现特征筛选。</p>
+<p><strong>（3）门控机制</strong></p>
+<p>引入门控函数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mo>⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">g(\cdot)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord">⋅</span><span class="mclose">)</span></span></span></span> 控制信息流动：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi mathvariant="bold">h</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mi mathvariant="bold">h</mi><mo>+</mo><mi>g</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold">W</mi><mi>g</mi></msub><mo>⋅</mo><mo stretchy="false">[</mo><mi mathvariant="bold">h</mi><mo separator="true">,</mo><mtext>Attention</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">h</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{h}&#x27; = \mathbf{h} + g(\mathbf{W}_g \cdot [\mathbf{h}, \text{Attention}(\mathbf{h})])
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8019em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathbf">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathbf">h</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">Attention</span></span><span class="mopen">(</span><span class="mord mathbf">h</span><span class="mclose">)])</span></span></span></span></span></p>
+<p>这与 LSTM/GRU 的门控思想类似，增强了对长期依赖的建模能力。</p>
+<h3 id="5-4-序列化和统一特征建模">5.4 序列化和统一特征建模</h3>
+<p>HSTU 将所有异质特征（item ID、用户画像、时间戳、行为类型等）序列化后拼接为一个统一序列。每个特征都是 token，模型统一处理。</p>
+<p>训练目标为标准的 Next Token Prediction（Causal Mask + 交叉熵损失）。</p>
+<h3 id="5-5-性能与Scaling">5.5 性能与Scaling</h3>
+<ul>
+<li><strong>效率</strong>：在 8192 长度序列上比 FlashAttention2 的 Transformer 快 5.3x - 15.2x</li>
+<li><strong>Scaling</strong>：1.5T 参数量的生成式推荐系统，在线 A/B 测试关键指标提升 <strong>12.4%</strong></li>
+<li><strong>幂律</strong>：实验验证了生成式推荐模型遵循类似 LLM 的 Scaling Law</li>
+</ul>
+<div style="text-align:center">
+  <style>.psrixfopokbi{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig4_hstu.png" class="psrixfopokbi" alt="HSTU 性能图">
+</div>
+<hr>
+<h2 id="6-大语言模型加持——HLLM">6. 大语言模型加持——HLLM</h2>
+<p><strong>论文</strong>：<em>HLLM: Enhancing Sequential Recommendations via Hierarchical Large Language Models for Item and User Modeling</em>, ByteDance 2024<br>
+<strong>引用</strong>：Jiaqi Zhao et al., ByteDance. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2409.12740">arXiv:2409.12740</a></p>
+<h3 id="6-1-为什么需要-LLM？">6.1 为什么需要 LLM？</h3>
+<p>传统推荐模型依赖 ID Embedding，存在三个根本问题：</p>
+<ol>
+<li><strong>冷启动差</strong>：新物品/新用户没有历史交互，ID 嵌入几乎无效</li>
+<li><strong>建模能力有限</strong>：参数规模小、神经网络浅，难以捕捉复杂用户兴趣</li>
+<li><strong>缺乏世界知识</strong>：无法利用物品的文本描述、语义关系等</li>
+</ol>
+<p>HLLM（Hierarchical Large Language Model）的核心思路是：<strong>用 LLM 的预训练知识理解物品语义，用层级架构解决效率问题</strong>。</p>
+<h3 id="6-2-分层架构：Item-LLM-User-LLM">6.2 分层架构：Item LLM + User LLM</h3>
+<div style="text-align:center">
+  <style>.exbzjqiiwkfh{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig5_hllm.png" class="exbzjqiiwkfh" alt="HLLM 架构图">
+</div>
+<p>HLLM 由两个独立的 LLM 组成，分工明确：</p>
+<p><strong>Item LLM</strong>（Item Modeling）</p>
+<ul>
+<li>输入：物品的文本描述（标题、标签、详情等）</li>
+<li>在文本末尾添加特殊 token <code>[ITEM]</code></li>
+<li>输出：取 <code>[ITEM]</code> 对应的最后一层隐藏状态作为物品嵌入</li>
+<li>作用：<strong>让 LLM &quot;读懂&quot;每个物品</strong>，将长文本压缩为固定长度语义向量</li>
+</ul>
+<p><strong>User LLM</strong>（User Modeling）</p>
+<ul>
+<li>输入：Item LLM 生成的物品嵌入序列（用户历史交互）</li>
+<li>输出：预测下一个物品的嵌入</li>
+<li>关键设计：<strong>丢弃预训练 LLM 的词嵌入层，但保留其他所有预训练权重</strong>——这让 LLM 的世界知识能为推荐任务服务</li>
+</ul>
+<h3 id="6-3-训练目标：生成式-判别式">6.3 训练目标：生成式 + 判别式</h3>
+<p>HLLM 同时支持两种推荐范式：</p>
+<p><strong>生成式推荐</strong>（Generative Recommendation）</p>
+<ul>
+<li>用 InfoNCE 损失：让 User LLM 预测的下一个物品嵌入与真实物品嵌入的相似度高于负样本</li>
+<li>负采样：随机采样，排除当前用户序列中的物品</li>
+</ul>
+<p><strong>判别式推荐</strong>（Discriminative Recommendation）</p>
+<ul>
+<li><strong>早融合（Early Fusion）</strong>：将目标物品嵌入追加到用户序列末尾，通过 User LLM 生成交叉特征</li>
+<li><strong>晚融合（Late Fusion）</strong>：先提取用户独立特征（序列末尾添加 <code>[USER]</code> token），再与目标物品嵌入结合</li>
+</ul>
+<div style="text-align:center">
+  <style>.qdclsfiqnrkr{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig5_hllm_itemllm.png" class="qdclsfiqnrkr" alt="HLLM Item LLM 细节">
+</div>
+<p>可以加入生成损失作为辅助（多任务学习），进一步提升判别式推荐效果。</p>
+<h3 id="6-4-关键发现">6.4 关键发现</h3>
+<ol>
+<li><strong>预训练权重 + 推荐微调，缺一不可</strong>：仅用随机初始化的 LLM 效果差；冻结任一 LLM 都会导致性能下降</li>
+<li><strong>Scaling Law 显著</strong>：从 1B 参数扩展到 7B 参数，在 Amazon Books 数据集上 Recall@10 提升近 40%；而传统 ID 模型参数增大后性能饱和</li>
+<li><strong>效率优势</strong>：通过缓存 Item LLM 的物品嵌入，推理时间与传统 ID 模型相当</li>
+</ol>
+<h3 id="6-5-在线实验">6.5 在线实验</h3>
+<p>在字节跳动真实推荐场景中，HLLM-1B 采用判别式晚融合方案，经过三阶段训练（端到端训练→冻结 Item LLM 微调 User LLM→提取用户特征用于在线模型），关键业务指标提升 <strong>0.705%</strong>。</p>
+<hr>
+<h2 id="7-统一端到端——OneRec-OpenOneRec">7. 统一端到端——OneRec &amp; OpenOneRec</h2>
+<p><strong>原始论文</strong>：<em>OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment</em>, Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.18965">arXiv:2502.18965</a></p>
+<p><strong>技术报告</strong>：<em>OpenOneRec Technical Report</em>, Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2512.24762">arXiv:2512.24762</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
+<blockquote>
+<p>OneRec 原始论文验证了工业落地效果；OpenOneRec 技术报告则在此基础上开源了完整训练 Pipeline、发布了 OneRec-Foundation 系列模型、并提出了 RecIF-Bench 评测基准。两篇论文共同构成 OneRec 体系的完整图景。</p>
+</blockquote>
+<h3 id="7-1-打破级联架构">7.1 打破级联架构</h3>
+<p>传统推荐的召回→粗排→精排多级架构存在三个根本问题：</p>
+<ol>
+<li><strong>算力效率低</strong>：快手精排模型 SIM 在 H100 上训练 MFU 仅 4.6%，推理 11.2%；而 LLM 可达 40%-50%</li>
+<li><strong>目标冲突</strong>：各阶段独立优化，多个目标（点击、时长、互动等）相互掣肘</li>
+<li><strong>技术脱节</strong>：难以吸收 Scaling Law、强化学习等 AI 前沿技术</li>
+</ol>
+<p>OneRec 的核心创新：<strong>用一个生成式 Encoder-Decoder 模型彻底替代多级流水线</strong>。</p>
+<div style="text-align:center">
+  <style>.ccbrdweseqhl{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig6_onerec.png" class="ccbrdweseqhl" alt="OneRec 架构图">
+</div>
+<h3 id="7-2-协同感知多模态分词器">7.2 协同感知多模态分词器</h3>
+<p>快手平台有亿级视频，如何让模型&quot;理解&quot;每个视频是首要挑战。OneRec 首创了<strong>协同感知的多模态分词方案</strong>：</p>
+<ul>
+<li>同时处理视频的标题、标签、语音转文字、图像识别等多维信息</li>
+<li>融入用户行为信号（协同过滤信号）</li>
+<li>使用 <strong>RQ-Kmeans</strong> 将每个视频转化为 3 层粗到细的语义 ID</li>
+</ul>
+<h3 id="7-3-Encoder-Decoder-架构">7.3 Encoder-Decoder 架构</h3>
+<p><strong>Encoder</strong>：整合用户全生命周期行为序列，实现多尺度用户建模</p>
+<ul>
+<li>静态特征（用户画像）</li>
+<li>短期行为序列</li>
+<li>有效观看序列</li>
+<li>终身行为序列</li>
+</ul>
+<p><strong>Decoder</strong>：基于 <strong>MoE（Mixture of Experts）</strong> 架构的逐点生成策略，提升模型容量和效率</p>
+<p>训练使用 <strong>NTP（Next Token Prediction）</strong> 损失函数。</p>
+<div style="text-align:center">
+  <style>.bzicgrklcdlr{max-width:720px;width:100%;height:auto;}</style><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig6_onerec_overview.png" class="bzicgrklcdlr" alt="OneRec 详细框架">
+</div>
+<h3 id="7-4-RL-偏好对齐">7.4 RL 偏好对齐</h3>
+<p>预训练模型通过 NTP 拟合历史曝光数据，但这些数据来自传统推荐系统，<strong>无法突破原有系统的天花板</strong>。</p>
+<p>OneRec 引入基于强化学习的偏好对齐方法，构建综合奖励系统：</p>
+<ul>
+<li><strong>偏好奖励（Preference Reward）</strong>：对齐用户偏好的个性化 P-Score</li>
+<li><strong>格式奖励（Format Reward）</strong>：确保生成的 token 均为合法语义 ID</li>
+<li><strong>工业场景奖励（Industrial Reward）</strong>：满足特殊业务需求（营销号打压、冷启动扶持等）</li>
+</ul>
+<p>使用 <strong>ECPO（Early-Clipped GRPO）</strong> 算法优化——对负优势样本做更严格的策略梯度截断，防止梯度爆炸。</p>
+<h3 id="7-5-性能优化">7.5 性能优化</h3>
+<p>OneRec 在系统层面做了极致优化：</p>
+<ul>
+<li><strong>架构精简</strong>：关键算子从 15,000+ 压缩到 1,200 个（压缩 92%）</li>
+<li><strong>训练 MFU</strong>：23.7%（vs 传统 4.6%）</li>
+<li><strong>推理 MFU</strong>：28.8%（vs 传统 11.2%）</li>
+<li><strong>OPEX</strong>：降至传统方案的 <strong>10.6%</strong>（近 90% 成本节约）</li>
+</ul>
+<p>核心优化手段：请求分组特征复用、变长 Flash Attention、SKAI Embedding GPU 训练系统（消除 CPU 同步瓶颈）、KV Cache 复用等。</p>
+<h3 id="7-6-在线效果">7.6 在线效果</h3>
+<p>OneRec 已上线快手/快手极速版双端短视频推荐主场景，承接约 <strong>25% QPS</strong>。</p>
+<p>A/B 测试结果（5% 流量，1 周）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>OneRec</th>
+<th>OneRec + RM Selection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App 停留时长</td>
+<td>+0.01%/+0.06%</td>
+<td><strong>+0.54%/+1.24%</strong></td>
+</tr>
+<tr>
+<td>短视频观看量</td>
+<td>+1.98%/+2.40%</td>
+<td>+2.52%/+3.39%</td>
+</tr>
+<tr>
+<td>点赞</td>
+<td>-2.00%/-2.64%</td>
+<td><strong>+2.43%/+1.49%</strong></td>
+</tr>
+<tr>
+<td>关注</td>
+<td>-2.88%/-2.75%</td>
+<td><strong>+3.24%/+2.28%</strong></td>
+</tr>
+<tr>
+<td>评论</td>
+<td>-1.56%/-2.23%</td>
+<td><strong>+5.27%/+3.20%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>注：纯生成式模型已达到传统系统同等效果；叠加 RM Selection 后全面超越，且所有交互指标均正向。</p>
+<p>在本地生活服务场景（100% 全量）：GMV +21.01%、订单量 +17.89%、购买用户数 +18.58%、新客获取效率 +23.02%。</p>
+<h3 id="7-7-OpenOneRec-技术报告：开源体系与-RecIF-Bench">7.7 OpenOneRec 技术报告：开源体系与 RecIF-Bench</h3>
+<blockquote>
+<p>OpenOneRec 技术报告（arXiv:2512.24762）在原始 OneRec 论文基础上，<strong>开源了完整的训练 Pipeline</strong>，并发布了 OneRec-Foundation 系列模型与 RecIF-Bench 评测基准，标志着生成式推荐从工业落地走向开放研究生态。</p>
+</blockquote>
+<h4 id="7-7-1-RecIF-Bench：推荐指令跟随评测基准">7.7.1 RecIF-Bench：推荐指令跟随评测基准</h4>
+<p>RecIF-Bench 是首个<strong>综合评估推荐系统指令跟随与领域专业能力</strong>的基准，覆盖 8 个任务，构建了四层能力层级：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>能力</th>
+<th>代表任务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Layer 0</strong></td>
+<td>语义对齐（Item Understanding）</td>
+<td>物品内容理解</td>
+</tr>
+<tr>
+<td><strong>Layer 1</strong></td>
+<td>基础预测</td>
+<td>短视频推荐、广告推荐、商品推荐、标签预测</td>
+</tr>
+<tr>
+<td><strong>Layer 2</strong></td>
+<td>指令跟随</td>
+<td>交互式推荐、标签条件推荐</td>
+</tr>
+<tr>
+<td><strong>Layer 3</strong></td>
+<td>推理能力</td>
+<td>推荐理由生成（Explanation）</td>
+</tr>
+</tbody>
+</table>
+<p>数据集覆盖三个领域：<strong>短视频（Content）</strong>、<strong>广告（Commercial）</strong>、<strong>商品（E-commerce）</strong>，共 96M 交互、160K 用户。</p>
+<h4 id="7-7-2-OneRec-Foundation-模型族">7.7.2 OneRec-Foundation 模型族</h4>
+<p>基于 Qwen3 backbone 训练，包含 Standard 和 Pro 两个系列：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>Backbone</th>
+<th>参数</th>
+<th>训练数据</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OneRec-1.7B</strong></td>
+<td>Qwen3-1.7B</td>
+<td>1.7B</td>
+<td>~33B tokens（开源）</td>
+<td>Standard 版本</td>
+</tr>
+<tr>
+<td><strong>OneRec-8B</strong></td>
+<td>Qwen3-8B</td>
+<td>8B</td>
+<td>~33B tokens（开源）</td>
+<td>Standard 版本</td>
+</tr>
+<tr>
+<td><strong>OneRec-1.7B-Pro</strong></td>
+<td>Qwen3-1.7B</td>
+<td>1.7B</td>
+<td>~130B tokens（含工业数据）</td>
+<td>扩展版本</td>
+</tr>
+<tr>
+<td><strong>OneRec-8B-Pro</strong></td>
+<td>Qwen3-8B</td>
+<td>8B</td>
+<td>~130B tokens（含工业数据）</td>
+<td>扩展版本</td>
+</tr>
+</tbody>
+</table>
+<h4 id="7-7-3-训练-Pipeline（开源内容）">7.7.3 训练 Pipeline（开源内容）</h4>
+<p>OpenOneRec 完整开源了三阶段训练流程：</p>
+<ol>
+<li>
+<p><strong>Co-Pretraining（联合预训练）</strong>：</p>
+<ul>
+<li><strong>Itemic-Text Alignment</strong>：将物品的语义 ID 与文本描述对齐</li>
+<li><strong>Full-Parameter Co-Pretraining</strong>：全参数训练，融合协同过滤信号</li>
+</ul>
+</li>
+<li>
+<p><strong>Post-Training 阶段一：多任务 SFT</strong>：</p>
+<ul>
+<li>基于 RecIF-Bench 的多任务监督微调</li>
+<li>训练模型的基础指令跟随能力</li>
+</ul>
+</li>
+<li>
+<p><strong>Post-Training 阶段二：On-Policy Distillation</strong>：</p>
+<ul>
+<li>蒸馏恢复模型的通用推理能力（防止推荐任务导致通用能力灾难性遗忘）</li>
+</ul>
+</li>
+<li>
+<p><strong>Post-Training 阶段三：RL 增强</strong>：</p>
+<ul>
+<li>强化学习进一步提升推荐专项能力</li>
+</ul>
+</li>
+</ol>
+<h4 id="7-7-4-跨域泛化能力">7.7.4 跨域泛化能力</h4>
+<p>在 <strong>Amazon Benchmark</strong>（10 个数据集）上，OneRec-Foundation 展现了出色的零样本/少样本跨域迁移能力，平均 <strong>Recall@10 提升 26.8%</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>SASRec</th>
+<th>TIGER</th>
+<th>LC-Rec</th>
+<th><strong>OneRec-Ours</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baby</td>
+<td>0.0381</td>
+<td>0.0318</td>
+<td>0.0344</td>
+<td><strong>0.0513</strong></td>
+</tr>
+<tr>
+<td>Beauty</td>
+<td>0.0639</td>
+<td>0.0628</td>
+<td>0.0764</td>
+<td><strong>0.0924</strong></td>
+</tr>
+<tr>
+<td>Cell Phones</td>
+<td>0.0782</td>
+<td>0.0786</td>
+<td>0.0883</td>
+<td><strong>0.1036</strong></td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<h4 id="7-7-5-Scaling-Law-与灾难遗忘平衡">7.7.5 Scaling Law 与灾难遗忘平衡</h4>
+<p>技术报告验证了关键发现：<strong>随着参数规模增大，推荐能力可预测地提升，同时 LLM 的通用世界知识不会发生灾难性遗忘</strong>——这是生成式推荐Scaling Law 的重要特性，也是 OneRec-Foundation 区别于传统 ID 模型的核心优势。</p>
+<blockquote>
+<p>📢 OneRec 官方已开源！快手团队开源了 <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">OpenOneRec</a>（778 ⭐），包含预训练模型（1.7B / 8B / Pro 版本）、RecIF-Bench 评测基准和完整训练 Pipeline。</p>
+</blockquote>
+<h3 id="7-8-MiniOneRec：首个生成式推荐开源框架">7.8 MiniOneRec：首个生成式推荐开源框架</h3>
+<blockquote>
+<p>MiniOneRec 是中科大 LDS / AlphaLab / NExT 团队（包含 Xiangnan He）对 OneRec 的<strong>开源复现与扩展</strong>，GitHub 1.6k ⭐，是目前生成式推荐领域最活跃的开源项目之一。</p>
+</blockquote>
+<p><strong>核心贡献</strong>：</p>
+<ol>
+<li><strong>首个全流程开源框架</strong>：覆盖 SID 构造 → SFT 微调 → RL 偏好对齐，端到端可复现</li>
+<li><strong>在公开数据集验证 Scaling Law</strong>：0.5B → 7B 参数，训练/评估 loss 均随参数规模一致下降</li>
+<li><strong>多种 SID 构造算法</strong>：RQ-VAE / RQ-Kmeans / Constrained RQ-Kmeans / RQ-Kmeans+</li>
+</ol>
+<p><strong>技术细节</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SID 构造</strong></td>
+<td>RQ-VAE：三层残差量化（codebook size K=256，层次 a/b/c）</td>
+</tr>
+<tr>
+<td><strong>SFT 阶段</strong></td>
+<td>Next Token Prediction + 语言对齐目标（text↔SID 双向映射）</td>
+</tr>
+<tr>
+<td><strong>RL 阶段</strong></td>
+<td>GRPO（Group Relative Policy Optimization）+ 约束 Beam Search</td>
+</tr>
+<tr>
+<td><strong>约束解码</strong></td>
+<td>保证每条 beam 唯一且有效，显著提升采样效率和多样性</td>
+</tr>
+<tr>
+<td><strong>Reward 设计</strong></td>
+<td>二元正确性奖励 + 排序感知惩罚（高概率但错误项加重惩罚）+ 协同过滤分数</td>
+</tr>
+<tr>
+<td><strong>LLM 基座</strong></td>
+<td>Qwen 0.5B ~ 7B，实验覆盖 Amazon Review 多个类目</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SID 构造流程</strong>（三种可选方案）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">方案一 RQ-VAE：</span><br><span class="line">  Item (title + description)</span><br><span class="line">    → Text Encoder (Qwen frozen)</span><br><span class="line">    → Embedding (e.g., 4096-dim)</span><br><span class="line">    → RQ-VAE 三层量化</span><br><span class="line">    → Semantic ID: &lt;s_a_X&gt;&lt;s_b_Y&gt;&lt;s_c_Z&gt;</span><br><span class="line"></span><br><span class="line">方案二 RQ-Kmeans：</span><br><span class="line">  Embedding → Faiss → RQ-Kmeans 分层聚类 → SID</span><br><span class="line"></span><br><span class="line">方案三 RQ-Kmeans+（GPR 改进版）：</span><br><span class="line">  在 RQ-Kmeans 基础上做冲突项去重 + 均衡约束 → 更均匀的 SID 分布</span><br></pre></td></tr></table></figure>
+<p><strong>MiniOneRec vs OneRec</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>OneRec</th>
+<th>MiniOneRec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据</td>
+<td>工业私有数据</td>
+<td>Amazon Review 公开数据</td>
+</tr>
+<tr>
+<td>模型规模</td>
+<td>超大规模（工业级）</td>
+<td>0.5B ~ 7B（学术友好）</td>
+</tr>
+<tr>
+<td>侧重点</td>
+<td>工业落地 + 全流量验证</td>
+<td>学术复现 + Scaling Law 验证</td>
+</tr>
+<tr>
+<td>开源程度</td>
+<td>完整训练 Pipeline</td>
+<td>SID 构造 + SFT + RL + 评测</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么重要</strong>：OneRec 是工业级黑盒，而 MiniOneRec 让学术圈能完整复现生成式推荐的每个环节，降低了研究门槛。同时它验证了 Scaling Law 在推荐场景的通用性——这正是 OneRec 只在工业数据上展示、但缺乏公开验证的核心问题。</p>
+<hr>
+<h2 id="8-总结与展望">8. 总结与展望</h2>
+<h3 id="8-1-生成式推荐的演进规律">8.1 生成式推荐的演进规律</h3>
+<p>从 SASRec 到 MiniOneRec，我们可以清晰看到一条演进路径：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>代表工作</th>
+<th>核心创新</th>
+<th>预测方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自回归生成</td>
+<td>SASRec</td>
+<td>因果 Transformer</td>
+<td>预测下一个 item 的概率分布</td>
+</tr>
+<tr>
+<td>双向增强</td>
+<td>BERT4Rec</td>
+<td>Cloze Task 训练</td>
+<td>双向表示 + 推理时 left-to-right 解码</td>
+</tr>
+<tr>
+<td>语义 ID 生成</td>
+<td>TIGER</td>
+<td>RQ-VAE Semantic ID</td>
+<td>直接生成目标物品的语义 ID</td>
+</tr>
+<tr>
+<td>大模型赋能</td>
+<td>HSTU</td>
+<td>层级 Transformer + 注意力改造</td>
+<td>异质特征统一序列建模 + Scaling Law</td>
+</tr>
+<tr>
+<td></td>
+<td>HLLM</td>
+<td>Item LLM + User LLM 分层</td>
+<td>LLM 知识 + 分层架构效率</td>
+</tr>
+<tr>
+<td>端到端统一</td>
+<td>OneRec</td>
+<td>Encoder-Decoder + RL 偏好对齐</td>
+<td>一个模型输出推荐列表</td>
+</tr>
+<tr>
+<td>开源生态</td>
+<td>MiniOneRec</td>
+<td>全流程开源 + Scaling Law 公开验证</td>
+<td>开源复现降低研究门槛</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8-2-共同规律">8.2 共同规律</h3>
+<ol>
+<li><strong>从判别到生成</strong>：将推荐问题重新建模为序列生成任务</li>
+<li><strong>从随机 ID 到语义 ID</strong>：让物品标识符具备语义结构，提升泛化能力</li>
+<li><strong>从单模型到端到端</strong>：打破多级级联架构，一个模型统一建模</li>
+<li><strong>Scaling Law 生效</strong>：生成式推荐模型展现出类似 LLM 的参数扩展收益</li>
+<li><strong>RL 偏好对齐</strong>：通过强化学习突破历史数据天花板，让模型真正&quot;学会&quot;用户偏好</li>
+</ol>
+<h3 id="8-3-当前瓶颈与未来方向">8.3 当前瓶颈与未来方向</h3>
+<p><strong>瓶颈</strong>：</p>
+<ul>
+<li><strong>推理延迟</strong>：自回归解码在工业场景下延迟仍是挑战</li>
+<li><strong>无效生成</strong>：生成的 Semantic ID 可能无法映射到真实物品</li>
+<li><strong>训练成本</strong>：超大规模模型的训练资源需求</li>
+<li><strong>可解释性</strong>：生成式推荐的决策链路难以追踪</li>
+</ul>
+<p><strong>方向</strong>：</p>
+<ul>
+<li>多模态融合：用户行为模态与 LLM/VLM 的原生融合</li>
+<li>更强的推理能力：Infer 阶段的 scaling up</li>
+<li>完备的 Reward System：引导模型更好地理解用户偏好和业务需求</li>
+</ul>
+<h3 id="8-4-七算法横向对比">8.4 七算法横向对比</h3>
+<h4 id="8-4-1-核心要素对比">8.4.1 核心要素对比</h4>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>SASRec</th>
+<th>BERT4Rec</th>
+<th>TIGER</th>
+<th>HSTU</th>
+<th>HLLM</th>
+<th>OneRec</th>
+<th>MiniOneRec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>发表时间</strong></td>
+<td>2018</td>
+<td>2019</td>
+<td>2023</td>
+<td>2024</td>
+<td>2024</td>
+<td>2025</td>
+<td>2025</td>
+</tr>
+<tr>
+<td><strong>发表机构</strong></td>
+<td>UCSD</td>
+<td>Alibaba</td>
+<td>Google</td>
+<td>Meta</td>
+<td>ByteDance</td>
+<td>Kuaishou</td>
+<td>USTC</td>
+</tr>
+<tr>
+<td><strong>训练目标</strong></td>
+<td>Next Item Prediction</td>
+<td>Cloze Task</td>
+<td>Next Semantic ID</td>
+<td>Next Token Prediction</td>
+<td>InfoNCE / 判别式</td>
+<td>NTP + RL 对齐</td>
+<td>NTP + RL 对齐</td>
+</tr>
+<tr>
+<td><strong>Attention</strong></td>
+<td>因果（单向）</td>
+<td>双向（Cloze）</td>
+<td>因果（Encoder-Decoder）</td>
+<td>无 softmax 归一化</td>
+<td>继承 LLM 架构</td>
+<td>MoE Decoder</td>
+<td>因果（继承 LLM）</td>
+</tr>
+<tr>
+<td><strong>Item ID 形式</strong></td>
+<td>原子 ID（随机）</td>
+<td>原子 ID（随机）</td>
+<td>Semantic ID（层级）</td>
+<td>统一 token 序列</td>
+<td>LLM 嵌入</td>
+<td>多模态语义 ID</td>
+<td>语义层级 ID</td>
+</tr>
+<tr>
+<td><strong>生成方式</strong></td>
+<td>概率分布预测</td>
+<td>Cloze 训练 + 推理解码</td>
+<td>自回归生成 Semantic ID</td>
+<td>自回归生成 token</td>
+<td>嵌入预测</td>
+<td>自回归生成列表</td>
+<td>自回归生成 SID</td>
+</tr>
+<tr>
+<td><strong>检索方式</strong></td>
+<td>内积打分 + Top-K</td>
+<td>内积打分 + Top-K</td>
+<td>直接生成 + 查表</td>
+<td>内积打分</td>
+<td>嵌入相似度</td>
+<td>直接生成</td>
+<td>直接生成</td>
+</tr>
+<tr>
+<td><strong>冷启动</strong></td>
+<td>❌ 依赖交互</td>
+<td>❌ 依赖交互</td>
+<td>✅ 依赖内容</td>
+<td>❌ 依赖交互</td>
+<td>✅ 依赖文本</td>
+<td>✅ 依赖内容</td>
+<td>✅ 依赖内容</td>
+</tr>
+<tr>
+<td><strong>Scaling Law</strong></td>
+<td>❌ 参数增大效果饱和</td>
+<td>❌ 参数增大效果饱和</td>
+<td>❌ 未验证</td>
+<td>✅ 1.5T 参数验证</td>
+<td>✅ 1B→7B 显著提升</td>
+<td>✅ 验证</td>
+<td>✅ 0.5B→7B 验证</td>
+</tr>
+<tr>
+<td><strong>工业落地</strong></td>
+<td>✅ 有大规模应用</td>
+<td>✅ 有应用</td>
+<td>研究</td>
+<td>✅ 工业级</td>
+<td>✅ 在线验证</td>
+<td>✅ 全流量（工业）</td>
+<td>研究（学术复现）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="8-4-2-架构演进对比">8.4.2 架构演进对比</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SASRec:  Input → Embedding → [Causal Attn + FFN]×2 → Output</span><br><span class="line">         原子ID + 位置编码，预测概率分布</span><br><span class="line"></span><br><span class="line">BERT4Rec: Input → Embedding → [Bidirectional Attn + FFN]×2 → Cloze训练</span><br><span class="line">         原子ID + 位置编码，双向建模，推理时加[mask]解码</span><br><span class="line"></span><br><span class="line">TIGER:   Item → RQ-VAE → Semantic ID → [Encoder-Decoder] → 生成Semantic ID</span><br><span class="line">         语义层级ID，Transformer直接生成下一个物品ID</span><br><span class="line"></span><br><span class="line">HSTU:    异质特征 → 序列化 → [层级Transformer(无softmax+门控)] → NTP训练</span><br><span class="line">         所有特征统一token化，注意力机制针对推荐场景优化</span><br><span class="line"></span><br><span class="line">HLLM:    Item文本 → Item LLM → 嵌入 → User LLM → 预测嵌入</span><br><span class="line">         两个独立LLM分层架构，预训练知识复用</span><br><span class="line"></span><br><span class="line">OneRec:  多模态 → RQ-Kmeans → 语义ID → Encoder → MoE Decoder → RL对齐</span><br><span class="line">         端到端统一模型，强化学习突破历史数据天花板</span><br></pre></td></tr></table></figure>
+<h4 id="8-4-3-相同之处">8.4.3 相同之处</h4>
+<ol>
+<li><strong>序列建模范式</strong>：都基于用户历史行为序列建模，从序列中学习用户兴趣</li>
+<li><strong>Transformer 架构</strong>：都使用 Transformer（及其变体）作为核心建模组件</li>
+<li><strong>自回归解码</strong>：推理时都采用从左到右的自回归生成方式（BERT4Rec 是特例，但推理时仍是）</li>
+<li><strong>负采样训练</strong>：都使用负采样（随机负样本或流行度负样本）配合交叉熵损失</li>
+<li><strong>序列位置感知</strong>：都引入位置编码（可学习或固定）来区分序列中 item 的顺序</li>
+<li><strong>残差连接 + LayerNorm</strong>：都使用残差连接和 Layer Normalization 稳定深层训练</li>
+</ol>
+<h4 id="8-4-4-关键不同之处">8.4.4 关键不同之处</h4>
+<p><strong>训练目标</strong>：从 Next Item Prediction（SASRec）→ Cloze Task（BERT4Rec）→ 直接生成 Semantic ID（TIGER）→ 统一 token 序列（HSTU/HLLM）→ NTP + RL 对齐（OneRec）</p>
+<p><strong>ID 表示方式</strong>：从原子随机 ID（SASRec/BERT4Rec）→ 语义化离散 ID（TIGER）→ 统一特征 token（HSTU）→ LLM 嵌入（HLLM）→ 多模态语义 ID（OneRec）</p>
+<p><strong>注意力机制</strong>：从因果 attention（SASRec）→ 双向 attention（BERT4Rec）→ Encoder-Decoder attention（TIGER）→ 无 softmax 归一化 attention（HSTU）→ 继承 LLM 架构（HLLM/OneRec）</p>
+<p><strong>工业适配</strong>：从学术验证（SASRec/BERT4Rec）→ 语义 ID 生成（TIGER）→ 效率优化（HSTU）→ 知识迁移（HLLM）→ 端到端统一（OneRec）→ 开源生态复现（MiniOneRec）</p>
+<p><strong>冷启动能力</strong>：HLLM 和 OneRec/MiniOneRec（依赖内容）具备冷启动能力；SASRec、BERT4Rec、HSTU（依赖交互）不具备</p>
+<p><strong>Scaling Law</strong>：HSTU、HLLM、OneRec、MiniOneRec 均验证了参数规模扩展的正向收益；SASRec 和 BERT4Rec 在增大参数后效果趋于饱和</p>
+<hr>
+<h2 id="参考资料">参考资料</h2>
+<blockquote>
+<p><strong>代码仓库索引</strong></p>
+<ul>
+<li>SASRec：<a target="_blank" rel="noopener" href="https://github.com/kang205/SASRec">github.com/kang205/SASRec</a></li>
+<li>BERT4Rec：<a target="_blank" rel="noopener" href="https://github.com/FeiSun/BERT4Rec">github.com/FeiSun/BERT4Rec</a></li>
+<li>TIGER：<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/tiger">github.com/facebookresearch/tiger</a></li>
+<li>HSTU：<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/generative-recommenders">github.com/facebookresearch/generative-recommenders</a></li>
+<li>HLLM：<a target="_blank" rel="noopener" href="https://github.com/bytedance/HLLM">github.com/bytedance/HLLM</a></li>
+<li>OneRec：<a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">github.com/Kuaishou-OneRec/OpenOneRec</a></li>
+<li>MiniOneRec：<a target="_blank" rel="noopener" href="https://github.com/AkaliKong/MiniOneRec">github.com/AkaliKong/MiniOneRec</a>（中科大团队，基于 OneRec 的开源复现）</li>
+</ul>
+</blockquote>
+<ol>
+<li>
+<p>Wang-Cheng Kang, Julian McAuley. <em>Self-Attentive Sequential Recommendation</em>. ICDM 2018. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1808.09781">arXiv:1808.09781</a> | <a target="_blank" rel="noopener" href="https://github.com/kang205/SASRec">代码</a></p>
+</li>
+<li>
+<p>Fei Sun et al. <em>BERT4Rec: Sequential Recommendation with Bidirectional Encoder Representations from Transformer</em>. CIKM 2019. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.06690">arXiv:1904.06690</a> | <a target="_blank" rel="noopener" href="https://github.com/FeiSun/BERT4Rec">代码</a></p>
+</li>
+<li>
+<p>Shijie Geng et al. <em>Recommender Systems with Generative Retrieval</em>. NeurIPS 2023. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.05065">arXiv:2305.05065</a> | <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/tiger">代码</a></p>
+</li>
+<li>
+<p>Yang Li et al. <em>Actions Speak Louder than Words: Trillion-Parameter Sequential Transducers for Generative Recommendations</em>. Meta 2024. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2402.17152">arXiv:2402.17152</a> | <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/generative-recommenders">代码</a></p>
+</li>
+<li>
+<p>Jiaqi Zhao et al. <em>HLLM: Enhancing Sequential Recommendations via Hierarchical Large Language Models for Item and User Modeling</em>. ByteDance 2024. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2409.12740">arXiv:2409.12740</a> | <a target="_blank" rel="noopener" href="https://github.com/bytedance/HLLM">代码</a></p>
+</li>
+<li>
+<p>Jiaxin Deng et al. <em>OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment</em>. Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.18965">arXiv:2502.18965</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a></p>
+</li>
+<li>
+<p>Guorui Zhou et al. <em>OpenOneRec Technical Report</em>. Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2512.24762">arXiv:2512.24762</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
+</li>
+<li>
+<p>Xiaoyu Kong et al. <em>MiniOneRec: An Open-Source Framework for Scaling Generative Recommendation</em>. USTC 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.24431">arXiv:2510.24431</a> | <a target="_blank" rel="noopener" href="https://github.com/AkaliKong/MiniOneRec">代码</a></p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">python二维list初始化和赋值</div></div><div class="info-2"><div class="info-item-1">Python 二维 list 的本质 在 Python 中，二维 list 本质上是一个“列表的列表”。也就是说，它实际上是一个一维列表，里面的每个元素又是一个一维列表。 例如： 12345matrix = [    [0, 1, 2],    [3, 4, 5],    [6, 7, 8],] 这里 matrix 是一个外层列表，内层的每一个 [0, 1, 2]、[3, 4, 5] 都是单独的行对象。 常见初始化方式 1. 嵌套循环初始化 这是最直接、最清晰的方式。 12345678n = 3m = 4matrix = []for i in range(n):    row = []    for j in range(m):        row.append(0)    matrix.append(row) 这种写法会为每一行创建一个新的列表，保证行之间互不干扰。 2. 列表推导式初始化（推荐） 使用列表推导式，不仅简洁，而且避免了行共享问题。 123n = 3m = 4matrix = [[0] * m for _ in range(n)] 这个语句等价于： 123mat...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">36</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">从自回归到端到端的序列生成式推荐范式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E-%E6%89%93%E5%88%86-%E5%88%B0-%E7%94%9F%E6%88%90-%E2%80%94%E2%80%94%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F%E7%9A%84%E8%BD%AC%E5%8F%98"><span class="toc-text">1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%A0%E7%BB%9F%E6%8E%A8%E8%8D%90%E7%9A%84%E7%93%B6%E9%A2%88"><span class="toc-text">1.1 传统推荐的瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">1.2 生成式推荐的核心理念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%87%AA%E5%9B%9E%E5%BD%92%E8%B7%AF%E7%BA%BF%E2%80%94%E2%80%94SASRec"><span class="toc-text">2. 自回归路线——SASRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%8A%A8%E6%9C%BA%EF%BC%9A%E5%B9%B3%E8%A1%A1%E7%A8%80%E7%96%8F%E4%B8%8E%E7%A8%A0%E5%AF%86%E6%95%B0%E6%8D%AE"><span class="toc-text">2.1 动机：平衡稀疏与稠密数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9A%E5%9B%A0%E6%9E%9C-Transformer"><span class="toc-text">2.2 核心架构：因果 Transformer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="toc-text">2.3 训练目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E6%95%88%E6%9E%9C%E4%B8%8E%E5%B1%80%E9%99%90"><span class="toc-text">2.4 效果与局限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%8F%8C%E5%90%91%E5%8C%96%E6%8E%A2%E7%B4%A2%E2%80%94%E2%80%94BERT4Rec"><span class="toc-text">3. 双向化探索——BERT4Rec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E5%8D%95%E5%90%91%E7%BB%93%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-text">3.1 核心问题：单向结构的局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9ACloze-Task%EF%BC%88%E5%AE%8C%E5%BD%A2%E5%A1%AB%E7%A9%BA%EF%BC%89"><span class="toc-text">3.2 训练目标：Cloze Task（完形填空）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%8E%A8%E7%90%86%EF%BC%9A%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90"><span class="toc-text">3.3 推理：转换为自回归生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E6%9E%B6%E6%9E%84%E7%BB%86%E8%8A%82"><span class="toc-text">3.4 架构细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E6%95%88%E6%9E%9C%E4%B8%8E%E6%84%8F%E4%B9%89"><span class="toc-text">3.5 效果与意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Token-%E5%8C%96%E4%B8%80%E5%88%87%E2%80%94%E2%80%94TIGER"><span class="toc-text">4. Token 化一切——TIGER</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">4.1 生成式检索的核心理念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Semantic-ID%EF%BC%9A%E8%AE%A9%E7%89%A9%E5%93%81-ID-%E6%9C%89%E8%AF%AD%E4%B9%89"><span class="toc-text">4.2 Semantic ID：让物品 ID 有语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9E%8B"><span class="toc-text">4.3 生成式推荐模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%85%B3%E9%94%AE%E4%BC%98%E5%8A%BF"><span class="toc-text">4.4 关键优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">4.5 实验结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%AB%98%E6%95%88%E9%95%BF%E5%BA%8F%E5%88%97%E2%80%94%E2%80%94HSTU"><span class="toc-text">5. 高效长序列——HSTU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E5%B7%A5%E4%B8%9A%E5%8C%96%E6%8C%91%E6%88%98"><span class="toc-text">5.1 生成式推荐的工业化挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9AHierarchical-Sequential-Transduction-Units"><span class="toc-text">5.2 核心架构：Hierarchical Sequential Transduction Units</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%92%88%E5%AF%B9%E6%80%A7%E6%94%B9%E9%80%A0"><span class="toc-text">5.3 注意力机制的针对性改造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E7%BB%9F%E4%B8%80%E7%89%B9%E5%BE%81%E5%BB%BA%E6%A8%A1"><span class="toc-text">5.4 序列化和统一特征建模</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E6%80%A7%E8%83%BD%E4%B8%8EScaling"><span class="toc-text">5.5 性能与Scaling</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%8A%A0%E6%8C%81%E2%80%94%E2%80%94HLLM"><span class="toc-text">6. 大语言模型加持——HLLM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-LLM%EF%BC%9F"><span class="toc-text">6.1 为什么需要 LLM？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%EF%BC%9AItem-LLM-User-LLM"><span class="toc-text">6.2 分层架构：Item LLM + User LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9A%E7%94%9F%E6%88%90%E5%BC%8F-%E5%88%A4%E5%88%AB%E5%BC%8F"><span class="toc-text">6.3 训练目标：生成式 + 判别式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0"><span class="toc-text">6.4 关键发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E5%9C%A8%E7%BA%BF%E5%AE%9E%E9%AA%8C"><span class="toc-text">6.5 在线实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%BB%9F%E4%B8%80%E7%AB%AF%E5%88%B0%E7%AB%AF%E2%80%94%E2%80%94OneRec-OpenOneRec"><span class="toc-text">7. 统一端到端——OneRec &amp; OpenOneRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%89%93%E7%A0%B4%E7%BA%A7%E8%81%94%E6%9E%B6%E6%9E%84"><span class="toc-text">7.1 打破级联架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%8D%8F%E5%90%8C%E6%84%9F%E7%9F%A5%E5%A4%9A%E6%A8%A1%E6%80%81%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-text">7.2 协同感知多模态分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Encoder-Decoder-%E6%9E%B6%E6%9E%84"><span class="toc-text">7.3 Encoder-Decoder 架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-RL-%E5%81%8F%E5%A5%BD%E5%AF%B9%E9%BD%90"><span class="toc-text">7.4 RL 偏好对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-text">7.5 性能优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-%E5%9C%A8%E7%BA%BF%E6%95%88%E6%9E%9C"><span class="toc-text">7.6 在线效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-7-OpenOneRec-%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A%EF%BC%9A%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB%E4%B8%8E-RecIF-Bench"><span class="toc-text">7.7 OpenOneRec 技术报告：开源体系与 RecIF-Bench</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-1-RecIF-Bench%EF%BC%9A%E6%8E%A8%E8%8D%90%E6%8C%87%E4%BB%A4%E8%B7%9F%E9%9A%8F%E8%AF%84%E6%B5%8B%E5%9F%BA%E5%87%86"><span class="toc-text">7.7.1 RecIF-Bench：推荐指令跟随评测基准</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-2-OneRec-Foundation-%E6%A8%A1%E5%9E%8B%E6%97%8F"><span class="toc-text">7.7.2 OneRec-Foundation 模型族</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-3-%E8%AE%AD%E7%BB%83-Pipeline%EF%BC%88%E5%BC%80%E6%BA%90%E5%86%85%E5%AE%B9%EF%BC%89"><span class="toc-text">7.7.3 训练 Pipeline（开源内容）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-4-%E8%B7%A8%E5%9F%9F%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B"><span class="toc-text">7.7.4 跨域泛化能力</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-5-Scaling-Law-%E4%B8%8E%E7%81%BE%E9%9A%BE%E9%81%97%E5%BF%98%E5%B9%B3%E8%A1%A1"><span class="toc-text">7.7.5 Scaling Law 与灾难遗忘平衡</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-8-MiniOneRec%EF%BC%9A%E9%A6%96%E4%B8%AA%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6"><span class="toc-text">7.8 MiniOneRec：首个生成式推荐开源框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="toc-text">8. 总结与展望</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%BC%94%E8%BF%9B%E8%A7%84%E5%BE%8B"><span class="toc-text">8.1 生成式推荐的演进规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%85%B1%E5%90%8C%E8%A7%84%E5%BE%8B"><span class="toc-text">8.2 共同规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E5%BD%93%E5%89%8D%E7%93%B6%E9%A2%88%E4%B8%8E%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-text">8.3 当前瓶颈与未来方向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E4%B8%83%E7%AE%97%E6%B3%95%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4 七算法横向对比</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-1-%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.1 核心要素对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-2-%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.2 架构演进对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-3-%E7%9B%B8%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.3 相同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-4-%E5%85%B3%E9%94%AE%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.4 关键不同之处</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="从自回归到端到端的序列生成式推荐范式"><img src="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从自回归到端到端的序列生成式推荐范式"/></a><div class="content"><a class="title" href="/uncategorized/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="从自回归到端到端的序列生成式推荐范式">从自回归到端到端的序列生成式推荐范式</a><time datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值">python二维list初始化和赋值</a><time datetime="2026-05-15T14:15:06.000Z" title="发表于 2026-05-15 22:15:06">2026-05-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中not的用法"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法">python中not的用法</a><time datetime="2026-05-09T13:14:59.000Z" title="发表于 2026-05-09 21:14:59">2026-05-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python判断两个浮点数是否相等"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等">python判断两个浮点数是否相等</a><time datetime="2026-05-01T08:35:06.000Z" title="发表于 2026-05-01 16:35:06">2026-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E4%B8%AD%E7%9A%84map%E5%87%BD%E6%95%B0/" title="python中的map函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E4%B8%AD%E7%9A%84map%E5%87%BD%E6%95%B0/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中的map函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E4%B8%AD%E7%9A%84map%E5%87%BD%E6%95%B0/" title="python中的map函数">python中的map函数</a><time datetime="2026-04-29T15:14:08.000Z" title="发表于 2026-04-29 23:14:08">2026-04-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
