@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>生成式推荐：从自回归到端到端的序列生成 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从自回归到端到端的序列生成式推荐范式  当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>生成式推荐：从自回归到端到端的序列生成 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec、MiniOneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶颈 长期以来，推">
 <meta property="og:type" content="article">
 <meta property="og:title" content="生成式推荐：从自回归到端到端的序列生成">
 <meta property="og:url" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/index.html">
 <meta property="og:site_name" content="doubleke&#39;s blog">
-<meta property="og:description" content="从自回归到端到端的序列生成式推荐范式  当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶">
+<meta property="og:description" content="当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec、MiniOneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。   1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变 1.1 传统推荐的瓶颈 长期以来，推">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png">
 <meta property="article:published_time" content="2026-05-17T14:17:16.000Z">
-<meta property="article:modified_time" content="2026-05-19T23:20:48.692Z">
+<meta property="article:modified_time" content="2026-05-24T13:30:02.118Z">
 <meta property="article:author" content="doubleke">
 <meta property="article:tag" content="推荐">
 <meta property="article:tag" content="生成式推荐">
@@ -19,7 +19,7 @@
   "url": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/",
   "image": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png",
   "datePublished": "2026-05-17T14:17:16.000Z",
-  "dateModified": "2026-05-19T23:20:48.692Z",
+  "dateModified": "2026-05-24T13:30:02.118Z",
   "author": [
     {
       "@type": "Person",
@@ -160,9 +160,8 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">38</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">生成式推荐：从自回归到端到端的序列生成</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">生成式推荐：从自回归到端到端的序列生成</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-19T23:20:48.692Z" title="更新于 2026-05-20 07:20:48">2026-05-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">推荐算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/">生成式推荐</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>从自回归到端到端的序列生成式推荐范式</h1>
-<blockquote>
-<p>当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。</p>
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">38</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">生成式推荐：从自回归到端到端的序列生成</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">生成式推荐：从自回归到端到端的序列生成</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-24T13:30:02.118Z" title="更新于 2026-05-24 21:30:02">2026-05-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">推荐算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/">生成式推荐</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>当推荐系统学会&quot;生成&quot;而非&quot;匹配&quot;，会发生什么？本文系统梳理 SASRec、BERT4Rec、TIGER、HSTU、HLLM、OneRec、MiniOneRec 等生成式推荐相关工作，揭示从自回归到端到端的生成式推荐技术演进路径。</p>
 </blockquote>
 <hr>
 <h2 id="1-从-打分-到-生成-——推荐范式的转变">1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变</h2>
@@ -170,15 +169,15 @@
 <p>长期以来，推荐系统的核心范式是<strong>打分（Scoring）</strong>——给定用户特征和候选物品，通过一个判别模型预测点击/转化概率。这种方式催生了召回→粗排→精排的多级级联架构：</p>
 <ul>
 <li><strong>召回（Recall）</strong>：从百万级候选库中快速拉回千级相关候选</li>
-<li><strong>粗排（Ranking）</strong>：对召回结果做初步排序</li>
-<li><strong>精排（Re-rank）</strong>：综合多目标（点击、时长、互动等）做最终决策</li>
+<li><strong>粗排（Pre-Ranking）</strong>：对召回结果做初步排序</li>
+<li><strong>精排（Ranking）</strong>：综合多目标（点击、时长、互动等）做最终决策</li>
 </ul>
 <p><img src="fig0_cascade.png" alt="推荐系统多级级联架构"></p>
 <p>这套架构的问题在于：</p>
 <ol>
-<li><strong>各阶段独立优化，目标函数相互冲突</strong>，导致整体未必最优</li>
-<li><strong>强依赖 ID Embedding</strong>，冷启动场景表现差</li>
-<li><strong>逐-item 判别，无法建模 item 之间的依赖关系</strong></li>
+<li><strong>各阶段独立优化，目标可能不一致，甚至相互冲突</strong>，导致整体未必最优</li>
+<li><strong>强依赖 ID Embedding</strong>，召回I2I、用户行为序列建模等都依赖物品ID，冷启动场景表现差</li>
+<li><strong>逐-item 判别，无法建模 item 之间的依赖关系</strong>，而实际推荐结果是一个序列，物品之间会相互影响</li>
 <li><strong>算力效率低</strong>，精排模型的 MFU（模型浮点运算利用率）长期在个位数徘徊</li>
 </ol>
 <h3 id="1-2-生成式推荐的核心理念">1.2 生成式推荐的核心理念</h3>
@@ -187,9 +186,9 @@
 <p>从 SASRec 到 OneRec，我们看到了这条技术路径的完整演进：</p>
 <ul>
 <li><strong>自回归生成</strong>（SASRec、BERT4Rec）：用 Next Token Prediction 替代点估计</li>
-<li><strong>语义 ID 生成</strong>（TIGER）：把随机 item ID 替换为有语义的离散 token</li>
+<li><strong>语义 ID 生成</strong>（TIGER）：把item ID 替换为有语义的离散 token</li>
 <li><strong>大模型赋能</strong>（HSTU、HLLM）：将异质特征统一建模，验证 Scaling Law</li>
-<li><strong>端到端统一</strong>（OneRec）：彻底打破召回→精排级联，一个模型输出推荐列表</li>
+<li><strong>端到端统一</strong>（OneRec、MiniOneRec）：彻底打破召回→精排级联，一个模型输出整个推荐列表</li>
 </ul>
 <hr>
 <h2 id="2-自回归路线——SASRec">2. 自回归路线——SASRec</h2>
@@ -205,7 +204,7 @@
 <h3 id="2-2-核心架构：因果-Transformer">2.2 核心架构：因果 Transformer</h3>
 <p>SASRec 的核心是将 Transformer 的 self-attention 机制引入序列推荐，但做了关键的因果性改造。</p>
 <div style="text-align:center">
-  <style>.modilpukvgzg{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig1_sasrec.png" class="modilpukvgzg" alt="SASRec 架构图">
+  <img src="fig1_sasrec.png" alt="SASRec 架构图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p>如图所示，SASRec 由以下部分组成：</p>
 <p><strong>（1）Embedding Layer</strong></p>
@@ -267,13 +266,13 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 </ol>
 <p>BERT 在 NLP 中证明了双向 Transformer 的强大，那能不能迁移到推荐系统？</p>
 <div style="text-align:center">
-  <style>.rtgtnjoxmjay{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig2_bert4rec_hq.png" class="rtgtnjoxmjay" alt="BERT4Rec Cloze Task 示意">
+  <img src="fig2_bert4rec_hq.png" alt="BERT4Rec Cloze Task 示意" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <h3 id="3-2-训练目标：Cloze-Task（完形填空）">3.2 训练目标：Cloze Task（完形填空）</h3>
 <p>如果直接训练双向 Transformer，<strong>信息泄露</strong>是最大问题——预测某个 item 时，模型可以直接看到它的真实值。BERT 解决这个问题的方法是<strong>Masked Language Model（MLM）</strong>，BERT4Rec 将其引入推荐系统：</p>
 <p>随机遮盖序列中一定比例（如 15%）的 item，用双向 Transformer 的输出预测被遮盖的 item。训练时不使用 [CLS] 分类 token，而是对每个位置做 item 预测。</p>
 <div style="text-align:center">
-  <style>.qrrkkigcpibk{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig2_bert4rec.png" class="qrrkkigcpibk" alt="BERT4Rec 架构图">
+  <img src="fig2_bert4rec.png" alt="BERT4Rec 架构图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p><strong>Cloze Task 的优势</strong>：</p>
 <ul>
@@ -317,7 +316,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <h3 id="4-2-Semantic-ID：让物品-ID-有语义">4.2 Semantic ID：让物品 ID 有语义</h3>
 <p>TIGER 的核心创新是<strong>Semantic ID（语义 ID）</strong>——不再是随机的原子 ID，而是由多个离散 token 组成的、有语义结构的表示。</p>
 <div style="text-align:center">
-  <style>.ruxsaksooycq{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig3_tiger.png" class="ruxsaksooycq" alt="TIGER Encoder-Decoder 架构图">
+  <img src="fig3_tiger.png" alt="TIGER Encoder-Decoder 架构图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p>Semantic ID 的生成使用 <strong>RQ-VAE（Residual Quantized VAE）</strong>：</p>
 <ol>
@@ -348,9 +347,9 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <p><strong>输入</strong>：用户历史交互物品对应的 Semantic ID 序列，展开为 token 序列</p>
 <p><strong>输出</strong>：下一个物品的 Semantic ID（多个 token 逐个生成）</p>
 <div style="text-align:center">
-  <style>.yhyimnesupbh{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig3_tiger_poster.png" class="yhyimnesupbh" alt="TIGER 框架图">
+  <img src="fig3_tiger_poster.png" alt="TIGER 框架图" style="max-width:720px;width:100%;height:auto;" />
 </div>
-<p>模型使用 <strong>Transformer Encoder-Decoder</strong>，标准自回归解码.</p>
+<p>模型使用 <strong>Transformer Encoder-Decoder</strong>，标准自回归解码。</p>
 <h3 id="4-4-关键优势">4.4 关键优势</h3>
 <ol>
 <li><strong>无需 ANN 索引</strong>：Transformer 参数本身承担了索引功能，检索不需要额外的向量数据库</li>
@@ -376,7 +375,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <p>Meta 的 HSTU 是回答这些问题的一次系统性尝试。</p>
 <h3 id="5-2-核心架构：Hierarchical-Sequential-Transduction-Units">5.2 核心架构：Hierarchical Sequential Transduction Units</h3>
 <div style="text-align:center">
-  <style>.gupdwrnfuatf{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig4_hstu.png" class="gupdwrnfuatf" alt="HSTU 架构图">
+  <img src="fig4_hstu.png" alt="HSTU 架构图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p>HSTU 将推荐问题表述为<strong>序列转导（Sequential Transduction）任务</strong>，将异质特征统一建模为 token 序列，然后用层级 Transformer 处理。</p>
 <p><strong>层级设计</strong>（对应名称中的 “Hierarchical”）：</p>
@@ -408,7 +407,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <li><strong>幂律</strong>：实验验证了生成式推荐模型遵循类似 LLM 的 Scaling Law</li>
 </ul>
 <div style="text-align:center">
-  <style>.btbrximnmrnr{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig4_hstu.png" class="btbrximnmrnr" alt="HSTU 性能图">
+  <img src="fig4_hstu.png" alt="HSTU 性能图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <hr>
 <h2 id="6-大语言模型加持——HLLM">6. 大语言模型加持——HLLM</h2>
@@ -424,7 +423,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <p>HLLM（Hierarchical Large Language Model）的核心思路是：<strong>用 LLM 的预训练知识理解物品语义，用层级架构解决效率问题</strong>。</p>
 <h3 id="6-2-分层架构：Item-LLM-User-LLM">6.2 分层架构：Item LLM + User LLM</h3>
 <div style="text-align:center">
-  <style>.jqmchsoyaqkq{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig5_hllm.png" class="jqmchsoyaqkq" alt="HLLM 架构图">
+  <img src="fig5_hllm.png" alt="HLLM 架构图" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p>HLLM 由两个独立的 LLM 组成，分工明确：</p>
 <p><strong>Item LLM</strong>（Item Modeling）</p>
@@ -453,7 +452,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <li><strong>晚融合（Late Fusion）</strong>：先提取用户独立特征（序列末尾添加 <code>[USER]</code> token），再与目标物品嵌入结合</li>
 </ul>
 <div style="text-align:center">
-  <style>.wcojuwwaqfsg{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig5_hllm_itemllm.png" class="wcojuwwaqfsg" alt="HLLM Item LLM 细节">
+  <img src="fig5_hllm_itemllm.png" alt="HLLM Item LLM 细节" style="max-width:720px;width:100%;height:auto;" />
 </div>
 <p>可以加入生成损失作为辅助（多任务学习），进一步提升判别式推荐效果。</p>
 <h3 id="6-4-关键发现">6.4 关键发现</h3>
@@ -465,53 +464,163 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <h3 id="6-5-在线实验">6.5 在线实验</h3>
 <p>在字节跳动真实推荐场景中，HLLM-1B 采用判别式晚融合方案，经过三阶段训练（端到端训练→冻结 Item LLM 微调 User LLM→提取用户特征用于在线模型），关键业务指标提升 <strong>0.705%</strong>。</p>
 <hr>
-<h2 id="7-统一端到端——OneRec-OpenOneRec">7. 统一端到端——OneRec &amp; OpenOneRec</h2>
+<h2 id="7-统一端到端——OneRec">7. 统一端到端——OneRec</h2>
 <p><strong>原始论文</strong>：<em>OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment</em>, Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.18965">arXiv:2502.18965</a></p>
-<p><strong>技术报告</strong>：<em>OpenOneRec Technical Report</em>, Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2512.24762">arXiv:2512.24762</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
-<blockquote>
-<p>OneRec 原始论文验证了工业落地效果；OpenOneRec 技术报告则在此基础上开源了完整训练 Pipeline、发布了 OneRec-Foundation 系列模型、并提出了 RecIF-Bench 评测基准。两篇论文共同构成 OneRec 体系的完整图景。</p>
-</blockquote>
-<h3 id="7-1-打破级联架构">7.1 打破级联架构</h3>
-<p>传统推荐的召回→粗排→精排多级架构存在三个根本问题：</p>
+<p><strong>技术报告</strong>：<em>OneRec Technical Report</em>, Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2506.13695">arXiv:2506.13695</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
+<h3 id="7-1-背景与动机：传统级联架构的三大问题">7.1 背景与动机：传统级联架构的三大问题</h3>
+<p>传统推荐系统采用多级级联架构（召回→粗排→精排），存在三个根本限制：</p>
 <ol>
-<li><strong>算力效率低</strong>：快手精排模型 SIM 在 H100 上训练 MFU 仅 4.6%，推理 11.2%；而 LLM 可达 40%-50%</li>
-<li><strong>目标冲突</strong>：各阶段独立优化，多个目标（点击、时长、互动等）相互掣肘</li>
-<li><strong>技术脱节</strong>：难以吸收 Scaling Law、强化学习等 AI 前沿技术</li>
+<li><strong>计算碎片化（Fragmented Compute）</strong>：快手分析发现服务时超过 50% 的资源用于通信和存储，而非高精度计算。精排模型的训练/推理 MFU 仅 4.6%/11.2%，远低于 LLM 在 H100 上的 ~40%</li>
+<li><strong>目标冲突（Objective Collision）</strong>：数百个优化目标（CTR、时长、用户/创作者/平台生态目标）在各阶段相互冲突</li>
+<li><strong>技术脱节（Technology Gap）</strong>：无法吸收 Scaling Law、强化学习等 AI 前沿技术</li>
 </ol>
-<p>OneRec 的核心创新：<strong>用一个生成式 Encoder-Decoder 模型彻底替代多级流水线</strong>。</p>
+<p>OneRec 的核心创新：<strong>用一个端到端的生成式 Encoder-Decoder 模型彻底替代多级流水线</strong>，统一建模召回与排序。</p>
 <div style="text-align:center">
-  <style>.bolugspogtmp{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig6_onerec.png" class="bolugspogtmp" alt="OneRec 架构图">
+  <img src="fig7_onerec_arch.png" alt="OneRec 整体框架图" style="max-width:800px;width:100%;height:auto;" />
 </div>
-<h3 id="7-2-协同感知多模态分词器">7.2 协同感知多模态分词器</h3>
-<p>快手平台有亿级视频，如何让模型&quot;理解&quot;每个视频是首要挑战。OneRec 首创了<strong>协同感知的多模态分词方案</strong>：</p>
+<blockquote>
+<p><strong>图注</strong>：传统级联推荐系统与 OneRec 的对比（来自技术报告 <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2506.13695">arXiv:2506.13695</a> Figure 2）。传统架构将资源分散在多级级联中，而 OneRec 用单一生成式模型统一建模。</p>
+</blockquote>
+<h3 id="7-2-Tokenizer：协同感知多模态语义-ID">7.2 Tokenizer：协同感知多模态语义 ID</h3>
+<p>OneRec 的 Tokenizer 负责将每个物品（视频）转化为离散的语义 token（Itemic Token），是生成式推荐的基础。</p>
+<p><strong>核心流程</strong>：</p>
+<ol>
+<li><strong>多模态编码</strong>：同时处理视频的标题、标签、语音转文字、图像等多维信息，通过 Text Encoder 提取语义向量</li>
+<li><strong>协同感知</strong>：融入用户行为信号（协同过滤信号），让语义 ID 包含推荐知识</li>
+<li><strong>RQ-Kmeans 量化</strong>：将语义向量通过 RQ-Kmeans（ Residual-Quantized K-Means）转化为 3 层粗到细的语义 ID</li>
+</ol>
+<p>语义 ID 的优势：</p>
 <ul>
-<li>同时处理视频的标题、标签、语音转文字、图像识别等多维信息</li>
-<li>融入用户行为信号（协同过滤信号）</li>
-<li>使用 <strong>RQ-Kmeans</strong> 将每个视频转化为 3 层粗到细的语义 ID</li>
+<li><strong>语义可解释</strong>：同一品类的物品会有相似的 SID 前缀</li>
+<li><strong>冷启动友好</strong>：新物品只需编码文本即可获得 SID</li>
+<li><strong>生成式检索</strong>：推理时直接生成 SID，无需遍历全量候选</li>
 </ul>
+<div style="text-align:center">
+  <img src="fig7_onerec_sid.png" alt="OneRec Tokenizer 语义 ID 流程图" style="max-width:720px;width:100%;height:auto;" />
+</div>
+<blockquote>
+<p><strong>图注</strong>：OneRec Tokenizer 语义 ID 生成流程图。</p>
+</blockquote>
 <h3 id="7-3-Encoder-Decoder-架构">7.3 Encoder-Decoder 架构</h3>
+<p>OneRec 采用 <strong>Encoder-Decoder 架构</strong> 进行生成式推荐：</p>
 <p><strong>Encoder</strong>：整合用户全生命周期行为序列，实现多尺度用户建模</p>
+<p>Encoder 接收四大类输入，通过四个独立 Pathway 处理不同时间跨度的用户信号：</p>
+<ol>
+<li>
+<p><strong>用户静态特征（User Static Pathway）</strong></p>
 <ul>
-<li>静态特征（用户画像）</li>
-<li>短期行为序列</li>
-<li>有效观看序列</li>
-<li>终身行为序列</li>
+<li>用户 ID（uid）、年龄（age）、性别（gender）等核心画像</li>
+<li>通过 MLP 映射到模型隐向量 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">h</mi><mi>u</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>1</mn><mo>×</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{h}_u \in \mathbb{R}^{1 \times d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
 </ul>
-<p><strong>Decoder</strong>：基于 <strong>MoE（Mixture of Experts）</strong> 架构的逐点生成策略，提升模型容量和效率</p>
+</li>
+<li>
+<p><strong>短期行为（Short-term Pathway）</strong></p>
+<ul>
+<li>最近 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>s</mi></msub><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">L_s = 20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">20</span></span></span></span> 条交互记录</li>
+<li>每条包含：视频 ID（vid）、作者 ID（aid）、标签（tag）、时间戳（ts）、播放时长（playtime）、时长（dur）、标签（label）</li>
+<li>输出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">h</mi><mi>s</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>L</mi><mi>s</mi></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{h}_s \in \mathbb{R}^{L_s \times d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+<li>
+<p><strong>正向反馈行为（Positive-feedback Pathway）</strong></p>
+<ul>
+<li>高互动行为（点赞、关注、评论等）序列，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>p</mi></msub><mo>=</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">L_p = 256</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">256</span></span></span></span> 条</li>
+<li>捕捉用户的主动偏好信号</li>
+<li>输出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">h</mi><mi>p</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>L</mi><mi>p</mi></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{h}_p \in \mathbb{R}^{L_p \times d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+<li>
+<p><strong>终身行为（Lifelong Pathway）</strong></p>
+<ul>
+<li>用户完整交互历史，最多 10 万条</li>
+<li>采用两层 hierarchical 压缩策略：
+<ul>
+<li>第一层：通过内容表征做 K-means 聚类，逐层聚合</li>
+<li>第二层：通过 QFormer 的 Cross Attention 将长序列压缩为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>q</mi></msub><mo>=</mo><mn>128</mn></mrow><annotation encoding="application/x-tex">N_q = 128</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">128</span></span></span></span> 个 query 向量</li>
+</ul>
+</li>
+<li>输出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">h</mi><mi>l</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>N</mi><mi>q</mi></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{h}_l \in \mathbb{R}^{N_q \times d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.109em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+</ol>
+<p><strong>特征融合</strong>：Encoder 将四个 Pathway 的输出拼接为统一序列：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi mathvariant="bold">z</mi><mrow><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msup><mo>=</mo><mo stretchy="false">[</mo><msub><mi mathvariant="bold">h</mi><mi>u</mi></msub><mo separator="true">;</mo><msub><mi mathvariant="bold">h</mi><mi>s</mi></msub><mo separator="true">;</mo><msub><mi mathvariant="bold">h</mi><mi>p</mi></msub><mo separator="true">;</mo><msub><mi mathvariant="bold">h</mi><mi>l</mi></msub><mo stretchy="false">]</mo><mo>+</mo><msub><mi mathvariant="bold">e</mi><mrow><mi>p</mi><mi>o</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbf{z}^{(1)} = [\mathbf{h}_u; \mathbf{h}_s; \mathbf{h}_p; \mathbf{h}_l] + \mathbf{e}_{pos}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathbf">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7305em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathbf">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">os</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">e</mi><mrow><mi>p</mi><mi>o</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbf{e}_{pos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7305em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathbf">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">os</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 为可学习的位置编码。拼接后的序列通过 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mrow><mi>e</mi><mi>n</mi><mi>c</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L_{enc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 层 Transformer Encoder 处理，每层包含全可见的 Self-Attention 和 FFN，使用 RMSNorm 稳定训练。</p>
+<p><strong>Decoder</strong>：基于自回归方式逐 token 生成推荐结果</p>
+<ul>
+<li>给定用户序列，Decoder 自回归地预测下一个 itemic token</li>
+<li>直接输出推荐物品的语义 ID，无需传统的内积打分</li>
+</ul>
 <p>训练使用 <strong>NTP（Next Token Prediction）</strong> 损失函数。</p>
 <div style="text-align:center">
-  <style>.xkdqsldvgrcw{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig6_onerec_overview.png" class="xkdqsldvgrcw" alt="OneRec 详细框架">
+  <img src="fig7_onerec_encoder_decoder.png" alt="OneRec Encoder-Decoder 架构图" style="max-width:800px;width:100%;height:auto;" />
 </div>
-<h3 id="7-4-RL-偏好对齐">7.4 RL 偏好对齐</h3>
-<p>预训练模型通过 NTP 拟合历史曝光数据，但这些数据来自传统推荐系统，<strong>无法突破原有系统的天花板</strong>。</p>
-<p>OneRec 引入基于强化学习的偏好对齐方法，构建综合奖励系统：</p>
+<blockquote>
+<p><strong>图注</strong>：OneRec Encoder-Decoder 架构图。Encoder 整合用户全生命周期行为序列，Decoder 基于自回归方式逐 token 生成推荐结果。</p>
+</blockquote>
+<h3 id="7-4-Reward-System：综合奖励设计">7.4 Reward System：综合奖励设计</h3>
+<p>预训练模型通过 NTP 学习的是&quot;历史曝光数据的分布&quot;，无法突破传统推荐的天花板。为此 OneRec 引入了基于奖励系统的偏好对齐机制，通过强化学习在&quot;生成空间&quot;中优化模型，让模型感知更细粒度的偏好信息。</p>
+<div style="text-align:center">
+  <img src="fig7_onerec_reward_system.png" alt="Reward System 框架图" style="max-width:800px;width:100%;height:auto;" />
+</div>
+<blockquote>
+<p><strong>图注</strong>：OneRec Reward System 框架图。包含偏好奖励（P-Score）、格式奖励和工业场景奖励三个部分。</p>
+</blockquote>
+<p>奖励系统由三部分组成：</p>
+<h4 id="7-4-1-偏好奖励（Preference-Reward）：P-Score">7.4.1 偏好奖励（Preference Reward）：P-Score</h4>
+<p>传统方法将点击、时长、点赞等多个目标加权求和，权重靠人工调参，既不精准又缺乏个性化，且不同目标之间容易相互冲突。</p>
+<p>OneRec 提出 <strong>P-Score（Preference Score）</strong>，用一个神经网络学习个性化的多目标融合分数：</p>
 <ul>
-<li><strong>偏好奖励（Preference Reward）</strong>：对齐用户偏好的个性化 P-Score</li>
-<li><strong>格式奖励（Format Reward）</strong>：确保生成的 token 均为合法语义 ID</li>
-<li><strong>工业场景奖励（Industrial Reward）</strong>：满足特殊业务需求（营销号打压、冷启动扶持等）</li>
+<li><strong>模型结构</strong>：基于 SIM（Search-based Interest Model），包含多个 Tower 分别学习不同目标（ctr、lctr、ltr、vtr 等）</li>
+<li><strong>训练方式</strong>：每个 Tower 计算对应目标的 BCE Loss，最终所有 Tower 的隐状态与用户/物品表征一起送入 MLP，输出 P-Score</li>
+<li><strong>多目标平衡</strong>：通过调整每个目标的权重 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>w</mi><mrow><mi>x</mi><mi>t</mi><mi>r</mi></mrow></msup></mrow><annotation encoding="application/x-tex">w^{xtr}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span></span>，使 P-Score 在所有目标上均达到 AUC 提升，实现帕累托优化</li>
+<li><strong>核心优势</strong>：P-Score 能根据具体用户的特征自适应调整融合权重，比固定加权更精准</li>
 </ul>
-<p>使用 <strong>ECPO（Early-Clipped GRPO）</strong> 算法优化——对负优势样本做更严格的策略梯度截断，防止梯度爆炸。</p>
-<h3 id="7-5-性能优化">7.5 性能优化</h3>
+<p>最终使用 P-Score 作为偏好对齐的奖励信号 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">r_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</p>
+<h4 id="7-4-2-格式奖励（Format-Reward）">7.4.2 格式奖励（Format Reward）</h4>
+<p>生成式推荐的输出空间是离散的语义 ID 序列（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>N</mi><mi>t</mi><msub><mi>L</mi><mi>t</mi></msub></msubsup></mrow><annotation encoding="application/x-tex">N_t^{L_t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.169em;vertical-align:-0.2458em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9232em;"><span style="top:-2.4542em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.1449em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2963em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span></span></span></span> 量级），远大于实际物品数。这意味着模型可能生成&quot;无对应物品&quot;的非法序列。</p>
+<p><strong>合法性比例（Legality Ratio）</strong>：生成的可映射到真实物品的语义 ID 序列占比，是衡量生成稳定性的关键指标。</p>
+<p>格式奖励的设计目标是：最大化合法性比例，确保每个生成的 token 都能映射到有效物品。</p>
+<h4 id="7-4-3-工业场景奖励（Industrial-Reward）">7.4.3 工业场景奖励（Industrial Reward）</h4>
+<p>满足特殊业务需求，典型场景包括：</p>
+<ul>
+<li><strong>营销号打压</strong>：降低低质量营销内容的曝光</li>
+<li><strong>冷启动扶持</strong>：对新物品/新用户给予额外奖励</li>
+<li><strong>生态平衡</strong>：保障创作者生态、平台内容多样性等目标</li>
+</ul>
+<h4 id="7-4-4-ECPO：Early-Clipped-GRPO">7.4.4 ECPO：Early-Clipped GRPO</h4>
+<p>获得奖励后，OneRec 使用 <strong>ECPO（Early-Clipped GRPO）</strong> 算法优化策略梯度。</p>
+<div style="text-align:center">
+  <img src="fig7_onerec_ecpo.png" alt="ECPO 算法图" style="max-width:720px;width:100%;height:auto;" />
+</div>
+<blockquote>
+<p><strong>图注</strong>：ECPO 算法图。横轴为策略比例 π_θ/π_θ_old，纵轴为裁剪后的比例。正优势（A&gt;0）样本按原始 GRPO 处理，负优势（A&lt;0）样本通过 Early-Clipping 限制最大比例。</p>
+</blockquote>
+<p><strong>核心问题</strong>：原始 GRPO 对负优势样本允许较大的策略比（π_θ/π_θ_old），容易导致梯度爆炸。</p>
+<p><strong>ECPO 解决方案</strong>：对负优势样本做更严格的提前截断（Early-Clipping）。定义修正后的旧策略：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>π</mi><msub><mi>θ</mi><mrow><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo stretchy="false">(</mo><msub><mi>o</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>u</mi><mo stretchy="false">)</mo><mo>=</mo><mi>max</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mfrac><mrow><mtext>sg</mtext><mo stretchy="false">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>o</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>u</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><mrow><mn>1</mn><mo>+</mo><mi>ϵ</mi><mo>+</mo><mi>δ</mi></mrow></mfrac><mo separator="true">,</mo><msub><mi>π</mi><msub><mi>θ</mi><mrow><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub></msub><mo stretchy="false">(</mo><msub><mi>o</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>u</mi><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow><mo separator="true">,</mo><mspace width="1em"/><mi>δ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\pi_{\theta_{old}}&#x27;(o_i|u) = \max\left(\frac{\text{sg}(\pi_\theta(o_i|u))}{1+\epsilon+\delta}, \pi_{\theta_{old}}(o_i|u)\right), \quad \delta &gt; 0
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1548em;vertical-align:-0.3529em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0278em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3529em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mop">max</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">ϵ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">sg</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mclose">))</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0278em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2559em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03785em;">δ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span></p>
+<p>其中 δ 控制容忍的策略比上界。ECPO 移除了 KL 散度损失，因为 SFT 与 RL 联合训练，SFT 本身保证了模型稳定性。</p>
+<h3 id="7-5-训练流程">7.5 训练流程</h3>
+<p>OneRec 的训练分为三个阶段：</p>
+<p><strong>Pre-training（预训练）</strong>：</p>
+<ul>
+<li>在大规模用户行为数据上进行 NTP 训练</li>
+<li>让模型学习序列预测能力</li>
+</ul>
+<p><strong>Post-training（后训练）</strong>：</p>
+<ul>
+<li>Stage 1：SFT（监督微调）——基于标注数据的多任务微调</li>
+<li>Stage 2：RL（强化学习）——使用 ECPO 算法优化奖励</li>
+</ul>
+<div style="text-align:center">
+  <img src="fig7_sid_vs_pid.png" alt="SID vs PID 对比图" style="max-width:720px;width:100%;height:auto;" />
+</div>
+<blockquote>
+<p><strong>图注</strong>：SID（Semantic ID）与 PID（Product ID）的对比。SID 具有更好的语义结构和跨域泛化能力。</p>
+</blockquote>
+<h3 id="7-6-系统优化">7.6 系统优化</h3>
 <p>OneRec 在系统层面做了极致优化：</p>
 <ul>
 <li><strong>架构精简</strong>：关键算子从 15,000+ 压缩到 1,200 个（压缩 92%）</li>
@@ -519,8 +628,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <li><strong>推理 MFU</strong>：28.8%（vs 传统 11.2%）</li>
 <li><strong>OPEX</strong>：降至传统方案的 <strong>10.6%</strong>（近 90% 成本节约）</li>
 </ul>
-<p>核心优化手段：请求分组特征复用、变长 Flash Attention、SKAI Embedding GPU 训练系统（消除 CPU 同步瓶颈）、KV Cache 复用等。</p>
-<h3 id="7-6-在线效果">7.6 在线效果</h3>
+<h3 id="7-7-在线效果">7.7 在线效果</h3>
 <p>OneRec 已上线快手/快手极速版双端短视频推荐主场景，承接约 <strong>25% QPS</strong>。</p>
 <p>A/B 测试结果（5% 流量，1 周）：</p>
 <table>
@@ -559,215 +667,103 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 </tr>
 </tbody>
 </table>
-<p>注：纯生成式模型已达到传统系统同等效果；叠加 RM Selection 后全面超越，且所有交互指标均正向。</p>
 <p>在本地生活服务场景（100% 全量）：GMV +21.01%、订单量 +17.89%、购买用户数 +18.58%、新客获取效率 +23.02%。</p>
-<h3 id="7-7-OpenOneRec-技术报告：开源体系与-RecIF-Bench">7.7 OpenOneRec 技术报告：开源体系与 RecIF-Bench</h3>
+<h3 id="7-8-开源体系">7.8 开源体系</h3>
 <blockquote>
-<p>OpenOneRec 技术报告（arXiv:2512.24762）在原始 OneRec 论文基础上，<strong>开源了完整的训练 Pipeline</strong>，并发布了 OneRec-Foundation 系列模型与 RecIF-Bench 评测基准，标志着生成式推荐从工业落地走向开放研究生态。</p>
+<p>技术报告开源了完整训练 Pipeline，并发布了 OneRec-Foundation 系列模型与 RecIF-Bench 评测基准，标志着生成式推荐从工业落地走向开放研究生态。</p>
 </blockquote>
-<h4 id="7-7-1-RecIF-Bench：推荐指令跟随评测基准">7.7.1 RecIF-Bench：推荐指令跟随评测基准</h4>
-<p>RecIF-Bench 是首个<strong>综合评估推荐系统指令跟随与领域专业能力</strong>的基准，覆盖 8 个任务，构建了四层能力层级：</p>
-<table>
-<thead>
-<tr>
-<th>层级</th>
-<th>能力</th>
-<th>代表任务</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Layer 0</strong></td>
-<td>语义对齐（Item Understanding）</td>
-<td>物品内容理解</td>
-</tr>
-<tr>
-<td><strong>Layer 1</strong></td>
-<td>基础预测</td>
-<td>短视频推荐、广告推荐、商品推荐、标签预测</td>
-</tr>
-<tr>
-<td><strong>Layer 2</strong></td>
-<td>指令跟随</td>
-<td>交互式推荐、标签条件推荐</td>
-</tr>
-<tr>
-<td><strong>Layer 3</strong></td>
-<td>推理能力</td>
-<td>推荐理由生成（Explanation）</td>
-</tr>
-</tbody>
-</table>
-<p>数据集覆盖三个领域：<strong>短视频（Content）</strong>、<strong>广告（Commercial）</strong>、<strong>商品（E-commerce）</strong>，共 96M 交互、160K 用户。</p>
-<h4 id="7-7-2-OneRec-Foundation-模型族">7.7.2 OneRec-Foundation 模型族</h4>
-<p>基于 Qwen3 backbone 训练，包含 Standard 和 Pro 两个系列：</p>
+<p><strong>OneRec-Foundation 模型族</strong>（基于 Qwen3 backbone）：</p>
 <table>
 <thead>
 <tr>
 <th>模型</th>
-<th>Backbone</th>
 <th>参数</th>
 <th>训练数据</th>
-<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>OneRec-1.7B</strong></td>
-<td>Qwen3-1.7B</td>
 <td>1.7B</td>
 <td>~33B tokens（开源）</td>
-<td>Standard 版本</td>
 </tr>
 <tr>
 <td><strong>OneRec-8B</strong></td>
-<td>Qwen3-8B</td>
 <td>8B</td>
 <td>~33B tokens（开源）</td>
-<td>Standard 版本</td>
 </tr>
 <tr>
 <td><strong>OneRec-1.7B-Pro</strong></td>
-<td>Qwen3-1.7B</td>
 <td>1.7B</td>
 <td>~130B tokens（含工业数据）</td>
-<td>扩展版本</td>
 </tr>
 <tr>
 <td><strong>OneRec-8B-Pro</strong></td>
-<td>Qwen3-8B</td>
 <td>8B</td>
 <td>~130B tokens（含工业数据）</td>
-<td>扩展版本</td>
 </tr>
 </tbody>
 </table>
-<h4 id="7-7-3-训练-Pipeline（开源内容）">7.7.3 训练 Pipeline（开源内容）</h4>
-<p>OpenOneRec 完整开源了三阶段训练流程：</p>
-<ol>
-<li>
-<p><strong>Co-Pretraining（联合预训练）</strong>：</p>
-<ul>
-<li><strong>Itemic-Text Alignment</strong>：将物品的语义 ID 与文本描述对齐</li>
-<li><strong>Full-Parameter Co-Pretraining</strong>：全参数训练，融合协同过滤信号</li>
-</ul>
-</li>
-<li>
-<p><strong>Post-Training 阶段一：多任务 SFT</strong>：</p>
-<ul>
-<li>基于 RecIF-Bench 的多任务监督微调</li>
-<li>训练模型的基础指令跟随能力</li>
-</ul>
-</li>
-<li>
-<p><strong>Post-Training 阶段二：On-Policy Distillation</strong>：</p>
-<ul>
-<li>蒸馏恢复模型的通用推理能力（防止推荐任务导致通用能力灾难性遗忘）</li>
-</ul>
-</li>
-<li>
-<p><strong>Post-Training 阶段三：RL 增强</strong>：</p>
-<ul>
-<li>强化学习进一步提升推荐专项能力</li>
-</ul>
-</li>
-</ol>
-<h4 id="7-7-4-跨域泛化能力">7.7.4 跨域泛化能力</h4>
-<p>在 <strong>Amazon Benchmark</strong>（10 个数据集）上，OneRec-Foundation 展现了出色的零样本/少样本跨域迁移能力，平均 <strong>Recall@10 提升 26.8%</strong>：</p>
+<p>所有模型均已在 <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a> 开源。</p>
+<p><strong>Scaling Law 验证</strong>：随着参数规模增大，推荐能力可预测地提升，同时 LLM 的通用世界知识不会发生灾难性遗忘。</p>
+<hr>
+<h2 id="8-开源复现——MiniOneRec">8. 开源复现——MiniOneRec</h2>
+<p><strong>论文</strong>：<em>MiniOneRec: An Open-Source Framework for Scaling Generative Recommendation</em>, USTC 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.24431">arXiv:2510.24431</a> | <a target="_blank" rel="noopener" href="https://github.com/AkaliKong/MiniOneRec">代码</a></p>
+<p><strong>与 OneRec 的关系</strong>：MiniOneRec 是中科大 LDS / AlphaLab / NExT 团队（包含 Xiangnan He）对 OneRec 的<strong>学术复现与扩展</strong>。OneRec 当时还未开源，MiniOneRec 让学术圈能完整复现生成式推荐的每个环节，并在公开数据集（Amazon Review）上验证了 Scaling Law。</p>
+<p>GitHub 1.6k ⭐，是目前生成式推荐领域最活跃的开源项目之一。</p>
+<h3 id="8-1-整体框架">8.1 整体框架</h3>
+<div style="text-align:center">
+  <img src="fig8_minionerec_framework.png" alt="MiniOneRec 框架图" style="max-width:720px;width:100%;height:auto;" />
+</div>
+<p>MiniOneRec 的 pipeline 包含三个核心阶段：<strong>SID 构造 → SFT → RL</strong>，与 OneRec 的训练流程一致，但提供了多种可替换的算法实现。</p>
+<h3 id="8-2-SID-构造：多种算法可选">8.2 SID 构造：多种算法可选</h3>
+<p>MiniOneRec 实现了四种 SID 构造方法，覆盖不同精度与效率的权衡：</p>
 <table>
 <thead>
 <tr>
-<th>领域</th>
-<th>SASRec</th>
-<th>TIGER</th>
-<th>LC-Rec</th>
-<th><strong>OneRec-Ours</strong></th>
+<th>方法</th>
+<th>算法</th>
+<th>特点</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Baby</td>
-<td>0.0381</td>
-<td>0.0318</td>
-<td>0.0344</td>
-<td><strong>0.0513</strong></td>
+<td><strong>RQ-VAE</strong></td>
+<td>残差量化 VAE</td>
+<td>三层量化，语义对齐强</td>
 </tr>
 <tr>
-<td>Beauty</td>
-<td>0.0639</td>
-<td>0.0628</td>
-<td>0.0764</td>
-<td><strong>0.0924</strong></td>
+<td><strong>RQ-Kmeans</strong></td>
+<td>分层 K-Means</td>
+<td>基于 Faiss，高效但碰撞率较高</td>
 </tr>
 <tr>
-<td>Cell Phones</td>
-<td>0.0782</td>
-<td>0.0786</td>
-<td>0.0883</td>
-<td><strong>0.1036</strong></td>
+<td><strong>Constrained RQ-Kmeans</strong></td>
+<td>约束分层 K-Means</td>
+<td>冲突项去重 + 均衡约束</td>
 </tr>
 <tr>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<td><strong>RQ-Kmeans+</strong></td>
+<td>增强版 RQ-Kmeans</td>
+<td>最优方案，分布均匀</td>
 </tr>
 </tbody>
 </table>
-<h4 id="7-7-5-Scaling-Law-与灾难遗忘平衡">7.7.5 Scaling Law 与灾难遗忘平衡</h4>
-<p>技术报告验证了关键发现：<strong>随着参数规模增大，推荐能力可预测地提升，同时 LLM 的通用世界知识不会发生灾难性遗忘</strong>——这是生成式推荐Scaling Law 的重要特性，也是 OneRec-Foundation 区别于传统 ID 模型的核心优势。</p>
-<blockquote>
-<p>📢 OneRec 官方已开源！快手团队开源了 <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">OpenOneRec</a>（778 ⭐），包含预训练模型（1.7B / 8B / Pro 版本）、RecIF-Bench 评测基准和完整训练 Pipeline。</p>
-</blockquote>
-<h3 id="7-8-MiniOneRec：首个生成式推荐开源框架">7.8 MiniOneRec：首个生成式推荐开源框架</h3>
-<blockquote>
-<p>MiniOneRec 是中科大 LDS / AlphaLab / NExT 团队（包含 Xiangnan He）对 OneRec 的<strong>开源复现与扩展</strong>，GitHub 1.6k ⭐，是目前生成式推荐领域最活跃的开源项目之一。</p>
-</blockquote>
-<p><strong>核心贡献</strong>：</p>
-<ol>
-<li><strong>首个全流程开源框架</strong>：覆盖 SID 构造 → SFT 微调 → RL 偏好对齐，端到端可复现</li>
-<li><strong>在公开数据集验证 Scaling Law</strong>：0.5B → 7B 参数，训练/评估 loss 均随参数规模一致下降</li>
-<li><strong>多种 SID 构造算法</strong>：RQ-VAE / RQ-Kmeans / Constrained RQ-Kmeans / RQ-Kmeans+</li>
-</ol>
-<p><strong>技术细节</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>模块</th>
-<th>实现</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>SID 构造</strong></td>
-<td>RQ-VAE：三层残差量化（codebook size K=256，层次 a/b/c）</td>
-</tr>
-<tr>
-<td><strong>SFT 阶段</strong></td>
-<td>Next Token Prediction + 语言对齐目标（text↔SID 双向映射）</td>
-</tr>
-<tr>
-<td><strong>RL 阶段</strong></td>
-<td>GRPO（Group Relative Policy Optimization）+ 约束 Beam Search</td>
-</tr>
-<tr>
-<td><strong>约束解码</strong></td>
-<td>保证每条 beam 唯一且有效，显著提升采样效率和多样性</td>
-</tr>
-<tr>
-<td><strong>Reward 设计</strong></td>
-<td>二元正确性奖励 + 排序感知惩罚（高概率但错误项加重惩罚）+ 协同过滤分数</td>
-</tr>
-<tr>
-<td><strong>LLM 基座</strong></td>
-<td>Qwen 0.5B ~ 7B，实验覆盖 Amazon Review 多个类目</td>
-</tr>
-</tbody>
-</table>
-<p><strong>SID 构造流程</strong>（三种可选方案）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">方案一 RQ-VAE：</span><br><span class="line">  Item (title + description)</span><br><span class="line">    → Text Encoder (Qwen frozen)</span><br><span class="line">    → Embedding (e.g., 4096-dim)</span><br><span class="line">    → RQ-VAE 三层量化</span><br><span class="line">    → Semantic ID: &lt;s_a_X&gt;&lt;s_b_Y&gt;&lt;s_c_Z&gt;</span><br><span class="line"></span><br><span class="line">方案二 RQ-Kmeans：</span><br><span class="line">  Embedding → Faiss → RQ-Kmeans 分层聚类 → SID</span><br><span class="line"></span><br><span class="line">方案三 RQ-Kmeans+（GPR 改进版）：</span><br><span class="line">  在 RQ-Kmeans 基础上做冲突项去重 + 均衡约束 → 更均匀的 SID 分布</span><br></pre></td></tr></table></figure>
-<p><strong>MiniOneRec vs OneRec</strong>：</p>
+<p>以 RQ-VAE 为例，构造流程为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Item (title + description)</span><br><span class="line">  → Text Encoder (Qwen frozen)</span><br><span class="line">  → Embedding (4096-dim)</span><br><span class="line">  → RQ-VAE 三层残差量化（K=256）</span><br><span class="line">  → Semantic ID: &lt;s_a_X&gt;&lt;s_b_Y&gt;&lt;s_c_Z&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="8-3-训练流程">8.3 训练流程</h3>
+<p><strong>SFT 阶段</strong>：</p>
+<ul>
+<li>Next Token Prediction + 语言对齐目标（text↔SID 双向映射）</li>
+<li>支持冻结 LLM 参数，仅训练 SID embedding</li>
+</ul>
+<p><strong>RL 阶段</strong>：</p>
+<ul>
+<li>GRPO（Group Relative Policy Optimization）+ 约束 Beam Search</li>
+<li>Reward 设计：二元正确性奖励 + 排序感知惩罚 + 协同过滤分数</li>
+<li>约束解码保证每条 beam 唯一且有效</li>
+</ul>
+<h3 id="8-4-与-OneRec-的对比">8.4 与 OneRec 的对比</h3>
 <table>
 <thead>
 <tr>
@@ -778,32 +774,42 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 </thead>
 <tbody>
 <tr>
-<td>数据</td>
+<td><strong>数据</strong></td>
 <td>工业私有数据</td>
 <td>Amazon Review 公开数据</td>
 </tr>
 <tr>
-<td>模型规模</td>
+<td><strong>模型规模</strong></td>
 <td>超大规模（工业级）</td>
-<td>0.5B ~ 7B（学术友好）</td>
+<td>0.5B ~ 7B（学术友好，4-8 卡可复现）</td>
 </tr>
 <tr>
-<td>侧重点</td>
+<td><strong>侧重点</strong></td>
 <td>工业落地 + 全流量验证</td>
-<td>学术复现 + Scaling Law 验证</td>
+<td>学术复现 + Scaling Law 公开验证</td>
 </tr>
 <tr>
-<td>开源程度</td>
-<td>完整训练 Pipeline</td>
-<td>SID 构造 + SFT + RL + 评测</td>
+<td><strong>SID 方法</strong></td>
+<td>RQ-Kmeans</td>
+<td>RQ-VAE / RQ-Kmeans / Constrained / Kmeans+</td>
+</tr>
+<tr>
+<td><strong>RL 算法</strong></td>
+<td>ECPO (GRPO)</td>
+<td>GRPO（等效）</td>
+</tr>
+<tr>
+<td><strong>开源范围</strong></td>
+<td>完整训练 Pipeline + 模型权重</td>
+<td>全流程代码 + 评测脚本</td>
 </tr>
 </tbody>
 </table>
-<p><strong>为什么重要</strong>：OneRec 是工业级黑盒，而 MiniOneRec 让学术圈能完整复现生成式推荐的每个环节，降低了研究门槛。同时它验证了 Scaling Law 在推荐场景的通用性——这正是 OneRec 只在工业数据上展示、但缺乏公开验证的核心问题。</p>
+<p>MiniOneRec 的核心价值在于：<strong>让学术研究者能用公开代码完整复现生成式推荐的端到端流程</strong>，填补了 OneRec 工业黑盒与学术研究之间的 Gap。</p>
 <hr>
 <h2 id="8-总结与展望">8. 总结与展望</h2>
 <h3 id="8-1-生成式推荐的演进规律">8.1 生成式推荐的演进规律</h3>
-<p>从 SASRec 到 MiniOneRec，我们可以清晰看到一条演进路径：</p>
+<p>从 SASRec 到 OneRec，我们可以清晰看到一条演进路径：</p>
 <table>
 <thead>
 <tr>
@@ -851,7 +857,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <td>一个模型输出推荐列表</td>
 </tr>
 <tr>
-<td>开源生态</td>
+<td></td>
 <td>MiniOneRec</td>
 <td>全流程开源 + Scaling Law 公开验证</td>
 <td>开源复现降低研究门槛</td>
@@ -880,7 +886,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <li>更强的推理能力：Infer 阶段的 scaling up</li>
 <li>完备的 Reward System：引导模型更好地理解用户偏好和业务需求</li>
 </ul>
-<h3 id="8-4-七算法横向对比">8.4 七算法横向对比</h3>
+<h3 id="8-4-算法横向对比">8.4 算法横向对比</h3>
 <h4 id="8-4-1-核心要素对比">8.4.1 核心要素对比</h4>
 <table>
 <thead>
@@ -1050,13 +1056,13 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <p>Jiaxin Deng et al. <em>OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment</em>. Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.18965">arXiv:2502.18965</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a></p>
 </li>
 <li>
-<p>Guorui Zhou et al. <em>OpenOneRec Technical Report</em>. Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2512.24762">arXiv:2512.24762</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
+<p>Guorui Zhou et al. <em>OpenOneRec Technical Report</em>. Kuaishou 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2506.13695">arXiv:2506.13695</a> | <a target="_blank" rel="noopener" href="https://github.com/Kuaishou-OneRec/OpenOneRec">代码</a> | <a target="_blank" rel="noopener" href="https://huggingface.co/OpenOneRec">HuggingFace</a></p>
 </li>
 <li>
 <p>Xiaoyu Kong et al. <em>MiniOneRec: An Open-Source Framework for Scaling Generative Recommendation</em>. USTC 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.24431">arXiv:2510.24431</a> | <a target="_blank" rel="noopener" href="https://github.com/AkaliKong/MiniOneRec">代码</a></p>
 </li>
 </ol>
-</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%A8%E8%8D%90/">推荐</a><a class="post-meta__tags" href="/tags/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/">生成式推荐</a></div><div class="post-share"><div class="social-share" data-image="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img class="cover" src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">搜推系统常用离线评估指标解析</div></div><div class="info-2"><div class="info-item-1"> 搜推系统离线评估指标详解：从 HitRate、AUC到NDCG指标，手把手拆解核心公式与业务含义。  1. 为什么需要离线评估 线上 A/B 实验是评估算法效果的&quot;金标准&quot;，但它的代价也很高——需要切分流量、长周期观察，另外万一模型翻车还直接影响用户体验。所以在实际迭代中，会先用离线指标快速筛选，再用 A/B 实验做最终验证。 离线评估的指标包括 召回类、预估类、排序类等，覆盖了从候选池到精排的完整 pipeline。需要注意的是，离线指标与线上指标之间存在天然 Gap，离线指标和线上观测指标本身就不一致，也会有曝光偏差和位置偏差等问题，很可能出现离线指标涨，线上指标跌的情况，因此也不能太迷信离线指标。 2. 召回类指标 推荐系统的第一步是从海量候选池中召回候选集，召回类指标衡量的是&quot;有没有把用户感兴趣的内容找出来&quot;。 2.1 Recall@K（召回率 / 覆盖率） Recall@K 衡量 Top-K 推荐列表对所有正样本的覆盖程度： Recall@K=Top-K 中命中的正样本数全部正样本数\text{Recall@K} = \frac...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">python二维list初始化和赋值</div></div><div class="info-2"><div class="info-item-1">Python 二维 list 的本质 在 Python 中，二维 list 本质上是一个“列表的列表”。也就是说，它实际上是一个一维列表，里面的每个元素又是一个一维列表。 例如： 12345matrix = [    [0, 1, 2],    [3, 4, 5],    [6, 7, 8],] 这里 matrix 是一个外层列表，内层的每一个 [0, 1, 2]、[3, 4, 5] 都是单独的行对象。 常见初始化方式 1. 嵌套循环初始化 这是最直接、最清晰的方式。 12345678n = 3m = 4matrix = []for i in range(n):    row = []    for j in range(m):        row.append(0)    matrix.append(row) 这种写法会为每一行创建一个新的列表，保证行之间互不干扰。 2. 列表推导式初始化（推荐） 使用列表推导式，不仅简洁，而且避免了行共享问题。 123n = 3m = 4matrix = [[0] * m for _ in range(n)] 这个语句等价于： 123mat...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/%E6%8E%A8%E8%8D%90%E6%8E%92%E5%BA%8F%E5%88%86%E6%95%B0%E6%A0%A1%E5%87%86/" title="推荐排序分数校准：从不均衡采样到精准预测"><img class="cover" src="https://cdn.hailuoai.com/cdn_upload/20260404/487432426591133703/376935125328179/094357_c129/workspace/images/calibration-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-04</div><div class="info-item-2">推荐排序分数校准：从不均衡采样到精准预测</div></div><div class="info-2"><div class="info-item-1"> 排序模型对样本做采样后，预估分不再代表真实概率，校准如何把&quot;偏移的尺子&quot;重新调准。  1. 样本不均衡与采样 在推荐系统中，每一次用户曝光都可能产生两种结果：正样本（点击/转化）和负样本（曝光未点击）。 真实数据中，正负样本的比例极度失衡：    场景 正样本占比 正负比例     电商推荐（点击） 约 3% ~ 10% 1:10 ~ 1:30   广告展示（转化） 约 0.1% ~ 1% 1:100 ~ 1:1000    样本不均衡会引发两个训练层面的问题：负样本梯度淹没正样本，让模型难以学到有效信号；同时全量负样本的计算代价极高，训练速度严重受限。 为了缓解失衡，训练时只保留一部分负样本，  2. 为什么对负样本做采样后需要校准 对负样本做采样改变了样本的先验分布，模型输出的概率值不再是真实的 CTR/CVR。 排序只需要相对顺序对，但计费需要概率值对。    需求 排序（Rank） 计费（Bid）     依赖 只需正样本排在负样本前面 需要 p^\hat{p}p^​ 接近真实 ppp   对分布偏差的容忍度 高（相对顺序不变即可） 低（概率偏差直接...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%8F%8C%E5%A1%94%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/" title="推荐系统双塔召回模型详解"><img class="cover" src="https://cdn.hailuoai.com/cdn_upload/20260401/487432426591133703/376935125328179/141556_bf9f/workspace/images/tower-article-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-03</div><div class="info-item-2">推荐系统双塔召回模型详解</div></div><div class="info-2"><div class="info-item-1"> 从矩阵分解到深度学习，双塔如何成为现代推荐系统的召回标配  1. 双塔模型的基础介绍 1.1 从矩阵分解说起 在了解双塔模型之前，我们先回顾一下矩阵分解（Matrix Factorization，MF）：  矩阵分解：将用户-物品评分矩阵 R∈Rm×nR \in \mathbb{R}^{m \times n}R∈Rm×n 分解为两个低秩矩阵的乘积：R≈U⋅V⊤R \approx U \cdot V^{\top}R≈U⋅V⊤，通过梯度下降学习用户隐向量 uu∈Rku_u \in \mathbb{R}^kuu​∈Rk 和物品隐向量 vi∈Rkv_i \in \mathbb{R}^kvi​∈Rk，用点积 uu⋅viu_u \cdot v_iuu​⋅vi​ 预测用户uuu对物品iii的偏好分。  矩阵分解的局限：  只用 ID 信息，没有利用用户和物品丰富的内容特征 无法处理新用户、新物品的冷启动问题  1.2 双塔模型的核心思想 双塔模型（Two-Tower Model）的核心洞察是：  用两个深度神经网络（DNN）分别学习矩阵分解中的 user/item ID Embedding，...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/%E6%8E%A8%E8%8D%90%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A8%A1%E5%9E%8B%E6%BC%94%E8%BF%9B/" title="推荐排序算法模型演进"><img class="cover" src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1775387948_dff8a1af.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-05</div><div class="info-item-2">推荐排序算法模型演进</div></div><div class="info-2"><div class="info-item-1"> 排序是推荐系统的核心环节。本文系统梳理从 LR、GBDT 到 Wide&amp;Deep、DIN 等排序模型的完整演进脉络，覆盖特征体系、特征处理、传统排序模型、深度学习排序模型、基础的行为序列建模等内容。  1. 排序在推荐漏斗中的位置与核心使命 一个完整的推荐系统通常由召回（Retrieval）→ 粗排（Pre-Rank）→ 精排（Ranking）→ 重排（Re-rank） 四层构成，形状像一个倒漏斗：       召回：从海量物品库（百万至亿级）中快速筛选出候选集（千至万级），注重吞吐量和相关性 粗排：对召回候选集做初步排序，输出约 千级 规模 精排：对候选物品逐一打分，输出约 千级 规模，进入重排阶段 重排：业务规则干预、多样性控制，最终输出 几十个 精品结果展示给用户  在整条漏斗中，精排是特征使用最丰富、模型精度要求最高的环节，任务核心是对单个物品的打分预测。如漏斗右侧所示，精排阶段的核心处理链路为：用户特征、物品特征、交叉特征、上下文特征经 Embedding 层后进入多塔 DNN，最终输出 CTR/CVR 等预估分数用于排序。  2. 排序模型常用特征 排序模型...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/" title="推荐系统与Embedding"><img class="cover" src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-03</div><div class="info-item-2">推荐系统与Embedding</div></div><div class="info-2"><div class="info-item-1"> Embedding技术是深度学习的一种基础核心操作，有很多的应用场景。本篇结合了书籍 《深度学习推荐系统》和吴恩达老师的视频课程 《Natural Language Processing and Word Embeddings》。  1. embedding基础概念 word embedding差不多表示为词表示，如何用数字化的形式表示一个单词。简单解释embedding就是用一个低维稠密的向量表示一个对象。embedding可以表达对象的一些特征，在向量距离上反应了对象之间的相似性。 1.1 embedding词表示解释 如果用one-hot的方式表示词，类似[0 0 0 0 …… 1 …… 0 0 0]。 one-hot表示的问题，没有考虑词之间的关系，任意两个词的距离都是一样的。比较自然的可以想到将one-hot的向量转变为一个稠密的向量，比如[0.32 1.43 0.43 …… 4.32]。 合理的思考是，比如对于单词，man、woman、king、queen、apple、orange等，可以有一些描述词诸如gender、royal、age等，通过单词和描述词的相关度得...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img class="cover" src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-20</div><div class="info-item-2">搜推系统常用离线评估指标解析</div></div><div class="info-2"><div class="info-item-1"> 搜推系统离线评估指标详解：从 HitRate、AUC到NDCG指标，手把手拆解核心公式与业务含义。  1. 为什么需要离线评估 线上 A/B 实验是评估算法效果的&quot;金标准&quot;，但它的代价也很高——需要切分流量、长周期观察，另外万一模型翻车还直接影响用户体验。所以在实际迭代中，会先用离线指标快速筛选，再用 A/B 实验做最终验证。 离线评估的指标包括 召回类、预估类、排序类等，覆盖了从候选池到精排的完整 pipeline。需要注意的是，离线指标与线上指标之间存在天然 Gap，离线指标和线上观测指标本身就不一致，也会有曝光偏差和位置偏差等问题，很可能出现离线指标涨，线上指标跌的情况，因此也不能太迷信离线指标。 2. 召回类指标 推荐系统的第一步是从海量候选池中召回候选集，召回类指标衡量的是&quot;有没有把用户感兴趣的内容找出来&quot;。 2.1 Recall@K（召回率 / 覆盖率） Recall@K 衡量 Top-K 推荐列表对所有正样本的覆盖程度： Recall@K=Top-K 中命中的正样本数全部正样本数\text{Recall@K} = \frac...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E9%87%8D%E6%8E%92/%E6%8E%A8%E8%8D%90%E9%87%8D%E6%8E%92%E5%A4%9A%E6%A0%B7%E6%80%A7/" title="推荐重排多样性"><img class="cover" src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1775444575_31d45343.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-06</div><div class="info-item-2">推荐重排多样性</div></div><div class="info-2"><div class="info-item-1"> 推荐结果既要精准，也要多样。本篇会介绍推荐系统中重排阶段多样性问题的定义、衡量方式，以及从规则 到 MMR 再到 DPP 的核心算法演进。   1. 为什么需要推荐多样性 推荐同质化问题 在电商平台上，你是否有过这样的体验：搜索&quot;收纳用品&quot;后，推荐页出现了大量相似的垃圾袋？或者刷短视频时，连续多条内容都是同一类型的短视频？ 这就是推荐系统中的同质化问题。当推荐系统以预估单个物品的效率做建模，并以此打分做排序时，推荐结果会向某一类高频、高相关物品集中，用户看到的永远是自己&quot;已知感兴趣&quot;的内容，新品类和新品牌难以获得曝光机会。      同质化不仅损害用户体验（新鲜感下降），长期还会导致用户兴趣固化、流失风险上升。 根源：排序模型的贪心本质 推荐系统的漏斗中，精排阶段负责对候选物品逐一打分，按分数从高到低截取 Top-K 列表。这个过程是贪心（Greedy） 的——每个物品独立根据自身的 CTR/CVR 预估分参与排序。 这种贪心策略的问题是：优化的是&quot;单品最优&quot;，而非&quot;列表最优&quot;（Listwise）。...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">38</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">从自回归到端到端的序列生成式推荐范式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E-%E6%89%93%E5%88%86-%E5%88%B0-%E7%94%9F%E6%88%90-%E2%80%94%E2%80%94%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F%E7%9A%84%E8%BD%AC%E5%8F%98"><span class="toc-text">1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%A0%E7%BB%9F%E6%8E%A8%E8%8D%90%E7%9A%84%E7%93%B6%E9%A2%88"><span class="toc-text">1.1 传统推荐的瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">1.2 生成式推荐的核心理念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%87%AA%E5%9B%9E%E5%BD%92%E8%B7%AF%E7%BA%BF%E2%80%94%E2%80%94SASRec"><span class="toc-text">2. 自回归路线——SASRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%8A%A8%E6%9C%BA%EF%BC%9A%E5%B9%B3%E8%A1%A1%E7%A8%80%E7%96%8F%E4%B8%8E%E7%A8%A0%E5%AF%86%E6%95%B0%E6%8D%AE"><span class="toc-text">2.1 动机：平衡稀疏与稠密数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9A%E5%9B%A0%E6%9E%9C-Transformer"><span class="toc-text">2.2 核心架构：因果 Transformer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="toc-text">2.3 训练目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E6%95%88%E6%9E%9C%E4%B8%8E%E5%B1%80%E9%99%90"><span class="toc-text">2.4 效果与局限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%8F%8C%E5%90%91%E5%8C%96%E6%8E%A2%E7%B4%A2%E2%80%94%E2%80%94BERT4Rec"><span class="toc-text">3. 双向化探索——BERT4Rec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E5%8D%95%E5%90%91%E7%BB%93%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-text">3.1 核心问题：单向结构的局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9ACloze-Task%EF%BC%88%E5%AE%8C%E5%BD%A2%E5%A1%AB%E7%A9%BA%EF%BC%89"><span class="toc-text">3.2 训练目标：Cloze Task（完形填空）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%8E%A8%E7%90%86%EF%BC%9A%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90"><span class="toc-text">3.3 推理：转换为自回归生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E6%9E%B6%E6%9E%84%E7%BB%86%E8%8A%82"><span class="toc-text">3.4 架构细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E6%95%88%E6%9E%9C%E4%B8%8E%E6%84%8F%E4%B9%89"><span class="toc-text">3.5 效果与意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Token-%E5%8C%96%E4%B8%80%E5%88%87%E2%80%94%E2%80%94TIGER"><span class="toc-text">4. Token 化一切——TIGER</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">4.1 生成式检索的核心理念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Semantic-ID%EF%BC%9A%E8%AE%A9%E7%89%A9%E5%93%81-ID-%E6%9C%89%E8%AF%AD%E4%B9%89"><span class="toc-text">4.2 Semantic ID：让物品 ID 有语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9E%8B"><span class="toc-text">4.3 生成式推荐模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%85%B3%E9%94%AE%E4%BC%98%E5%8A%BF"><span class="toc-text">4.4 关键优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">4.5 实验结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%AB%98%E6%95%88%E9%95%BF%E5%BA%8F%E5%88%97%E2%80%94%E2%80%94HSTU"><span class="toc-text">5. 高效长序列——HSTU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E5%B7%A5%E4%B8%9A%E5%8C%96%E6%8C%91%E6%88%98"><span class="toc-text">5.1 生成式推荐的工业化挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9AHierarchical-Sequential-Transduction-Units"><span class="toc-text">5.2 核心架构：Hierarchical Sequential Transduction Units</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%92%88%E5%AF%B9%E6%80%A7%E6%94%B9%E9%80%A0"><span class="toc-text">5.3 注意力机制的针对性改造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E7%BB%9F%E4%B8%80%E7%89%B9%E5%BE%81%E5%BB%BA%E6%A8%A1"><span class="toc-text">5.4 序列化和统一特征建模</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E6%80%A7%E8%83%BD%E4%B8%8EScaling"><span class="toc-text">5.5 性能与Scaling</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%8A%A0%E6%8C%81%E2%80%94%E2%80%94HLLM"><span class="toc-text">6. 大语言模型加持——HLLM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-LLM%EF%BC%9F"><span class="toc-text">6.1 为什么需要 LLM？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%EF%BC%9AItem-LLM-User-LLM"><span class="toc-text">6.2 分层架构：Item LLM + User LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9A%E7%94%9F%E6%88%90%E5%BC%8F-%E5%88%A4%E5%88%AB%E5%BC%8F"><span class="toc-text">6.3 训练目标：生成式 + 判别式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0"><span class="toc-text">6.4 关键发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E5%9C%A8%E7%BA%BF%E5%AE%9E%E9%AA%8C"><span class="toc-text">6.5 在线实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%BB%9F%E4%B8%80%E7%AB%AF%E5%88%B0%E7%AB%AF%E2%80%94%E2%80%94OneRec-OpenOneRec"><span class="toc-text">7. 统一端到端——OneRec &amp; OpenOneRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%89%93%E7%A0%B4%E7%BA%A7%E8%81%94%E6%9E%B6%E6%9E%84"><span class="toc-text">7.1 打破级联架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%8D%8F%E5%90%8C%E6%84%9F%E7%9F%A5%E5%A4%9A%E6%A8%A1%E6%80%81%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-text">7.2 协同感知多模态分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Encoder-Decoder-%E6%9E%B6%E6%9E%84"><span class="toc-text">7.3 Encoder-Decoder 架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-RL-%E5%81%8F%E5%A5%BD%E5%AF%B9%E9%BD%90"><span class="toc-text">7.4 RL 偏好对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-text">7.5 性能优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-%E5%9C%A8%E7%BA%BF%E6%95%88%E6%9E%9C"><span class="toc-text">7.6 在线效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-7-OpenOneRec-%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A%EF%BC%9A%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB%E4%B8%8E-RecIF-Bench"><span class="toc-text">7.7 OpenOneRec 技术报告：开源体系与 RecIF-Bench</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-1-RecIF-Bench%EF%BC%9A%E6%8E%A8%E8%8D%90%E6%8C%87%E4%BB%A4%E8%B7%9F%E9%9A%8F%E8%AF%84%E6%B5%8B%E5%9F%BA%E5%87%86"><span class="toc-text">7.7.1 RecIF-Bench：推荐指令跟随评测基准</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-2-OneRec-Foundation-%E6%A8%A1%E5%9E%8B%E6%97%8F"><span class="toc-text">7.7.2 OneRec-Foundation 模型族</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-3-%E8%AE%AD%E7%BB%83-Pipeline%EF%BC%88%E5%BC%80%E6%BA%90%E5%86%85%E5%AE%B9%EF%BC%89"><span class="toc-text">7.7.3 训练 Pipeline（开源内容）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-4-%E8%B7%A8%E5%9F%9F%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B"><span class="toc-text">7.7.4 跨域泛化能力</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-5-Scaling-Law-%E4%B8%8E%E7%81%BE%E9%9A%BE%E9%81%97%E5%BF%98%E5%B9%B3%E8%A1%A1"><span class="toc-text">7.7.5 Scaling Law 与灾难遗忘平衡</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-8-MiniOneRec%EF%BC%9A%E9%A6%96%E4%B8%AA%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6"><span class="toc-text">7.8 MiniOneRec：首个生成式推荐开源框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="toc-text">8. 总结与展望</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%BC%94%E8%BF%9B%E8%A7%84%E5%BE%8B"><span class="toc-text">8.1 生成式推荐的演进规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%85%B1%E5%90%8C%E8%A7%84%E5%BE%8B"><span class="toc-text">8.2 共同规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E5%BD%93%E5%89%8D%E7%93%B6%E9%A2%88%E4%B8%8E%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-text">8.3 当前瓶颈与未来方向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E4%B8%83%E7%AE%97%E6%B3%95%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4 七算法横向对比</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-1-%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.1 核心要素对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-2-%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.2 架构演进对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-3-%E7%9B%B8%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.3 相同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-4-%E5%85%B3%E9%94%AE%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.4 关键不同之处</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搜推系统常用离线评估指标解析"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析">搜推系统常用离线评估指标解析</a><time datetime="2026-05-19T23:16:08.000Z" title="发表于 2026-05-20 07:16:08">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="生成式推荐：从自回归到端到端的序列生成"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="生成式推荐：从自回归到端到端的序列生成"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="生成式推荐：从自回归到端到端的序列生成">生成式推荐：从自回归到端到端的序列生成</a><time datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值">python二维list初始化和赋值</a><time datetime="2026-05-15T14:15:06.000Z" title="发表于 2026-05-15 22:15:06">2026-05-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中not的用法"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法">python中not的用法</a><time datetime="2026-05-09T13:14:59.000Z" title="发表于 2026-05-09 21:14:59">2026-05-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python判断两个浮点数是否相等"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等">python判断两个浮点数是否相等</a><time datetime="2026-05-01T08:35:06.000Z" title="发表于 2026-05-01 16:35:06">2026-05-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%A8%E8%8D%90/">推荐</a><a class="post-meta__tags" href="/tags/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/">生成式推荐</a></div><div class="post-share"><div class="social-share" data-image="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img class="cover" src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">搜推系统常用离线评估指标解析</div></div><div class="info-2"><div class="info-item-1"> 搜推系统离线评估指标详解：从 HitRate、AUC到NDCG指标，手把手拆解核心公式与业务含义。  1. 为什么需要离线评估 线上 A/B 实验是评估算法效果的&quot;金标准&quot;，但它的代价也很高——需要切分流量、长周期观察，另外万一模型翻车还直接影响用户体验。所以在实际迭代中，会先用离线指标快速筛选，再用 A/B 实验做最终验证。 离线评估的指标包括 召回类、预估类、排序类等，覆盖了从候选池到精排的完整 pipeline。需要注意的是，离线指标与线上指标之间存在天然 Gap，离线指标和线上观测指标本身就不一致，也会有曝光偏差和位置偏差等问题，很可能出现离线指标涨，线上指标跌的情况，因此也不能太迷信离线指标。 2. 召回类指标 推荐系统的第一步是从海量候选池中召回候选集，召回类指标衡量的是&quot;有没有把用户感兴趣的内容找出来&quot;。 2.1 Recall@K（召回率 / 覆盖率） Recall@K 衡量 Top-K 推荐列表对所有正样本的覆盖程度： Recall@K=Top-K 中命中的正样本数全部正样本数\text{Recall@K} = \frac...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">python二维list初始化和赋值</div></div><div class="info-2"><div class="info-item-1">Python 二维 list 的本质 在 Python 中，二维 list 本质上是一个“列表的列表”。也就是说，它实际上是一个一维列表，里面的每个元素又是一个一维列表。 例如： 12345matrix = [    [0, 1, 2],    [3, 4, 5],    [6, 7, 8],] 这里 matrix 是一个外层列表，内层的每一个 [0, 1, 2]、[3, 4, 5] 都是单独的行对象。 常见初始化方式 1. 嵌套循环初始化 这是最直接、最清晰的方式。 12345678n = 3m = 4matrix = []for i in range(n):    row = []    for j in range(m):        row.append(0)    matrix.append(row) 这种写法会为每一行创建一个新的列表，保证行之间互不干扰。 2. 列表推导式初始化（推荐） 使用列表推导式，不仅简洁，而且避免了行共享问题。 123n = 3m = 4matrix = [[0] * m for _ in range(n)] 这个语句等价于： 123mat...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/%E6%8E%A8%E8%8D%90%E5%A4%9A%E7%9B%AE%E6%A0%87%E6%8E%92%E5%BA%8F%E5%BB%BA%E6%A8%A1/" title="推荐多目标排序建模"><img class="cover" src="https://cdn.hailuoai.com/cdn_upload/20260404/487432426591133703/376935125328179/150211_767e/workspace/images/multi-task-cover-v2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-04</div><div class="info-item-2">推荐多目标排序建模</div></div><div class="info-2"><div class="info-item-1"> 推荐系统的真实业务从来不是单一目标——如何让 CTR、CVR、GMV 等多个目标协同优化，是推荐系统的核心难题之一。  1. 多目标排序的背景 1.1 业务目标天然多元 真实的推荐业务场景中，用户行为是多维的，衡量指标也是多元的：    场景 典型目标 说明     音乐推荐 完播率、收藏率、分享率 用户是否真的在消费内容   电商推荐 点击率（CTR）、转化率（CVR）、GMV 曝光→点击→成交的完整链路   视频推荐 播放完成率、互动率、留存率 内容质量和用户参与度并重    1.2 目标之间的冲突 多目标之间并非总是协同的，它们往往存在天然冲突：  CTR ↑ vs CVR ↓：低门槛内容（八卦、擦边）CTR 高但 CVR 低；高门槛内容（专业教程）CTR 低但 CVR 高 短期点击 vs 长期留存：单纯优化 CTR 会导致标题党泛滥，用户新鲜感消退后留存下降 GMV 最大化 vs 用户体验：过度推销高毛利商品会损害用户体验  因此，多目标排序的本质不是&quot;选最优&quot;，而是在多个目标之间找到帕累托最优的平衡点。 1.3 传统单目标建模的困境 传统做法是为每...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%8F%8C%E5%A1%94%E5%8F%AC%E5%9B%9E%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/" title="推荐系统双塔召回模型详解"><img class="cover" src="https://cdn.hailuoai.com/cdn_upload/20260401/487432426591133703/376935125328179/141556_bf9f/workspace/images/tower-article-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-03</div><div class="info-item-2">推荐系统双塔召回模型详解</div></div><div class="info-2"><div class="info-item-1"> 从矩阵分解到深度学习，双塔如何成为现代推荐系统的召回标配  1. 双塔模型的基础介绍 1.1 从矩阵分解说起 在了解双塔模型之前，我们先回顾一下矩阵分解（Matrix Factorization，MF）：  矩阵分解：将用户-物品评分矩阵 R∈Rm×nR \in \mathbb{R}^{m \times n}R∈Rm×n 分解为两个低秩矩阵的乘积：R≈U⋅V⊤R \approx U \cdot V^{\top}R≈U⋅V⊤，通过梯度下降学习用户隐向量 uu∈Rku_u \in \mathbb{R}^kuu​∈Rk 和物品隐向量 vi∈Rkv_i \in \mathbb{R}^kvi​∈Rk，用点积 uu⋅viu_u \cdot v_iuu​⋅vi​ 预测用户uuu对物品iii的偏好分。  矩阵分解的局限：  只用 ID 信息，没有利用用户和物品丰富的内容特征 无法处理新用户、新物品的冷启动问题  1.2 双塔模型的核心思想 双塔模型（Two-Tower Model）的核心洞察是：  用两个深度神经网络（DNN）分别学习矩阵分解中的 user/item ID Embedding，...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/" title="推荐系统与Embedding"><img class="cover" src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E5%8F%AC%E5%9B%9E/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E4%B8%8EEmbedding/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-03</div><div class="info-item-2">推荐系统与Embedding</div></div><div class="info-2"><div class="info-item-1"> Embedding技术是深度学习的一种基础核心操作，有很多的应用场景。本篇结合了书籍 《深度学习推荐系统》和吴恩达老师的视频课程 《Natural Language Processing and Word Embeddings》。  1. embedding基础概念 word embedding差不多表示为词表示，如何用数字化的形式表示一个单词。简单解释embedding就是用一个低维稠密的向量表示一个对象。embedding可以表达对象的一些特征，在向量距离上反应了对象之间的相似性。 1.1 embedding词表示解释 如果用one-hot的方式表示词，类似[0 0 0 0 …… 1 …… 0 0 0]。 one-hot表示的问题，没有考虑词之间的关系，任意两个词的距离都是一样的。比较自然的可以想到将one-hot的向量转变为一个稠密的向量，比如[0.32 1.43 0.43 …… 4.32]。 合理的思考是，比如对于单词，man、woman、king、queen、apple、orange等，可以有一些描述词诸如gender、royal、age等，通过单词和描述词的相关度得...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img class="cover" src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-20</div><div class="info-item-2">搜推系统常用离线评估指标解析</div></div><div class="info-2"><div class="info-item-1"> 搜推系统离线评估指标详解：从 HitRate、AUC到NDCG指标，手把手拆解核心公式与业务含义。  1. 为什么需要离线评估 线上 A/B 实验是评估算法效果的&quot;金标准&quot;，但它的代价也很高——需要切分流量、长周期观察，另外万一模型翻车还直接影响用户体验。所以在实际迭代中，会先用离线指标快速筛选，再用 A/B 实验做最终验证。 离线评估的指标包括 召回类、预估类、排序类等，覆盖了从候选池到精排的完整 pipeline。需要注意的是，离线指标与线上指标之间存在天然 Gap，离线指标和线上观测指标本身就不一致，也会有曝光偏差和位置偏差等问题，很可能出现离线指标涨，线上指标跌的情况，因此也不能太迷信离线指标。 2. 召回类指标 推荐系统的第一步是从海量候选池中召回候选集，召回类指标衡量的是&quot;有没有把用户感兴趣的内容找出来&quot;。 2.1 Recall@K（召回率 / 覆盖率） Recall@K 衡量 Top-K 推荐列表对所有正样本的覆盖程度： Recall@K=Top-K 中命中的正样本数全部正样本数\text{Recall@K} = \frac...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/%E6%8E%A8%E8%8D%90%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A8%A1%E5%9E%8B%E6%BC%94%E8%BF%9B/" title="推荐排序算法模型演进"><img class="cover" src="https://cdn.hailuoai.com/mcp/cdn_upload/487432426591133703/376935125328179/1775387948_dff8a1af.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-05</div><div class="info-item-2">推荐排序算法模型演进</div></div><div class="info-2"><div class="info-item-1"> 排序是推荐系统的核心环节。本文系统梳理从 LR、GBDT 到 Wide&amp;Deep、DIN 等排序模型的完整演进脉络，覆盖特征体系、特征处理、传统排序模型、深度学习排序模型、基础的行为序列建模等内容。  1. 排序在推荐漏斗中的位置与核心使命 一个完整的推荐系统通常由召回（Retrieval）→ 粗排（Pre-Rank）→ 精排（Ranking）→ 重排（Re-rank） 四层构成，形状像一个倒漏斗：       召回：从海量物品库（百万至亿级）中快速筛选出候选集（千至万级），注重吞吐量和相关性 粗排：对召回候选集做初步排序，输出约 千级 规模 精排：对候选物品逐一打分，输出约 千级 规模，进入重排阶段 重排：业务规则干预、多样性控制，最终输出 几十个 精品结果展示给用户  在整条漏斗中，精排是特征使用最丰富、模型精度要求最高的环节，任务核心是对单个物品的打分预测。如漏斗右侧所示，精排阶段的核心处理链路为：用户特征、物品特征、交叉特征、上下文特征经 Embedding 层后进入多塔 DNN，最终输出 CTR/CVR 等预估分数用于排序。  2. 排序模型常用特征 排序模型...</div></div></div></a><a class="pagination-related" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/%E6%8E%A8%E8%8D%90%E6%8E%92%E5%BA%8F%E5%88%86%E6%95%B0%E6%A0%A1%E5%87%86/" title="推荐排序分数校准：从不均衡采样到精准预测"><img class="cover" src="https://cdn.hailuoai.com/cdn_upload/20260404/487432426591133703/376935125328179/094357_c129/workspace/images/calibration-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-04</div><div class="info-item-2">推荐排序分数校准：从不均衡采样到精准预测</div></div><div class="info-2"><div class="info-item-1"> 排序模型对样本做采样后，预估分不再代表真实概率，校准如何把&quot;偏移的尺子&quot;重新调准。  1. 样本不均衡与采样 在推荐系统中，每一次用户曝光都可能产生两种结果：正样本（点击/转化）和负样本（曝光未点击）。 真实数据中，正负样本的比例极度失衡：    场景 正样本占比 正负比例     电商推荐（点击） 约 3% ~ 10% 1:10 ~ 1:30   广告展示（转化） 约 0.1% ~ 1% 1:100 ~ 1:1000    样本不均衡会引发两个训练层面的问题：负样本梯度淹没正样本，让模型难以学到有效信号；同时全量负样本的计算代价极高，训练速度严重受限。 为了缓解失衡，训练时只保留一部分负样本，  2. 为什么对负样本做采样后需要校准 对负样本做采样改变了样本的先验分布，模型输出的概率值不再是真实的 CTR/CVR。 排序只需要相对顺序对，但计费需要概率值对。    需求 排序（Rank） 计费（Bid）     依赖 只需正样本排在负样本前面 需要 p^\hat{p}p^​ 接近真实 ppp   对分布偏差的容忍度 高（相对顺序不变即可） 低（概率偏差直接...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">38</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E-%E6%89%93%E5%88%86-%E5%88%B0-%E7%94%9F%E6%88%90-%E2%80%94%E2%80%94%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F%E7%9A%84%E8%BD%AC%E5%8F%98"><span class="toc-text">1. 从&quot;打分&quot;到&quot;生成&quot;——推荐范式的转变</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%A0%E7%BB%9F%E6%8E%A8%E8%8D%90%E7%9A%84%E7%93%B6%E9%A2%88"><span class="toc-text">1.1 传统推荐的瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">1.2 生成式推荐的核心理念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%87%AA%E5%9B%9E%E5%BD%92%E8%B7%AF%E7%BA%BF%E2%80%94%E2%80%94SASRec"><span class="toc-text">2. 自回归路线——SASRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%8A%A8%E6%9C%BA%EF%BC%9A%E5%B9%B3%E8%A1%A1%E7%A8%80%E7%96%8F%E4%B8%8E%E7%A8%A0%E5%AF%86%E6%95%B0%E6%8D%AE"><span class="toc-text">2.1 动机：平衡稀疏与稠密数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9A%E5%9B%A0%E6%9E%9C-Transformer"><span class="toc-text">2.2 核心架构：因果 Transformer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="toc-text">2.3 训练目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E6%95%88%E6%9E%9C%E4%B8%8E%E5%B1%80%E9%99%90"><span class="toc-text">2.4 效果与局限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%8F%8C%E5%90%91%E5%8C%96%E6%8E%A2%E7%B4%A2%E2%80%94%E2%80%94BERT4Rec"><span class="toc-text">3. 双向化探索——BERT4Rec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E5%8D%95%E5%90%91%E7%BB%93%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-text">3.1 核心问题：单向结构的局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9ACloze-Task%EF%BC%88%E5%AE%8C%E5%BD%A2%E5%A1%AB%E7%A9%BA%EF%BC%89"><span class="toc-text">3.2 训练目标：Cloze Task（完形填空）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%8E%A8%E7%90%86%EF%BC%9A%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90"><span class="toc-text">3.3 推理：转换为自回归生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E6%9E%B6%E6%9E%84%E7%BB%86%E8%8A%82"><span class="toc-text">3.4 架构细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E6%95%88%E6%9E%9C%E4%B8%8E%E6%84%8F%E4%B9%89"><span class="toc-text">3.5 效果与意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Token-%E5%8C%96%E4%B8%80%E5%88%87%E2%80%94%E2%80%94TIGER"><span class="toc-text">4. Token 化一切——TIGER</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5"><span class="toc-text">4.1 生成式检索的核心理念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Semantic-ID%EF%BC%9A%E8%AE%A9%E7%89%A9%E5%93%81-ID-%E6%9C%89%E8%AF%AD%E4%B9%89"><span class="toc-text">4.2 Semantic ID：让物品 ID 有语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9E%8B"><span class="toc-text">4.3 生成式推荐模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%85%B3%E9%94%AE%E4%BC%98%E5%8A%BF"><span class="toc-text">4.4 关键优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">4.5 实验结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%AB%98%E6%95%88%E9%95%BF%E5%BA%8F%E5%88%97%E2%80%94%E2%80%94HSTU"><span class="toc-text">5. 高效长序列——HSTU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E5%B7%A5%E4%B8%9A%E5%8C%96%E6%8C%91%E6%88%98"><span class="toc-text">5.1 生成式推荐的工业化挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9AHierarchical-Sequential-Transduction-Units"><span class="toc-text">5.2 核心架构：Hierarchical Sequential Transduction Units</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E9%92%88%E5%AF%B9%E6%80%A7%E6%94%B9%E9%80%A0"><span class="toc-text">5.3 注意力机制的针对性改造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E7%BB%9F%E4%B8%80%E7%89%B9%E5%BE%81%E5%BB%BA%E6%A8%A1"><span class="toc-text">5.4 序列化和统一特征建模</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E6%80%A7%E8%83%BD%E4%B8%8EScaling"><span class="toc-text">5.5 性能与Scaling</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%8A%A0%E6%8C%81%E2%80%94%E2%80%94HLLM"><span class="toc-text">6. 大语言模型加持——HLLM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-LLM%EF%BC%9F"><span class="toc-text">6.1 为什么需要 LLM？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%EF%BC%9AItem-LLM-User-LLM"><span class="toc-text">6.2 分层架构：Item LLM + User LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%EF%BC%9A%E7%94%9F%E6%88%90%E5%BC%8F-%E5%88%A4%E5%88%AB%E5%BC%8F"><span class="toc-text">6.3 训练目标：生成式 + 判别式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0"><span class="toc-text">6.4 关键发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E5%9C%A8%E7%BA%BF%E5%AE%9E%E9%AA%8C"><span class="toc-text">6.5 在线实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%BB%9F%E4%B8%80%E7%AB%AF%E5%88%B0%E7%AB%AF%E2%80%94%E2%80%94OneRec"><span class="toc-text">7. 统一端到端——OneRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA%EF%BC%9A%E4%BC%A0%E7%BB%9F%E7%BA%A7%E8%81%94%E6%9E%B6%E6%9E%84%E7%9A%84%E4%B8%89%E5%A4%A7%E9%97%AE%E9%A2%98"><span class="toc-text">7.1 背景与动机：传统级联架构的三大问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Tokenizer%EF%BC%9A%E5%8D%8F%E5%90%8C%E6%84%9F%E7%9F%A5%E5%A4%9A%E6%A8%A1%E6%80%81%E8%AF%AD%E4%B9%89-ID"><span class="toc-text">7.2 Tokenizer：协同感知多模态语义 ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Encoder-Decoder-%E6%9E%B6%E6%9E%84"><span class="toc-text">7.3 Encoder-Decoder 架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-Reward-System%EF%BC%9A%E7%BB%BC%E5%90%88%E5%A5%96%E5%8A%B1%E8%AE%BE%E8%AE%A1"><span class="toc-text">7.4 Reward System：综合奖励设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-1-%E5%81%8F%E5%A5%BD%E5%A5%96%E5%8A%B1%EF%BC%88Preference-Reward%EF%BC%89%EF%BC%9AP-Score"><span class="toc-text">7.4.1 偏好奖励（Preference Reward）：P-Score</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-2-%E6%A0%BC%E5%BC%8F%E5%A5%96%E5%8A%B1%EF%BC%88Format-Reward%EF%BC%89"><span class="toc-text">7.4.2 格式奖励（Format Reward）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-3-%E5%B7%A5%E4%B8%9A%E5%9C%BA%E6%99%AF%E5%A5%96%E5%8A%B1%EF%BC%88Industrial-Reward%EF%BC%89"><span class="toc-text">7.4.3 工业场景奖励（Industrial Reward）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-4-ECPO%EF%BC%9AEarly-Clipped-GRPO"><span class="toc-text">7.4.4 ECPO：Early-Clipped GRPO</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B"><span class="toc-text">7.5 训练流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8C%96"><span class="toc-text">7.6 系统优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-7-%E5%9C%A8%E7%BA%BF%E6%95%88%E6%9E%9C"><span class="toc-text">7.7 在线效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-8-%E5%BC%80%E6%BA%90%E4%BD%93%E7%B3%BB"><span class="toc-text">7.8 开源体系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%BC%80%E6%BA%90%E5%A4%8D%E7%8E%B0%E2%80%94%E2%80%94MiniOneRec"><span class="toc-text">8. 开源复现——MiniOneRec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="toc-text">8.1 整体框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-SID-%E6%9E%84%E9%80%A0%EF%BC%9A%E5%A4%9A%E7%A7%8D%E7%AE%97%E6%B3%95%E5%8F%AF%E9%80%89"><span class="toc-text">8.2 SID 构造：多种算法可选</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B"><span class="toc-text">8.3 训练流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E4%B8%8E-OneRec-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4 与 OneRec 的对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="toc-text">8. 总结与展望</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E7%9A%84%E6%BC%94%E8%BF%9B%E8%A7%84%E5%BE%8B"><span class="toc-text">8.1 生成式推荐的演进规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%85%B1%E5%90%8C%E8%A7%84%E5%BE%8B"><span class="toc-text">8.2 共同规律</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E5%BD%93%E5%89%8D%E7%93%B6%E9%A2%88%E4%B8%8E%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-text">8.3 当前瓶颈与未来方向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E7%AE%97%E6%B3%95%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4 算法横向对比</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-1-%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.1 核心要素对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-2-%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%AF%B9%E6%AF%94"><span class="toc-text">8.4.2 架构演进对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-3-%E7%9B%B8%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.3 相同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-4-%E5%85%B3%E9%94%AE%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="toc-text">8.4.4 关键不同之处</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搜推系统常用离线评估指标解析"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析">搜推系统常用离线评估指标解析</a><time datetime="2026-05-19T23:16:08.000Z" title="发表于 2026-05-20 07:16:08">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="生成式推荐：从自回归到端到端的序列生成"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/fig0_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="生成式推荐：从自回归到端到端的序列生成"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E4%BB%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E5%88%B0%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90%E8%8C%83%E5%BC%8F/" title="生成式推荐：从自回归到端到端的序列生成">生成式推荐：从自回归到端到端的序列生成</a><time datetime="2026-05-17T14:17:16.000Z" title="发表于 2026-05-17 22:17:16">2026-05-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E4%BA%8C%E7%BB%B4list%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E8%B5%8B%E5%80%BC/" title="python二维list初始化和赋值">python二维list初始化和赋值</a><time datetime="2026-05-15T14:15:06.000Z" title="发表于 2026-05-15 22:15:06">2026-05-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python中not的用法"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法">python中not的用法</a><time datetime="2026-05-09T13:14:59.000Z" title="发表于 2026-05-09 21:14:59">2026-05-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python判断两个浮点数是否相等"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等">python判断两个浮点数是否相等</a><time datetime="2026-05-01T08:35:06.000Z" title="发表于 2026-05-01 16:35:06">2026-05-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
   const showKatex = () => {
     document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
   }
