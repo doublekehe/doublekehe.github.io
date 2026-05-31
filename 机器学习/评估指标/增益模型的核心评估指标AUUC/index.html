@@ -1,0 +1,636 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>增益模型的核心评估指标AUUC | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="用给用户发红包的场景，把增益模型评估的核心指标 AUUC 讲清楚。  AUUC（Area Under the Uplift Curve，增益曲线下面积）是因果推断与 uplift modeling 领域最核心的离线评估指标。本文用一个贯穿始终的「发红包促购买」案例，把它的核心原理、直观含义、计算方式以及常见陷阱全部讲透。  1. 从一个真实的营销困境说起 某电商平台想提升用户购买转化率，市场部设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="增益模型的核心评估指标AUUC">
+<meta property="og:url" content="https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="用给用户发红包的场景，把增益模型评估的核心指标 AUUC 讲清楚。  AUUC（Area Under the Uplift Curve，增益曲线下面积）是因果推断与 uplift modeling 领域最核心的离线评估指标。本文用一个贯穿始终的「发红包促购买」案例，把它的核心原理、直观含义、计算方式以及常见陷阱全部讲透。  1. 从一个真实的营销困境说起 某电商平台想提升用户购买转化率，市场部设">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/cover.jpg">
+<meta property="article:published_time" content="2026-05-31T12:29:05.000Z">
+<meta property="article:modified_time" content="2026-05-31T12:32:54.345Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="AUUC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "增益模型的核心评估指标AUUC",
+  "url": "https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/",
+  "image": "https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/cover.jpg",
+  "datePublished": "2026-05-31T12:29:05.000Z",
+  "dateModified": "2026-05-31T12:32:54.345Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '增益模型的核心评估指标AUUC',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">40</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">增益模型的核心评估指标AUUC</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">增益模型的核心评估指标AUUC</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-31T12:29:05.000Z" title="发表于 2026-05-31 20:29:05">2026-05-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-31T12:32:54.345Z" title="更新于 2026-05-31 20:32:54">2026-05-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/">评估指标</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>用给用户发红包的场景，把增益模型评估的核心指标 AUUC 讲清楚。</p>
+</blockquote>
+<p><strong>AUUC</strong>（Area Under the Uplift Curve，增益曲线下面积）是因果推断与 uplift modeling 领域最核心的离线评估指标。本文用一个贯穿始终的「发红包促购买」案例，把它的核心原理、直观含义、计算方式以及常见陷阱全部讲透。</p>
+<hr>
+<h2 id="1-从一个真实的营销困境说起">1. 从一个真实的营销困境说起</h2>
+<p>某电商平台想提升用户购买转化率，市场部设计了一个营销方案：<strong>向用户发放 10 元红包，期望拉动一批原本处于观望状态的用户完成下单。</strong></p>
+<p>预算有限，只能触达一部分用户，于是出现了一个经典的选择问题：</p>
+<ul>
+<li><strong>发给所有人？</strong> 预算不够，而且大量用户「发不发都会买」，红包等于白贴。</li>
+<li><strong>只发给「发了才买」的人？</strong> 精准，但怎么知道谁属于这一类？</li>
+</ul>
+<p>这就是 uplift modeling（增益模型）要解决的核心问题：</p>
+<blockquote>
+<p><strong>预测每个用户因为「收到红包」而产生的额外购买概率提升（即 uplift），只对高 uplift 用户发放红包，把每一分营销预算都花在刀刃上。</strong></p>
+</blockquote>
+<p>而 AUUC，就是评估「我的模型能不能精准找到那批最该发红包的人」的核心指标。</p>
+<hr>
+<h2 id="2-先弄清楚：我们在预测什么">2. 先弄清楚：我们在预测什么</h2>
+<p>在传统的二分类问题中，我们预测的是：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mi mathvariant="normal">∣</mi><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(Y = 1 | X)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1∣</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mclose">)</span></span></span></span></span></p>
+<p>即「用户最终会不会购买」。但这个指标回答不了营销场景的核心问题——<strong>这次购买有多少是红包带来的，有多少是用户本来就会买的？</strong></p>
+<p>来看一个具体的例子。假设三个用户收到红包后的购买概率如下：</p>
+<table>
+<thead>
+<tr>
+<th>用户</th>
+<th>发红包后购买率 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mo>∣</mo><mi>T</mi><mo>=</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(Y=1\mid T=1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></th>
+<th>不发红包购买率 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mo>∣</mo><mi>T</mi><mo>=</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(Y=1\mid T=0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span></th>
+<th>Uplift <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mo>∣</mo><mi>T</mi><mo>=</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mo>∣</mo><mi>T</mi><mo>=</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(Y=1\mid T=1) - P(Y=1\mid T=0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span></th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>0.90</td>
+<td>0.80</td>
+<td>0.10</td>
+<td>忠诚用户，发不发大概率都会买，红包撬动作用不大</td>
+</tr>
+<tr>
+<td>B</td>
+<td>0.80</td>
+<td>0.10</td>
+<td><strong>0.70</strong></td>
+<td>可转化用户，红包拉动了购买</td>
+</tr>
+<tr>
+<td>C</td>
+<td>0.20</td>
+<td>0.20</td>
+<td>0.00</td>
+<td>沉睡用户，发了也不买</td>
+</tr>
+</tbody>
+</table>
+<p>**Uplift（增益）**的定义为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>uplift</mtext><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mi mathvariant="normal">∣</mi><mi>X</mi><mo separator="true">,</mo><mi>T</mi><mo>=</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mn>1</mn><mi mathvariant="normal">∣</mi><mi>X</mi><mo separator="true">,</mo><mi>T</mi><mo>=</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{uplift}(X) = P(Y=1|X, T=1) - P(Y=1|X, T=0)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">uplift</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1∣</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1∣</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span></span></p>
+<ul>
+<li>用户 A 的 uplift = 0.10，属于「本来就会买」的类型</li>
+<li>用户 B 的 uplift = 0.70，是真正被红包拉动的人 ✅</li>
+<li>用户 C 的 uplift = 0.00，红包对他完全无效</li>
+</ul>
+<p><strong>我们真正想找的是 B 这类用户</strong>。如果用一个二分类模型只预测「会不会买」，A 和 B 都会被标记为正类，模型却无法区分 A 是「本来就会买」（低 uplift）还是 B 是「被红包拉动的买」（高 uplift）。uplift 模型的核心任务，就是把 B 这类高 uplift 用户排在最前面。</p>
+<hr>
+<h2 id="3-为什么不能用二分类-AUC-评估-uplift-模型">3. 为什么不能用二分类 AUC 评估 uplift 模型</h2>
+<p>上一节我们定义了 uplift，也看到了不同用户的 uplift 差异巨大。那么问题来了：<strong>如何评估一个 uplift 模型的好坏？</strong></p>
+<p><strong>用二分类模型的 AUC 来评估？</strong> 前面提到，uplift 模型预测的是「增量购买概率」，二分类模型预测的是「最终购买概率」。直觉上，如果一个模型能找到「买了的用户」，是不是也能间接找到「被红包拉动的用户」？</p>
+<p><strong>不行。</strong> 二分类模型优化的是「识别出会购买的用户」，而 uplift 模型优化的是「识别出红包带来的额外购买」。方向不同，结果自然不同。</p>
+<p>来看一个具体场景（沿用第 2 节的例子）：</p>
+<table>
+<thead>
+<tr>
+<th>用户</th>
+<th>模型预测购买概率</th>
+<th>真实 uplift</th>
+<th>二分类排名</th>
+<th>理想排名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>0.90</td>
+<td>0.10</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>B</td>
+<td>0.80</td>
+<td><strong>0.70</strong></td>
+<td>2</td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td>C</td>
+<td>0.20</td>
+<td>0.00</td>
+<td>3</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>按典型的 0.5 阈值，A 和 B 都会被判定为正类——模型认为他们「会买」。但同样是正类，模型无法区分 A 的购买与红包无关（uplift 仅 0.10），而 B 的购买才是真正被红包拉动的（uplift 高达 0.70）。二分类模型的排序是 A &gt; B，而理想排序是 B &gt; A，恰恰相反。</p>
+<p>这说明：<strong>我们需要专门评估 uplift 排序能力的指标，而不是直接沿用二分类 AUC。</strong> 这就是下一节要介绍的 AUUC。</p>
+<hr>
+<h2 id="4-Uplift-Curve：AUUC-的基石">4. Uplift Curve：AUUC 的基石</h2>
+<p>Uplift Curve（增益曲线）是 AUUC 的核心构成。理解它的计算过程，就能理解 AUUC 一半的含义。</p>
+<p>在计算之前，先说明计算所需的数据结构。假设我们有一批用户，每个用户有三条信息：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+<th>取值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">W_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>用户所属组别</td>
+<td>1 = 红包组，0 = 对照组</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>用户的实际购买结果</td>
+<td>1 = 购买，0 = 未购买</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>τ</mi><mo>^</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\hat{\tau}_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>模型预测的 uplift 分数（score）</td>
+<td>实数</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="4-1-分步计算过程">4.1 分步计算过程</h3>
+<p><strong>Step 1：排序。</strong> 根据模型预测的 uplift 分数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>τ</mi><mo>^</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\hat{\tau}_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 从高到低对全部 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> 个用户降序排列。排序后，排在前面的用户是「模型认为最可能受益」的人群。</p>
+<p><strong>Step 2：分桶。</strong> 将排序后的用户均分为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> 个桶（通常 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">T=10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span>），记第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">t=1,2,\ldots,T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span>）。</p>
+<p><strong>Step 3：计算每个桶的累计增益 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>。</strong></p>
+<p>对第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶，累计增益的计算公式为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mfrac><msubsup><mi>Y</mi><mi>t</mi><mi>T</mi></msubsup><msubsup><mi>N</mi><mi>t</mi><mi>T</mi></msubsup></mfrac><mo>−</mo><mfrac><msubsup><mi>Y</mi><mi>t</mi><mi>C</mi></msubsup><msubsup><mi>N</mi><mi>t</mi><mi>C</mi></msubsup></mfrac><mo fence="true">)</mo></mrow><mo>×</mo><mo stretchy="false">(</mo><msubsup><mi>N</mi><mi>t</mi><mi>T</mi></msubsup><mo>+</mo><msubsup><mi>N</mi><mi>t</mi><mi>C</mi></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t) = \left( \frac{Y_t^T}{N_t^T} - \frac{Y_t^C}{N_t^C} \right) \times (N_t^T + N_t^C)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4772em;vertical-align:-0.9589em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5183em;"><span style="top:-2.2869em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8231em;"><span style="top:-2.4542em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9589em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5183em;"><span style="top:-2.2869em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8231em;"><span style="top:-2.4542em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2458em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9589em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>其中各符号的含义：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>Y</mi><mi>t</mi><mi>T</mi></msubsup></mrow><annotation encoding="application/x-tex">Y_t^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶中，红包组（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">W=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>）购买 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Y=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 的用户数</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>N</mi><mi>t</mi><mi>T</mi></msubsup></mrow><annotation encoding="application/x-tex">N_t^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶中，红包组的总用户数</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>Y</mi><mi>t</mi><mi>C</mi></msubsup></mrow><annotation encoding="application/x-tex">Y_t^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶中，对照组（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">W=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>）购买 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Y=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 的用户数</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>N</mi><mi>t</mi><mi>C</mi></msubsup></mrow><annotation encoding="application/x-tex">N_t^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶中，对照组的总用户数</td>
+</tr>
+</tbody>
+</table>
+<p>公式左侧 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msubsup><mi>Y</mi><mi>t</mi><mi>T</mi></msubsup><msubsup><mi>N</mi><mi>t</mi><mi>T</mi></msubsup></mfrac><mo>−</mo><mfrac><msubsup><mi>Y</mi><mi>t</mi><mi>C</mi></msubsup><msubsup><mi>N</mi><mi>t</mi><mi>C</mi></msubsup></mfrac></mrow><annotation encoding="application/x-tex">\frac{Y_t^T}{N_t^T} - \frac{Y_t^C}{N_t^C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.75em;vertical-align:-0.5964em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1536em;"><span style="top:-2.607em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8329em;"><span style="top:-2.2095em;margin-left:-0.109em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-2.8448em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2905em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.5102em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5964em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.75em;vertical-align:-0.5964em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1536em;"><span style="top:-2.607em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8329em;"><span style="top:-2.2095em;margin-left:-0.109em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-2.8448em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2905em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.5102em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5964em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 是第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个桶中红包组相对于对照组的转化率差值（即该桶的真实 uplift 估计），右侧乘以桶内总人数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msubsup><mi>N</mi><mi>t</mi><mi>T</mi></msubsup><mo>+</mo><msubsup><mi>N</mi><mi>t</mi><mi>C</mi></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(N_t^T + N_t^C)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 得到该桶带来的<strong>绝对购买增量（人数）</strong>。</p>
+<p><strong>Step 4：画出 Uplift Curve。</strong> 以累计桶数为横轴，以上一步计算的累计增益 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 为纵轴，连线画成折线图，即为 Uplift Curve。</p>
+<p>用一个完整的数字示例来演示。假设总用户 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">N=1000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1000</span></span></span></span>，均分为 10 桶，每桶 100 人（两组各 50 人）。对照组每桶固定 5 人购买（购买率 10%）。模型按预测 uplift 分数降序排列后，用真实 uplift 计算每个桶的购买数和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>。</p>
+<p>注意下表中的「预测 uplift」是模型的打分，「真实 uplift」是样本的真实因果效应。两者不一致之处，正是模型排序错误的地方——也正是 AUUC 能检测出来的问题：</p>
+<table>
+<thead>
+<tr>
+<th>桶号</th>
+<th>预测 uplift(%)</th>
+<th>真实 uplift(%)</th>
+<th>红包组购买数</th>
+<th>对照组购买数</th>
+<th>红包组购买率</th>
+<th>对照组购买率</th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>（人）</th>
+<th>累计 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">F(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>（人）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1（最高分）</td>
+<td>+28</td>
+<td>+25</td>
+<td>17</td>
+<td>5</td>
+<td>34%</td>
+<td>10%</td>
+<td>+25.0</td>
+<td>+25.0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>+20</td>
+<td>+18</td>
+<td>14</td>
+<td>5</td>
+<td>28%</td>
+<td>10%</td>
+<td>+18.0</td>
+<td>+43.0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>+15</td>
+<td>+8</td>
+<td>9</td>
+<td>5</td>
+<td>18%</td>
+<td>10%</td>
+<td>+8.0</td>
+<td>+51.0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>+10</td>
+<td>+12</td>
+<td>11</td>
+<td>5</td>
+<td>22%</td>
+<td>10%</td>
+<td>+12.0</td>
+<td>+63.0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>+8</td>
+<td>+5</td>
+<td>7</td>
+<td>5</td>
+<td>14%</td>
+<td>10%</td>
+<td>+5.0</td>
+<td>+68.0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>+4</td>
+<td>+2</td>
+<td>6</td>
+<td>5</td>
+<td>12%</td>
+<td>10%</td>
+<td>+2.0</td>
+<td>+70.0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>-3</td>
+<td>-2</td>
+<td>4</td>
+<td>5</td>
+<td>8%</td>
+<td>10%</td>
+<td>-2.0</td>
+<td>+68.0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>-7</td>
+<td>-8</td>
+<td>1</td>
+<td>5</td>
+<td>2%</td>
+<td>10%</td>
+<td>-8.0</td>
+<td>+60.0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>-13</td>
+<td>-14</td>
+<td>0</td>
+<td>5</td>
+<td>0%</td>
+<td>10%</td>
+<td>-14.0</td>
+<td>+46.0</td>
+</tr>
+<tr>
+<td>10（最低分）</td>
+<td>-17</td>
+<td>-18</td>
+<td>0</td>
+<td>5</td>
+<td>0%</td>
+<td>10%</td>
+<td>-18.0</td>
+<td>+28.0</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><em>注：数字为说明用，非真实业务数据。<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> = 真实 uplift（率差）× 100 人。例如桶 1：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>34</mn><mi mathvariant="normal">%</mi><mo>−</mo><mn>10</mn><mi mathvariant="normal">%</mi><mo stretchy="false">)</mo><mo>×</mo><mn>100</mn><mo>=</mo><mo>+</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">(34\% - 10\%) \times 100 = +25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">34%</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">10%</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">25</span></span></span></span> 人。注意桶 3（预测 uplift +15%，排第 3）和桶 4（预测 uplift +10%，排第 4）——模型把预测分数 15% 的样本排在了 12% 前面，这是模型的排序错误，真实 uplift 桶 3 只有 8%，低于桶 4 的 12%。</em></p>
+</blockquote>
+<p>根据上表绘制出的 Uplift Curve 如下图。蓝色曲线（learner）是模型的实际曲线，橙色斜线（Random）是随机基准，绿色上界（Perfect）代表完美模型。</p>
+<div style="text-align:center">
+  <img src="https://autoglm-agent.aminer.cn/auto_fly/bf033835-3a3f-4a8f-81cc-7cd503ac7513/uplift-curve-corrected.png" alt="Uplift Curve 示意图：蓝色为实际模型曲线，橙色为随机基准，绿色为完美上界" style="max-width:720px;width:100%;height:auto;" />
+</div>
+<blockquote>
+<p><strong>曲线的直观含义</strong>：Uplift Curve 的横轴是累计覆盖人数，纵轴是累计购买增量（人数）。曲线越向左上凸起——即在覆盖少量用户时就快速上升——说明模型越能把「真正被红包拉动」的用户排在前面。前几个桶的红包组转化率远高于对照组（曲线上扬快），低分桶的红包组和对照组转化率接近（曲线趋于平缓），这是理想模型的典型特征。</p>
+<p>值得注意的是，图中蓝色曲线（learner）在桶 3~4 之间与绿色完美曲线产生了明显间距——这正是因为模型的排序错误：桶 3 的真实 uplift 只有 8%，却排在了真实 uplift 12% 的桶 4 前面，导致这两个人群的增益被低估。这是 AUUC 衡量「排序准确程度」的核心机制。</p>
+<p>如果曲线落在随机线下方，说明模型在反向排序——发红包给「越发越不买」的人。</p>
+</blockquote>
+<hr>
+<h3 id="4-2-两个核心概念：CumLift-与-CumGain">4.2 两个核心概念：CumLift 与 CumGain</h3>
+<p>在 causalml 等主流库里，计算 Uplift Curve 时会输出两条曲线，理解它们的区别很重要：</p>
+<p><strong>CumLift（累计提升曲线）</strong>：横轴是累计用户比例，纵轴是累计单位 uplift，即：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>CumLift</mtext><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>t</mi></munderover><mrow><mo fence="true">(</mo><mfrac><msubsup><mi>Y</mi><mi>i</mi><mi>T</mi></msubsup><msubsup><mi>N</mi><mi>i</mi><mi>T</mi></msubsup></mfrac><mo>−</mo><mfrac><msubsup><mi>Y</mi><mi>i</mi><mi>C</mi></msubsup><msubsup><mi>N</mi><mi>i</mi><mi>C</mi></msubsup></mfrac><mo fence="true">)</mo></mrow></mrow><mi>t</mi></mfrac></mrow><annotation encoding="application/x-tex">\text{CumLift}(t) = \frac{\sum_{i=1}^{t} \left( \frac{Y_i^T}{N_i^T} - \frac{Y_i^C}{N_i^C} \right)}{t}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">CumLift</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.8796em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.1936em;"><span style="top:-2.4676em;"><span class="pstrut" style="height:3.1536em;"></span><span class="mord"><span class="mord mathnormal">t</span></span></span><span style="top:-3.3836em;"><span class="pstrut" style="height:3.1536em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-4.1936em;"><span class="pstrut" style="height:3.1536em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9335em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size2">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1536em;"><span style="top:-2.607em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8329em;"><span style="top:-2.1777em;margin-left:-0.109em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-2.8448em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3223em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.5102em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6186em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1536em;"><span style="top:-2.607em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8329em;"><span style="top:-2.1777em;margin-left:-0.109em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-2.8448em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3223em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.5102em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.214em;margin-left:-0.2222em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6186em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size2">)</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>这条曲线描述的是：每多覆盖 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个用户，平均每个用户的购买增量是多少。它是<strong>归一化后</strong>的曲线，横轴范围始终是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>。</p>
+<p><strong>CumGain（累计增益曲线）</strong>：横轴同样是累计用户比例，纵轴是累计绝对增益，即：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>CumGain</mtext><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>t</mi></munderover><mi>f</mi><mo stretchy="false">(</mo><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{CumGain}(t) = \sum_{i=1}^{t} f(i)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">CumGain</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.0582em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7806em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mclose">)</span></span></span></span></span></p>
+<p>这条曲线描述的是：累计覆盖前 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 个用户，总共带来了多少购买增量（人数）。<strong>AUUC 的面积就是 CumGain 曲线相对于随机基准线的面积。</strong></p>
+<p>实务中归一化后的 CumGain 曲线（右端点 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>）是最常看的图，它的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> 轴含义是「相比随机基准，增益提升了百分之多少」。</p>
+<hr>
+<h3 id="4-3-AUUC-的归一化">4.3 AUUC 的归一化</h3>
+<p>原始 AUUC 的单位是「人数」，不同数据规模之间不可比。因此通常会做归一化处理：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>AUUC</mtext><mtext>normalized</mtext></msub><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><mrow><mo fence="true">∣</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><mi>f</mi><mo stretchy="false">(</mo><mi>T</mi><mo stretchy="false">)</mo><mo fence="true">∣</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{AUUC}_{\text{normalized}} = \frac{\sum_{t=1}^T f(t)}{\left| \sum_{t=1}^T f(T) \right|}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">AUUC</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">normalized</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.3609em;vertical-align:-1.69em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6709em;"><span style="top:-2.11em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.15em;"><span style="top:-3.15em;"><span class="pstrut" style="height:3.8em;"></span><span style="width:0.333em;height:1.800em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.800em" viewBox="0 0 333 1800"><path d="M145 15 v585 v600 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v-600 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v600 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.65em;"><span></span></span></span></span></span></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.15em;"><span style="top:-3.15em;"><span class="pstrut" style="height:3.8em;"></span><span style="width:0.333em;height:1.800em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.800em" viewBox="0 0 333 1800"><path d="M145 15 v585 v600 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v-600 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v600 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.65em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.38em;"><span class="pstrut" style="height:3.15em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.8397em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>分母是全量用户的累计增益绝对值，本质上等价于全量人群的<strong>平均因果效应（ATE）</strong>。归一化后：</p>
+<ul>
+<li>完美模型的 AUUC = 1.0（完美地把所有高 uplift 用户排在最前面）</li>
+<li>随机模型的 AUUC ≈ 0.5（在随机排序下，期望增益是均匀分布的直线）</li>
+<li>反向模型的 AUUC &lt; 0.5（反向排序，发红包给「越发越不买」的人）</li>
+</ul>
+<p>这就是为什么 AUUC 的取值范围通常在 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mo>∼</mo><mn>1.0</mn></mrow><annotation encoding="application/x-tex">0.5 \sim 1.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0</span></span></span></span> 之间，0.5 代表随机基准，1.0 代表完美。</p>
+<hr>
+<h2 id="5-AUUC-的直观含义">5. AUUC 的直观含义</h2>
+<p>Uplift Curve 描述的是「按模型排序发红包，增量如何随覆盖人数累积」的趋势。但曲线本身不便于做横向比较，于是我们用曲线下方相对于随机基准线的面积来量化，这就是 <strong>AUUC（Area Under the Uplift Curve）</strong>。</p>
+<p>把 AUUC 和大家熟悉的 AUC 做类比，理解会更自然：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>AUC（二分类）</th>
+<th>AUUC（增益模型）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>衡量的是什么</td>
+<td>模型区分正负样本的能力</td>
+<td>模型找到「高因果效应」用户的能力</td>
+</tr>
+<tr>
+<td>随机基准线</td>
+<td>0.5（对角线）</td>
+<td>0.5（斜率 = 1 的直线）</td>
+</tr>
+<tr>
+<td>最优值</td>
+<td>1.0（完美分类）</td>
+<td>1.0（完美找到所有高 uplift 用户）</td>
+</tr>
+<tr>
+<td>数值意义</td>
+<td>正样本排在负样本前面的概率</td>
+<td>比随机多带来的增量比例</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AUUC 的一句话直观含义：</strong></p>
+<blockquote>
+<p>按照模型打分发红包，比随机发红包多带来的那部分转化增量。</p>
+</blockquote>
+<p>举例来说，如果一个模型的 AUUC = 0.72，意味着：按照这个模型的发红包排序，相比随机发红包，<strong>能多带来 22% 的额外增益</strong>（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.72</mn><mo>−</mo><mn>0.5</mn><mo>=</mo><mn>0.22</mn></mrow><annotation encoding="application/x-tex">0.72 - 0.5 = 0.22</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.72</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.22</span></span></span></span>，即比随机基准多出 44% 的转化量）。</p>
+<hr>
+<h2 id="6-AUUC-的前提：一个被高频忽视的条件">6. AUUC 的前提：一个被高频忽视的条件</h2>
+<p>使用 AUUC 有一个极其重要却经常被忽视的前提：</p>
+<blockquote>
+<p><strong>AUUC 的有效性建立在实验组和对照组完全随机分配的基础上。</strong></p>
+</blockquote>
+<p>这听起来是常识，但在实际业务中往往难以满足：</p>
+<ul>
+<li><strong>选择偏差</strong>：历史数据中，「主动领取红包」的用户本身就是活跃用户，其购买行为与红包无关</li>
+<li><strong>自选择偏差</strong>：用户可以自行选择是否参与活动，领了红包的人本身就是高意向用户</li>
+<li><strong>非随机 AB 分组</strong>：实验组和对照组的分组不是真随机，导致两组用户基础购买率天然不一致</li>
+</ul>
+<p>在非随机数据下，<strong>AUUC 可能完全失灵</strong>。有研究明确指出：当实验组和对照组用户分布存在系统性差异时，AUUC 对模型排序能力的判断可能发生颠倒——uplift 最高的模型，其 Uplift Curve 可能反而低于一个差模型。</p>
+<p><strong>核查数据是否随机的最简单方法</strong>：在 AB 分组后，对比实验组和对照组用户的基础属性分布（年龄、活跃度、历史购买率等），如果存在显著差异，说明分组不够随机，此时 AUUC 仅供参考，需要引入逆倾向得分加权（IPW）等方法对数据进行纠偏后再评估。</p>
+<hr>
+<h2 id="7-Python-实现：怎么计算-AUUC">7. Python 实现：怎么计算 AUUC</h2>
+<p>下面给出两种计算 AUUC 的方法：一种是调用成熟库 <code>scikit-uplift</code>（推荐生产使用），另一种是手写实现（便于理解原理）。</p>
+<h3 id="方法一：使用-scikit-uplift">方法一：使用 scikit-uplift</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装：pip install scikit-uplift</span></span><br><span class="line"><span class="keyword">from</span> sklift.metrics <span class="keyword">import</span> auuc_score, uplift_curve</span><br><span class="line"></span><br><span class="line"><span class="comment"># y_true     : 实际购买标签（0/1）</span></span><br><span class="line"><span class="comment"># uplift_pred: 模型预测的 uplift 分数</span></span><br><span class="line"><span class="comment"># treatment  : 用户所在组别（1=红包组，0=对照组）</span></span><br><span class="line"></span><br><span class="line">auuc = auuc_score(y_true, uplift_pred, treatment)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;AUUC = <span class="subst">&#123;auuc:<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"><span class="comment"># AUUC &gt; 0.5 → 模型有效；越接近 1 → 排序能力越强</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取曲线数据用于绘图</span></span><br><span class="line">lift, decile = uplift_curve(y_true, uplift_pred, treatment)</span><br></pre></td></tr></table></figure>
+<h3 id="方法二：手写实现（原理透明）">方法二：手写实现（原理透明）</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">compute_auuc</span>(<span class="params">y_true, uplift_pred, treatment, n_bins=<span class="number">10</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    手动计算 AUUC，逐桶计算累计增益</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    df = pd.DataFrame(&#123;</span><br><span class="line">        <span class="string">&#x27;uplift_pred&#x27;</span>: uplift_pred,</span><br><span class="line">        <span class="string">&#x27;y&#x27;</span>: y_true,</span><br><span class="line">        <span class="string">&#x27;treatment&#x27;</span>: treatment</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 按 uplift 预测分数降序排列</span></span><br><span class="line">    df = df.sort_values(<span class="string">&#x27;uplift_pred&#x27;</span>, ascending=<span class="literal">False</span>).reset_index(drop=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    n = <span class="built_in">len</span>(df)</span><br><span class="line">    bin_size = n // n_bins</span><br><span class="line"></span><br><span class="line">    cumgain_list = []   <span class="comment"># 存储每个桶的累计绝对增益 f(t)</span></span><br><span class="line">    cumulative_gain = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n_bins):</span><br><span class="line">        start = i * bin_size</span><br><span class="line">        end = (i + <span class="number">1</span>) * bin_size <span class="keyword">if</span> i &lt; n_bins - <span class="number">1</span> <span class="keyword">else</span> n</span><br><span class="line">        bin_data = df.iloc[start:end]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算该桶的红包组/对照组转化率差值</span></span><br><span class="line">        t_rate = bin_data[bin_data[<span class="string">&#x27;treatment&#x27;</span>] == <span class="number">1</span>][<span class="string">&#x27;y&#x27;</span>].mean()</span><br><span class="line">        c_rate = bin_data[bin_data[<span class="string">&#x27;treatment&#x27;</span>] == <span class="number">0</span>][<span class="string">&#x27;y&#x27;</span>].mean()</span><br><span class="line">        uplift = t_rate - c_rate</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 绝对增量 = uplift × 桶内总人数</span></span><br><span class="line">        cumulative_gain += uplift * <span class="built_in">len</span>(bin_data)</span><br><span class="line">        cumgain_list.append(cumulative_gain)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># AUUC = 累计增益曲线的均值（归一化后 ≈ 0.5~1.0）</span></span><br><span class="line">    auuc = np.mean(cumgain_list)</span><br><span class="line">    <span class="keyword">return</span> auuc, cumgain_list</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="8-实战解读指南">8. 实战解读指南</h2>
+<p>拿到一个 AUUC 分数后，如何判断模型的好坏？以下是一个实战参考框架：</p>
+<table>
+<thead>
+<tr>
+<th>AUUC 范围</th>
+<th>模型评级</th>
+<th>业务含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&lt; 0.50</strong></td>
+<td>⚠️ 反向模型</td>
+<td>模型打分与真实 uplift 负相关，发红包给低分用户效果更好</td>
+</tr>
+<tr>
+<td><strong>= 0.50</strong></td>
+<td>❌ 无效模型</td>
+<td>模型排序能力等于随机，发的红包和没发一样</td>
+</tr>
+<tr>
+<td><strong>0.50 ~ 0.60</strong></td>
+<td>🔵 弱模型</td>
+<td>能捕捉到部分高敏感用户，适合作为基线（baseline）</td>
+</tr>
+<tr>
+<td><strong>0.60 ~ 0.70</strong></td>
+<td>🟢 可用模型</td>
+<td>排序能力良好，能带来实质的营销效率提升，<strong>工业界常见水平</strong></td>
+</tr>
+<tr>
+<td><strong>0.70 ~ 0.85</strong></td>
+<td>🔷 强模型</td>
+<td>精准锁定高敏感用户，营销 ROI 显著高于随机，是优秀水平</td>
+</tr>
+<tr>
+<td><strong>&gt; 0.85</strong></td>
+<td>🟣 极强 / 存疑</td>
+<td>极其精准，但也需排查是否过拟合或数据泄漏</td>
+</tr>
+</tbody>
+</table>
+<p>实际工业级营销场景中，uplift 模型能稳定达到 <strong>AUUC 在 0.60~0.70</strong> 区间，已经能给营销部门带来可观的效率提升。如果 AUUC 超过 0.80，需要额外验证模型泛化性和数据质量。</p>
+<hr>
+<h2 id="9-小结">9. 小结</h2>
+<ol>
+<li><strong>Uplift 预测的是「红包带来的额外购买概率」</strong>，而非「最终会不会购买」——两者有本质区别</li>
+<li><strong>Uplift Curve</strong> 将模型排序能力可视化——越能把高 uplift 用户排在前面，曲线越向左上凸起</li>
+<li><strong>AUUC</strong> 是 CumGain 曲线相对于随机基准线的面积，越大表示「找对人」的能力越强</li>
+<li><strong>AUUC &gt; 0.5</strong> 才说明模型有效，越接近 1 越好；实际工业应用中 0.60~0.70 已属可用范围</li>
+<li><strong>随机分组数据是 AUUC 有效的前提</strong>——非随机数据下 AUUC 可能完全失灵，需要先做数据质量诊断</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AUUC/">AUUC</a></div><div class="post-share"><div class="social-share" data-image="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/InfoNCE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" title="InfoNCE损失函数"><img class="cover" src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/InfoNCE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">InfoNCE损失函数</div></div><div class="info-2"><div class="info-item-1"> InfoNCE 是对比学习的核心目标函数，本质上是在最大化查询与正样本之间的互信息。理解它的公式、温度参数以及与互信息的关系，是深入掌握对比学习的关键。  1. 对比学习与 InfoNCE 的引入 深度学习强大，但长期依赖海量标注数据。无监督学习是打破这一瓶颈的关键，而对比学习（Contrastive Learning）是其中最成功的路线之一。 对比学习的思想极为直观：让相似样本在特征空间中靠得更近，让不相似样本离得更远。这个&quot;相似&quot;由任务定义——可以是同一张图片的不同增广视图，可以是同一语音片段的不同编码，也可以是上下文中相邻的词 token。 2018 年，Oord 等人在论文 Contrastive Predictive Coding（CPC）[^1] 中提出了 InfoNCE 损失函数，迅速成为对比学习领域的标准目标函数。它不仅用于 CPC 本身，还被广泛借鉴到其它一系列相关工作中。 2. InfoNCE 公式与直观理解 2.1 标准形式 InfoNCE 损失函数的核心形式如下： LInfoNCE=−E[log⁡exp⁡(s(zt,ct)/τ)∑i=...</div></div></div></a><a class="pagination-related" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/" title="机器学习算法核心要素"><img class="cover" src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_01.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">机器学习算法核心要素</div></div><div class="info-2"><div class="info-item-1"> 完整的机器学习系统：数据是天花板，模型是载体，目标函数定方向，优化算法找答案，评估指标量好坏。   1. 什么是机器学习 机器学习，本质上是从数据中自动发现规律的方法。 与传统编程不同——传统编程是&quot;人写规则，机器执行&quot;，而机器学习是&quot;人给数据+目标，机器自己学规则&quot;。比如让机器识别猫的图片，你不再需要写&quot;猫有尖耳朵、胡须、圆瞳孔&quot;这些规则，而是喂给它大量标注好&quot;这是猫 / 这不是猫&quot;的图片，让模型自己找出区分猫的特征。 一个完整的机器学习系统，由五个核心要素构成：    .omkwxkwnblpl{max-width:720px;width:100%;height:auto;}  这五个要素环环相扣：数据决定上限，模型提供假设空间，目标函数定义什么是&quot;好&quot;，优化算法找到最好的参数，评估指标检验真正的效果。  2. 数据——模型的天花板 业界有句老话：“数据和特征决定了机器学习的上限，而模型和算法只是在逼近这个上限。” 如果数据质量差——充满噪声、标注错误、分布偏差——那么无论用...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">40</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E7%9A%84%E8%90%A5%E9%94%80%E5%9B%B0%E5%A2%83%E8%AF%B4%E8%B5%B7"><span class="toc-text">1. 从一个真实的营销困境说起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%88%E5%BC%84%E6%B8%85%E6%A5%9A%EF%BC%9A%E6%88%91%E4%BB%AC%E5%9C%A8%E9%A2%84%E6%B5%8B%E4%BB%80%E4%B9%88"><span class="toc-text">2. 先弄清楚：我们在预测什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E7%94%A8%E4%BA%8C%E5%88%86%E7%B1%BB-AUC-%E8%AF%84%E4%BC%B0-uplift-%E6%A8%A1%E5%9E%8B"><span class="toc-text">3. 为什么不能用二分类 AUC 评估 uplift 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Uplift-Curve%EF%BC%9AAUUC-%E7%9A%84%E5%9F%BA%E7%9F%B3"><span class="toc-text">4. Uplift Curve：AUUC 的基石</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%88%86%E6%AD%A5%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B"><span class="toc-text">4.1 分步计算过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%B8%A4%E4%B8%AA%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9ACumLift-%E4%B8%8E-CumGain"><span class="toc-text">4.2 两个核心概念：CumLift 与 CumGain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-AUUC-%E7%9A%84%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-text">4.3 AUUC 的归一化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-AUUC-%E7%9A%84%E7%9B%B4%E8%A7%82%E5%90%AB%E4%B9%89"><span class="toc-text">5. AUUC 的直观含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-AUUC-%E7%9A%84%E5%89%8D%E6%8F%90%EF%BC%9A%E4%B8%80%E4%B8%AA%E8%A2%AB%E9%AB%98%E9%A2%91%E5%BF%BD%E8%A7%86%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="toc-text">6. AUUC 的前提：一个被高频忽视的条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Python-%E5%AE%9E%E7%8E%B0%EF%BC%9A%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97-AUUC"><span class="toc-text">7. Python 实现：怎么计算 AUUC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8-scikit-uplift"><span class="toc-text">方法一：使用 scikit-uplift</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%89%8B%E5%86%99%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%8E%9F%E7%90%86%E9%80%8F%E6%98%8E%EF%BC%89"><span class="toc-text">方法二：手写实现（原理透明）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%AE%9E%E6%88%98%E8%A7%A3%E8%AF%BB%E6%8C%87%E5%8D%97"><span class="toc-text">8. 实战解读指南</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%B0%8F%E7%BB%93"><span class="toc-text">9. 小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/InfoNCE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" title="InfoNCE损失函数"><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/InfoNCE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InfoNCE损失函数"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/InfoNCE%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" title="InfoNCE损失函数">InfoNCE损失函数</a><time datetime="2026-05-31T13:05:14.000Z" title="发表于 2026-05-31 21:05:14">2026-05-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/" title="增益模型的核心评估指标AUUC"><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="增益模型的核心评估指标AUUC"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E5%A2%9E%E7%9B%8A%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87AUUC/" title="增益模型的核心评估指标AUUC">增益模型的核心评估指标AUUC</a><time datetime="2026-05-31T12:29:05.000Z" title="发表于 2026-05-31 20:29:05">2026-05-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/" title="机器学习算法核心要素"><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_01.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="机器学习算法核心要素"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/" title="机器学习算法核心要素">机器学习算法核心要素</a><time datetime="2026-05-31T03:55:45.000Z" title="发表于 2026-05-31 11:55:45">2026-05-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%9A%84%E8%B0%83%E5%91%B3%E5%89%82/" title="大模型输出的调味剂：温度系数、Top-K、Top-P详解"><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%9A%84%E8%B0%83%E5%91%B3%E5%89%82/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型输出的调味剂：温度系数、Top-K、Top-P详解"/></a><div class="content"><a class="title" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%9A%84%E8%B0%83%E5%91%B3%E5%89%82/" title="大模型输出的调味剂：温度系数、Top-K、Top-P详解">大模型输出的调味剂：温度系数、Top-K、Top-P详解</a><time datetime="2026-05-25T22:48:03.000Z" title="发表于 2026-05-26 06:48:03">2026-05-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析"><img src="https://cdn.hailuoai.com/mcp/u487432426591133703/general/1779115580_f44401a1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搜推系统常用离线评估指标解析"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%B8%B8%E7%94%A8%E7%A6%BB%E7%BA%BF%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87%E8%A7%A3%E6%9E%90/" title="搜推系统常用离线评估指标解析">搜推系统常用离线评估指标解析</a><time datetime="2026-05-19T23:16:08.000Z" title="发表于 2026-05-20 07:16:08">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

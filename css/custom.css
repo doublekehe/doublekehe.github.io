@@ -1,0 +1,25 @@
+:root {
+  --main-width: 96% !important;
+  --content-width: 92% !important;
+}
+.page-main .page {
+  max-width: 1400px !important;
+  width: 96% !important;
+}
+.post-content {
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#post {
+  width: 100% !important;
+  max-width: 1400px !important;
+}
+@media (max-width: 768px) {
+  .page-main .page {
+    width: 98% !important;
+  }
+  .post-content {
+    padding: 0 10px !important;
+  }
+}
