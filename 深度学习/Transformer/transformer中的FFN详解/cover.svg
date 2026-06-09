@@ -1,0 +1,76 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Transformer FFN 与 MLP 封面</title>
+  <desc id="desc">四个 token 分别通过共享 FFN，输出四个 token，并说明 FFN 是逐位置 MLP 与 1x1 卷积视角</desc>
+  <rect width="1280" height="720" fill="#f6f1e8"/>
+  <rect x="72" y="70" width="1136" height="580" rx="26" fill="#fffdf8" stroke="#d8d0bf" stroke-width="3"/>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <text x="118" y="150" font-size="58" font-weight="700" fill="#21313f">Transformer FFN</text>
+  </g>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif" font-size="22" fill="#52616f">
+    <text x="177" y="270" text-anchor="middle">tokens</text>
+    <text x="640" y="270" text-anchor="middle">shared FFN</text>
+    <text x="1038" y="270" text-anchor="middle">tokens</text>
+  </g>
+
+  <g transform="translate(118 306)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="118" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="3"/>
+    <rect x="0" y="74" width="118" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="3"/>
+    <rect x="0" y="148" width="118" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="3"/>
+    <rect x="0" y="222" width="118" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="3"/>
+    <text x="59" y="37" text-anchor="middle" font-size="23" fill="#1f4d7a">x1</text>
+    <text x="59" y="111" text-anchor="middle" font-size="23" fill="#1f4d7a">x2</text>
+    <text x="59" y="185" text-anchor="middle" font-size="23" fill="#1f4d7a">x3</text>
+    <text x="59" y="259" text-anchor="middle" font-size="23" fill="#1f4d7a">x4</text>
+  </g>
+
+  <g transform="translate(512 322)" font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="256" height="238" rx="18" fill="#fff7d6" stroke="#d49b22" stroke-width="3"/>
+    <rect x="36" y="28" width="184" height="42" rx="9" fill="#fde68a" stroke="#d49b22" stroke-width="2"/>
+    <rect x="36" y="88" width="184" height="42" rx="9" fill="#fde68a" stroke="#d49b22" stroke-width="2"/>
+    <rect x="36" y="148" width="184" height="42" rx="9" fill="#fde68a" stroke="#d49b22" stroke-width="2"/>
+    <text x="128" y="56" text-anchor="middle" font-size="22" font-weight="700" fill="#76520f">Linear</text>
+    <text x="128" y="116" text-anchor="middle" font-size="22" font-weight="700" fill="#76520f">GeLU</text>
+    <text x="128" y="176" text-anchor="middle" font-size="22" font-weight="700" fill="#76520f">Linear</text>
+    <text x="128" y="214" text-anchor="middle" font-size="18" fill="#8a6519">同一组参数 · 逐位置共享</text>
+  </g>
+
+  <g transform="translate(980 306)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="118" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="3"/>
+    <rect x="0" y="74" width="118" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="3"/>
+    <rect x="0" y="148" width="118" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="3"/>
+    <rect x="0" y="222" width="118" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="3"/>
+    <text x="59" y="37" text-anchor="middle" font-size="23" fill="#24613c">y1</text>
+    <text x="59" y="111" text-anchor="middle" font-size="23" fill="#24613c">y2</text>
+    <text x="59" y="185" text-anchor="middle" font-size="23" fill="#24613c">y3</text>
+    <text x="59" y="259" text-anchor="middle" font-size="23" fill="#24613c">y4</text>
+  </g>
+
+  <g stroke="#52616f" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M252 335 C350 335 410 335 496 335"/>
+    <path d="M252 409 C350 409 410 409 496 409"/>
+    <path d="M252 483 C350 483 410 483 496 483"/>
+    <path d="M252 557 C350 557 410 557 496 557"/>
+    <path d="M784 335 C868 335 906 335 964 335"/>
+    <path d="M784 409 C868 409 906 409 964 409"/>
+    <path d="M784 483 C868 483 906 483 964 483"/>
+    <path d="M784 557 C868 557 906 557 964 557"/>
+  </g>
+
+  <g stroke="#52616f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M488 321 L508 335 L488 349"/>
+    <path d="M488 395 L508 409 L488 423"/>
+    <path d="M488 469 L508 483 L488 497"/>
+    <path d="M488 543 L508 557 L488 571"/>
+    <path d="M956 321 L976 335 L956 349"/>
+    <path d="M956 395 L976 409 L956 423"/>
+    <path d="M956 469 L976 483 L956 497"/>
+    <path d="M956 543 L976 557 L956 571"/>
+  </g>
+
+  <g transform="translate(390 605)" font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="500" height="54" rx="14" fill="#edf2f7" stroke="#bbc4ce" stroke-width="2"/>
+    <text x="250" y="35" text-anchor="middle" font-size="22" fill="#344554">每个 token 独立通过同一个 FFN</text>
+  </g>
+</svg>

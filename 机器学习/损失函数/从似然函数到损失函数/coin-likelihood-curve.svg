@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="title desc">
+  <title id="title">抛硬币似然曲线</title>
+  <desc id="desc">抛十次硬币得到七次正面的似然曲线，峰值在 p 等于 0.7 附近。</desc>
+  <rect width="960" height="460" fill="#fbfaf7"/>
+  <line x1="104" y1="360" x2="850" y2="360" stroke="#344" stroke-width="3"/>
+  <line x1="104" y1="360" x2="104" y2="72" stroke="#344" stroke-width="3"/>
+  <text x="478" y="424" text-anchor="middle" font-size="22" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#344">正面概率 p</text>
+  <text x="42" y="218" text-anchor="middle" font-size="22" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#344" transform="rotate(-90 42 218)">L(p)</text>
+  <path d="M104 359 C170 358, 230 352, 294 334 C362 314, 432 262, 500 184 C562 114, 620 84, 668 116 C724 153, 760 242, 850 356" fill="none" stroke="#4b9088" stroke-width="8" stroke-linecap="round"/>
+  <line x1="626" y1="84" x2="626" y2="360" stroke="#c77b43" stroke-width="3" stroke-dasharray="9 10"/>
+  <circle cx="626" cy="84" r="10" fill="#c77b43"/>
+  <text x="626" y="392" text-anchor="middle" font-size="20" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#8a4f27">p=0.7</text>
+  <text x="112" y="392" text-anchor="middle" font-size="18" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#344">0</text>
+  <text x="850" y="392" text-anchor="middle" font-size="18" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#344">1</text>
+  <text x="478" y="48" text-anchor="middle" font-size="26" font-family="PingFang SC, Microsoft YaHei, Arial" font-weight="700" fill="#263c3a">10 次中 7 次正面的似然函数</text>
+</svg>

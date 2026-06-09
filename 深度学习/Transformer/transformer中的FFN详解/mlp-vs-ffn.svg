@@ -1,0 +1,63 @@
+<svg width="980" height="520" viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">普通 MLP 与 Transformer FFN 对比</title>
+  <desc id="desc">普通 MLP 处理整体特征向量，Transformer FFN 对每个 token 位置使用同一个 MLP</desc>
+  <rect width="980" height="520" fill="#ffffff"/>
+  <text x="490" y="48" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="30" font-weight="700" fill="#263642">普通 MLP vs Transformer FFN</text>
+
+  <g transform="translate(70 98)" font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="380" height="360" rx="16" fill="#f8fafc" stroke="#cbd5df" stroke-width="2"/>
+    <text x="190" y="44" text-anchor="middle" font-size="25" font-weight="700" fill="#314252">普通 MLP</text>
+
+    <rect x="52" y="104" width="118" height="132" rx="12" fill="#e0e7ff" stroke="#7587cf" stroke-width="2"/>
+    <text x="111" y="158" text-anchor="middle" font-size="20" fill="#344283">整体</text>
+    <text x="111" y="187" text-anchor="middle" font-size="20" fill="#344283">特征向量</text>
+
+    <rect x="242" y="104" width="92" height="132" rx="12" fill="#fef3c7" stroke="#d59d25" stroke-width="2"/>
+    <text x="288" y="178" text-anchor="middle" font-size="22" fill="#76520f">MLP</text>
+
+    <path d="M180 170 L232 170" stroke="#52616f" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M224 158 L240 170 L224 182" stroke="#52616f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <text x="190" y="308" text-anchor="middle" font-size="18" fill="#52616f">是否混合位置</text>
+    <text x="190" y="334" text-anchor="middle" font-size="18" fill="#52616f">取决于输入怎么拼</text>
+  </g>
+
+  <g transform="translate(530 98)" font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="380" height="360" rx="16" fill="#f8fafc" stroke="#cbd5df" stroke-width="2"/>
+    <text x="190" y="44" text-anchor="middle" font-size="23" font-weight="700" fill="#314252">Transformer FFN</text>
+
+    <g transform="translate(42 90)" font-family="Arial, sans-serif">
+      <rect x="0" y="0" width="64" height="44" rx="8" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+      <rect x="0" y="58" width="64" height="44" rx="8" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+      <rect x="0" y="116" width="64" height="44" rx="8" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+      <rect x="0" y="174" width="64" height="44" rx="8" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+      <text x="32" y="28" text-anchor="middle" font-size="17" fill="#1f4d7a">x1</text>
+      <text x="32" y="86" text-anchor="middle" font-size="17" fill="#1f4d7a">x2</text>
+      <text x="32" y="144" text-anchor="middle" font-size="17" fill="#1f4d7a">x3</text>
+      <text x="32" y="202" text-anchor="middle" font-size="17" fill="#1f4d7a">x4</text>
+    </g>
+
+    <rect x="148" y="118" width="104" height="128" rx="12" fill="#fef3c7" stroke="#d59d25" stroke-width="2"/>
+    <text x="200" y="174" text-anchor="middle" font-size="20" fill="#76520f">共享</text>
+    <text x="200" y="204" text-anchor="middle" font-size="20" fill="#76520f">MLP</text>
+
+    <g transform="translate(286 90)" font-family="Arial, sans-serif">
+      <rect x="0" y="0" width="64" height="44" rx="8" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+      <rect x="0" y="58" width="64" height="44" rx="8" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+      <rect x="0" y="116" width="64" height="44" rx="8" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+      <rect x="0" y="174" width="64" height="44" rx="8" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+      <text x="32" y="28" text-anchor="middle" font-size="17" fill="#24613c">y1</text>
+      <text x="32" y="86" text-anchor="middle" font-size="17" fill="#24613c">y2</text>
+      <text x="32" y="144" text-anchor="middle" font-size="17" fill="#24613c">y3</text>
+      <text x="32" y="202" text-anchor="middle" font-size="17" fill="#24613c">y4</text>
+    </g>
+
+    <g stroke="#52616f" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M116 112 L138 146"/><path d="M116 170 L138 174"/><path d="M116 228 L138 202"/><path d="M116 286 L138 230"/>
+      <path d="M262 146 L276 112"/><path d="M262 174 L276 170"/><path d="M262 202 L276 228"/><path d="M262 230 L276 286"/>
+    </g>
+
+    <text x="190" y="308" text-anchor="middle" font-size="18" fill="#52616f">不直接混合 token</text>
+    <text x="190" y="334" text-anchor="middle" font-size="18" fill="#52616f">逐位置变换</text>
+  </g>
+</svg>

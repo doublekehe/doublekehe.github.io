@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">概率与似然的区别</title>
+  <desc id="desc">左侧表示固定参数比较不同结果的概率，右侧表示固定结果比较不同参数的似然。</desc>
+  <rect width="960" height="420" fill="#fbfaf7"/>
+  <rect x="52" y="54" width="392" height="300" rx="12" fill="#eef5f3" stroke="#9bb9b4"/>
+  <rect x="516" y="54" width="392" height="300" rx="12" fill="#fff1e6" stroke="#d5a375"/>
+  <text x="248" y="102" text-anchor="middle" font-size="28" font-family="PingFang SC, Microsoft YaHei, Arial" font-weight="700" fill="#263c3a">概率</text>
+  <text x="712" y="102" text-anchor="middle" font-size="28" font-family="PingFang SC, Microsoft YaHei, Arial" font-weight="700" fill="#513623">似然</text>
+  <text x="248" y="148" text-anchor="middle" font-size="22" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#405654">固定参数 θ</text>
+  <text x="712" y="148" text-anchor="middle" font-size="22" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#694b35">固定观测 x</text>
+  <path d="M118 292 C168 206, 232 170, 300 212 C338 236, 366 272, 396 292" fill="none" stroke="#4b9088" stroke-width="8" stroke-linecap="round"/>
+  <path d="M580 292 C628 272, 668 184, 730 178 C786 172, 824 238, 872 292" fill="none" stroke="#c77b43" stroke-width="8" stroke-linecap="round"/>
+  <line x1="104" y1="304" x2="404" y2="304" stroke="#667" stroke-width="2"/>
+  <line x1="568" y1="304" x2="876" y2="304" stroke="#667" stroke-width="2"/>
+  <text x="254" y="335" text-anchor="middle" font-size="18" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#52615f">不同结果 x</text>
+  <text x="722" y="335" text-anchor="middle" font-size="18" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#6b5648">不同参数 θ</text>
+  <text x="248" y="384" text-anchor="middle" font-size="20" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#314744">P(x | θ)</text>
+  <text x="712" y="384" text-anchor="middle" font-size="20" font-family="PingFang SC, Microsoft YaHei, Arial" fill="#5a3e2c">L(θ | x)=P(x | θ)</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="ReLU 系列激活函数封面">
+  <style>
+    .bg{fill:#f8fafc}.title{font:700 58px -apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',Arial,sans-serif;fill:#111827}.sub{font:28px -apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',Arial,sans-serif;fill:#475569}.axis{stroke:#94a3b8;stroke-width:2}.grid{stroke:#e2e8f0;stroke-width:1}.relu{fill:none;stroke:#2563eb;stroke-width:10;stroke-linecap:round;stroke-linejoin:round}.tag{font:700 22px -apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',Arial,sans-serif;fill:#0f172a}.small{font:18px -apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',Arial,sans-serif;fill:#64748b}.card{fill:#fff;stroke:#e2e8f0;stroke-width:2}.curve{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <rect class="bg" width="1280" height="720"/>
+  <text x="80" y="116" class="title">ReLU 系列激活函数</text>
+  <text x="84" y="162" class="sub">围绕负半轴、拐点、截断和门控的几种改法</text>
+
+  <g transform="translate(82 222)">
+    <rect x="0" y="0" width="560" height="380" rx="24" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+    <line x1="62" y1="292" x2="500" y2="292" class="axis"/>
+    <line x1="250" y1="62" x2="250" y2="330" class="axis"/>
+    <line x1="62" y1="220" x2="500" y2="220" class="grid"/>
+    <line x1="62" y1="148" x2="500" y2="148" class="grid"/>
+    <polyline points="82,292 250,292 454,86" class="relu"/>
+    <circle cx="250" cy="292" r="8" fill="#2563eb"/>
+    <text x="64" y="48" class="tag">ReLU 本体</text>
+    <text x="64" y="78" class="small">负值归零，正值线性通过</text>
+    <text x="470" y="326" class="small">x</text>
+    <text x="32" y="82" class="small">f(x)</text>
+  </g>
+
+  <g transform="translate(700 218)">
+    <rect class="card" x="0" y="0" width="210" height="148" rx="18"/>
+    <line x1="32" y1="102" x2="176" y2="102" class="axis"/>
+    <line x1="92" y1="40" x2="92" y2="118" class="axis"/>
+    <polyline class="curve" stroke="#0f766e" points="34,108 92,102 172,42"/>
+    <text x="24" y="126" class="tag">泄露</text>
+    <text x="24" y="146" class="small">Leaky / PReLU</text>
+
+    <rect class="card" x="250" y="0" width="210" height="148" rx="18"/>
+    <line x1="282" y1="102" x2="426" y2="102" class="axis"/>
+    <line x1="342" y1="40" x2="342" y2="118" class="axis"/>
+    <path class="curve" stroke="#9333ea" d="M284 104 C318 106,330 110,350 100 C374 88,390 62,424 42"/>
+    <text x="274" y="126" class="tag">平滑</text>
+    <text x="274" y="146" class="small">GELU / Softplus</text>
+
+    <rect class="card" x="0" y="188" width="210" height="148" rx="18"/>
+    <line x1="32" y1="292" x2="176" y2="292" class="axis"/>
+    <line x1="80" y1="228" x2="80" y2="308" class="axis"/>
+    <line x1="32" y1="232" x2="176" y2="232" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 6" opacity=".55"/>
+    <polyline class="curve" stroke="#2563eb" points="34,292 80,292 142,232 174,232"/>
+    <text x="24" y="314" class="tag">截断</text>
+    <text x="24" y="334" class="small">ReLU6</text>
+
+    <rect class="card" x="250" y="188" width="210" height="148" rx="18"/>
+    <line x1="282" y1="292" x2="426" y2="292" class="axis"/>
+    <line x1="342" y1="228" x2="342" y2="308" class="axis"/>
+    <path class="curve" stroke="#db2777" d="M284 292 C314 300,335 302,356 288 C378 274,396 250,424 232"/>
+    <text x="274" y="314" class="tag">门控</text>
+    <text x="274" y="334" class="small">SiLU / Mish</text>
+  </g>
+</svg>

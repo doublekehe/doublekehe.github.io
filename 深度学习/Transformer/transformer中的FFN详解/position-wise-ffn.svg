@@ -1,0 +1,57 @@
+<svg width="980" height="520" viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">逐位置 FFN 示意图</title>
+  <desc id="desc">每个 token 独立经过同一个 FFN，输入和输出位置一一对应</desc>
+  <rect width="980" height="520" fill="#ffffff"/>
+  <text x="490" y="48" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="30" font-weight="700" fill="#263642">position-wise FFN</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif" font-size="19" fill="#263642">
+    <text x="94" y="102">X: [B, L, d_model]</text>
+    <text x="684" y="102">Y: [B, L, d_model]</text>
+  </g>
+
+  <g transform="translate(86 138)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="116" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+    <rect x="0" y="76" width="116" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+    <rect x="0" y="152" width="116" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+    <rect x="0" y="228" width="116" height="58" rx="10" fill="#dbeafe" stroke="#6b9bd6" stroke-width="2"/>
+    <text x="58" y="36" text-anchor="middle" font-size="20" fill="#1f4d7a">x1</text>
+    <text x="58" y="112" text-anchor="middle" font-size="20" fill="#1f4d7a">x2</text>
+    <text x="58" y="188" text-anchor="middle" font-size="20" fill="#1f4d7a">x3</text>
+    <text x="58" y="264" text-anchor="middle" font-size="20" fill="#1f4d7a">x4</text>
+  </g>
+
+  <g transform="translate(402 126)" font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="0" y="0" width="176" height="310" rx="16" fill="#fff7d6" stroke="#d59d25" stroke-width="2"/>
+    <text x="88" y="58" text-anchor="middle" font-size="23" font-weight="700" fill="#76520f">同一个</text>
+    <text x="88" y="94" text-anchor="middle" font-size="23" font-weight="700" fill="#76520f">FFN</text>
+    <rect x="32" y="132" width="112" height="40" rx="8" fill="#fde68a" stroke="#d59d25" stroke-width="2"/>
+    <rect x="32" y="192" width="112" height="40" rx="8" fill="#fde68a" stroke="#d59d25" stroke-width="2"/>
+    <text x="88" y="158" text-anchor="middle" font-size="18" fill="#76520f">Linear</text>
+    <text x="88" y="218" text-anchor="middle" font-size="18" fill="#76520f">Linear</text>
+    <text x="88" y="278" text-anchor="middle" font-size="18" fill="#8a6519">所有位置共享</text>
+  </g>
+
+  <g transform="translate(720 138)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="116" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+    <rect x="0" y="76" width="116" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+    <rect x="0" y="152" width="116" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+    <rect x="0" y="228" width="116" height="58" rx="10" fill="#d9f4e6" stroke="#56a87a" stroke-width="2"/>
+    <text x="58" y="36" text-anchor="middle" font-size="20" fill="#24613c">y1</text>
+    <text x="58" y="112" text-anchor="middle" font-size="20" fill="#24613c">y2</text>
+    <text x="58" y="188" text-anchor="middle" font-size="20" fill="#24613c">y3</text>
+    <text x="58" y="264" text-anchor="middle" font-size="20" fill="#24613c">y4</text>
+  </g>
+
+  <g stroke="#52616f" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M216 167 C292 167 326 167 390 167"/>
+    <path d="M216 243 C292 243 326 243 390 243"/>
+    <path d="M216 319 C292 319 326 319 390 319"/>
+    <path d="M216 395 C292 395 326 395 390 395"/>
+    <path d="M590 167 C638 167 670 167 708 167"/>
+    <path d="M590 243 C638 243 670 243 708 243"/>
+    <path d="M590 319 C638 319 670 319 708 319"/>
+    <path d="M590 395 C638 395 670 395 708 395"/>
+  </g>
+
+  <text x="490" y="485" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="20" fill="#606b75">FFN 内部不做 x1 与 x2 之间的直接交互</text>
+</svg>

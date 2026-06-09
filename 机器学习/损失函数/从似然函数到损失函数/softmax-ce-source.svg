@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 280" role="img" aria-labelledby="title desc">
+  <title id="title">Softmax CE 的似然来源</title>
+  <desc id="desc">多分类交叉熵来自 Categorical 分布的负对数似然。</desc>
+  <rect width="980" height="280" fill="#fbfaf7"/>
+  <g font-family="PingFang SC, Microsoft YaHei, Arial" text-anchor="middle">
+    <rect x="62" y="84" width="154" height="90" rx="10" fill="#eef5f3" stroke="#89aaa5" stroke-width="2"/>
+    <rect x="278" y="84" width="154" height="90" rx="10" fill="#fff1e6" stroke="#d5a375" stroke-width="2"/>
+    <rect x="494" y="84" width="176" height="90" rx="10" fill="#eef5f3" stroke="#89aaa5" stroke-width="2"/>
+    <rect x="732" y="84" width="176" height="90" rx="10" fill="#f7e9ef" stroke="#c696a8" stroke-width="2"/>
+    <text x="139" y="120" font-size="22" font-weight="700" fill="#263c3a">logits</text>
+    <text x="139" y="150" font-size="18" fill="#263c3a">z₁...zₖ</text>
+    <text x="355" y="120" font-size="22" font-weight="700" fill="#5a3e2c">softmax</text>
+    <text x="355" y="150" font-size="18" fill="#5a3e2c">概率分布</text>
+    <text x="582" y="120" font-size="22" font-weight="700" fill="#263c3a">Categorical</text>
+    <text x="582" y="150" font-size="18" fill="#263c3a">真实类别概率</text>
+    <text x="820" y="120" font-size="22" font-weight="700" fill="#6a4051">Cross Entropy</text>
+    <text x="820" y="150" font-size="18" fill="#6a4051">-log p_true</text>
+    <g stroke="#c77b43" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M220 129 H274"/>
+      <path d="M436 129 H490"/>
+      <path d="M674 129 H728"/>
+    </g>
+    <text x="490" y="230" font-size="19" fill="#5c5148">模型越相信真实类别，损失越小</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c77b43"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" role="img" aria-labelledby="title desc">
+  <title id="title">从最大似然到损失函数</title>
+  <desc id="desc">概率模型、似然函数、对数似然、负对数似然和损失函数之间的关系。</desc>
+  <rect width="980" height="240" fill="#fbfaf7"/>
+  <g font-family="PingFang SC, Microsoft YaHei, Arial" text-anchor="middle">
+    <g fill="#eef5f3" stroke="#89aaa5" stroke-width="2">
+      <rect x="44" y="80" width="150" height="76" rx="10"/>
+      <rect x="236" y="80" width="150" height="76" rx="10"/>
+      <rect x="428" y="80" width="150" height="76" rx="10"/>
+      <rect x="620" y="80" width="150" height="76" rx="10"/>
+      <rect x="812" y="80" width="124" height="76" rx="10"/>
+    </g>
+    <g fill="#263c3a" font-size="20" font-weight="700">
+      <text x="119" y="126">概率模型</text>
+      <text x="311" y="126">似然函数</text>
+      <text x="503" y="126">对数似然</text>
+      <text x="695" y="116">负对数</text>
+      <text x="695" y="140">似然</text>
+      <text x="874" y="126">Loss</text>
+    </g>
+    <g stroke="#c77b43" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M198 118 H232"/>
+      <path d="M390 118 H424"/>
+      <path d="M582 118 H616"/>
+      <path d="M774 118 H808"/>
+    </g>
+    <text x="489" y="202" font-size="19" fill="#5c5148">最大化似然，等价于最小化负对数似然</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c77b43"/>
+    </marker>
+  </defs>
+</svg>

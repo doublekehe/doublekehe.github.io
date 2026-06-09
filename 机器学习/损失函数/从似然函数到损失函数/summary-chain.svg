@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300" role="img" aria-labelledby="title desc">
+  <title id="title">似然函数知识链路</title>
+  <desc id="desc">从概率建模到似然函数、最大似然、负对数似然，再到 BCE 和 Softmax CE。</desc>
+  <rect width="980" height="300" fill="#fbfaf7"/>
+  <g font-family="PingFang SC, Microsoft YaHei, Arial" text-anchor="middle">
+    <text x="490" y="48" font-size="26" font-weight="700" fill="#263c3a">一条线串起来</text>
+    <g fill="#eef5f3" stroke="#89aaa5" stroke-width="2">
+      <rect x="54" y="104" width="130" height="70" rx="10"/>
+      <rect x="236" y="104" width="130" height="70" rx="10"/>
+      <rect x="418" y="104" width="130" height="70" rx="10"/>
+      <rect x="600" y="104" width="130" height="70" rx="10"/>
+    </g>
+    <rect x="782" y="82" width="144" height="114" rx="10" fill="#fff1e6" stroke="#d5a375" stroke-width="2"/>
+    <text x="119" y="147" font-size="20" font-weight="700" fill="#263c3a">概率建模</text>
+    <text x="301" y="147" font-size="20" font-weight="700" fill="#263c3a">似然函数</text>
+    <text x="483" y="147" font-size="20" font-weight="700" fill="#263c3a">MLE</text>
+    <text x="665" y="147" font-size="20" font-weight="700" fill="#263c3a">NLL</text>
+    <text x="854" y="124" font-size="20" font-weight="700" fill="#5a3e2c">分类 Loss</text>
+    <text x="854" y="158" font-size="18" fill="#5a3e2c">BCE</text>
+    <text x="854" y="184" font-size="18" fill="#5a3e2c">Softmax CE</text>
+    <g stroke="#c77b43" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M188 139 H232"/>
+      <path d="M370 139 H414"/>
+      <path d="M552 139 H596"/>
+      <path d="M734 139 H778"/>
+    </g>
+    <text x="490" y="248" font-size="19" fill="#5c5148">用概率描述数据，用似然选择参数，用负对数似然训练模型</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c77b43"/>
+    </marker>
+  </defs>
+</svg>
