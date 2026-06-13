@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="680" viewBox="0 0 1180 680" role="img" aria-labelledby="title desc">
+  <title id="title">HSTU 输出与后续任务应用</title>
+  <desc id="desc">展示 HSTU 输出序列表示如何用于 retrieval、ranking 和多任务预测</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#233044"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1180" height="680" fill="#fbfcff"/>
+  <text x="590" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#152033">HSTU 输出不是最终答案，而是下游任务的序列表示</text>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <rect x="70" y="146" width="278" height="344" rx="20" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    <text x="209" y="188" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937">HSTU Encoder</text>
+    <g text-anchor="middle" font-size="18">
+      <rect x="122" y="230" width="174" height="46" rx="9" fill="#e7f0ff" stroke="#2c5f9e"/>
+      <text x="209" y="259" fill="#1f3f67">y₀ ∈ Rᵈ</text>
+      <rect x="122" y="292" width="174" height="46" rx="9" fill="#e7f0ff" stroke="#2c5f9e"/>
+      <text x="209" y="321" fill="#1f3f67">y₁ ∈ Rᵈ</text>
+      <text x="209" y="374" fill="#64748b">...</text>
+      <rect x="122" y="412" width="174" height="46" rx="9" fill="#e7f0ff" stroke="#2c5f9e"/>
+      <text x="209" y="441" fill="#1f3f67">yₙ₋₁ ∈ Rᵈ</text>
+    </g>
+    <text x="209" y="532" text-anchor="middle" font-size="18" fill="#526071">Y ∈ Rⁿˣᵈ</text>
+  </g>
+  <g fill="none" stroke="#233044" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M350 250 C420 220 448 190 520 178"/>
+    <path d="M350 318 C420 318 448 318 520 318"/>
+    <path d="M350 386 C420 416 448 474 520 502"/>
+  </g>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <rect x="520" y="112" width="560" height="134" rx="18" fill="#e8f7ef" stroke="#35734d" stroke-width="2"/>
+    <text x="800" y="150" text-anchor="middle" font-size="23" font-weight="700" fill="#214d40">Retrieval / 下一 item 预测</text>
+    <text x="800" y="187" text-anchor="middle" font-size="19" fill="#334155">用某个位置的用户表示 uᵢ 预测 p(Φᵢ₊₁ | uᵢ)</text>
+    <text x="800" y="216" text-anchor="middle" font-size="18" fill="#526071">可连接 item embedding 空间，做 ANN 召回</text>
+    <rect x="520" y="272" width="560" height="134" rx="18" fill="#fff2d7" stroke="#8a6a20" stroke-width="2"/>
+    <text x="800" y="310" text-anchor="middle" font-size="23" font-weight="700" fill="#4b3507">Ranking / 目标感知打分</text>
+    <text x="800" y="347" text-anchor="middle" font-size="19" fill="#334155">把候选 item 插入序列或做 target-aware attention</text>
+    <text x="800" y="376" text-anchor="middle" font-size="18" fill="#526071">输出位置接小型任务网络，预测 action 或偏好强度</text>
+    <rect x="520" y="432" width="560" height="134" rx="18" fill="#f4e8fb" stroke="#785198" stroke-width="2"/>
+    <text x="800" y="470" text-anchor="middle" font-size="23" font-weight="700" fill="#4c3061">Multi-task Heads</text>
+    <text x="800" y="507" text-anchor="middle" font-size="19" fill="#334155">CTR / CVR / dwell time / like / share 等任务</text>
+    <text x="800" y="536" text-anchor="middle" font-size="18" fill="#526071">HSTU 负责表示，下游 head 负责具体目标</text>
+  </g>
+  <text x="590" y="632" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#526071">输出 Y 的形状与输入 X 相同，但每个位置已经融合了历史行为、相对时间和候选目标信息。</text>
+</svg>

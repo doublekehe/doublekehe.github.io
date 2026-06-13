@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" role="img" aria-labelledby="title desc">
+  <title id="title">HSTU 单层计算流程</title>
+  <desc id="desc">HSTU 从输入 X 到 U Q K V、注意力聚合、门控归一化和输出投影的流程图</desc>
+  <defs>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#243447"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="760" fill="#fbfcff"/>
+  <text x="560" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#162033">HSTU 单层数据流</text>
+  <g font-family="Arial, sans-serif" font-size="24" text-anchor="middle" filter="url(#shadow)">
+    <rect x="360" y="100" width="400" height="76" rx="18" fill="#e7f0ff" stroke="#285c9f" stroke-width="2"/>
+    <text x="560" y="132" fill="#17324d" font-weight="700">输入 X</text>
+    <text x="560" y="160" fill="#334155" font-size="20">n × d，例如 8192 × 1024</text>
+
+    <rect x="322" y="238" width="476" height="84" rx="18" fill="#fff3d8" stroke="#8a6b1f" stroke-width="2"/>
+    <text x="560" y="273" fill="#3d2f0a" font-weight="700">Pointwise Projection: f₁</text>
+    <text x="560" y="302" fill="#4b5563" font-size="20">X → U, Q, K, V</text>
+
+    <rect x="96" y="404" width="408" height="96" rx="18" fill="#f1eafe" stroke="#6748a3" stroke-width="2"/>
+    <text x="300" y="439" fill="#37235c" font-weight="700">Spatial Aggregation</text>
+    <text x="300" y="469" fill="#4b5563" font-size="20">A(X)=φ₂(QKᵀ + rabᵖ,ᵗ)</text>
+
+    <rect x="616" y="404" width="408" height="96" rx="18" fill="#e8f7ef" stroke="#35734d" stroke-width="2"/>
+    <text x="820" y="439" fill="#20452e" font-weight="700">Gate + Norm</text>
+    <text x="820" y="469" fill="#4b5563" font-size="20">Norm(A(X)V(X)) ⊙ U(X)</text>
+
+    <rect x="322" y="584" width="476" height="84" rx="18" fill="#fff0f0" stroke="#9a3b3b" stroke-width="2"/>
+    <text x="560" y="620" fill="#5b2222" font-weight="700">Pointwise Transformation: f₂</text>
+    <text x="560" y="648" fill="#4b5563" font-size="20">输出 Y ∈ Rⁿˣᵈ</text>
+  </g>
+  <g fill="none" stroke="#243447" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M560 176 L560 232"/>
+    <path d="M500 322 C430 350 360 365 312 398"/>
+    <path d="M620 322 C700 350 770 365 810 398"/>
+    <path d="M396 500 C430 548 484 560 544 582"/>
+    <path d="M724 500 C690 548 636 560 576 582"/>
+  </g>
+  <text x="560" y="718" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#526071">示意图，仅用于辅助理解；不同实现中的 projection 细节可能略有差异。</text>
+</svg>

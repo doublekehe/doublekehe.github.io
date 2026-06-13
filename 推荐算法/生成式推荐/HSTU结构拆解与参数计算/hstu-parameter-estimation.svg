@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">HSTU 参数量估算</title>
+  <desc id="desc">HSTU 单层、24 层 encoder、embedding table 与总参数量估算</desc>
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <line x1="780" y1="0" x2="780" y2="900" stroke="#c7c7c7"/>
+  <line x1="1210" y1="0" x2="1210" y2="900" stroke="#c7c7c7"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="390" y="56" font-size="31" font-weight="700" fill="#111827">HSTU in Recommendation Stack</text>
+    <text x="995" y="56" font-size="31" font-weight="700" fill="#111827">Single-Layer Parameters</text>
+    <text x="1405" y="56" font-size="31" font-weight="700" fill="#111827">Total Parameter Count</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="22" text-anchor="middle">
+    <rect x="56" y="52" width="42" height="808" fill="#fff4cf" stroke="#111827" stroke-width="2"/>
+    <text x="81" y="172" transform="rotate(-90 81 172)" font-size="20">Representation transformations</text>
+    <rect x="56" y="360" width="42" height="220" fill="#f8e8f6" stroke="#111827" stroke-width="2"/>
+    <text x="81" y="474" transform="rotate(-90 81 474)" font-size="20">Feature interactions</text>
+    <rect x="56" y="580" width="42" height="280" fill="#e3f2f7" stroke="#111827" stroke-width="2"/>
+    <text x="81" y="722" transform="rotate(-90 81 722)" font-size="20">Feature extractions</text>
+    <rect x="145" y="805" width="220" height="30" fill="#e5e7eb" stroke="#111827"/>
+    <text x="255" y="827">Raw Features</text>
+    <rect x="105" y="682" width="140" height="86" fill="#e6f4fb" stroke="#111827"/>
+    <text x="175" y="714">Numerical</text><text x="175" y="742">Features</text>
+    <rect x="290" y="682" width="160" height="86" fill="#e6f4fb" stroke="#111827"/>
+    <text x="370" y="714">Categorical</text><text x="370" y="742">Features</text>
+    <rect x="132" y="560" width="140" height="86" fill="#e6f4fb" stroke="#111827"/>
+    <text x="202" y="591">Bottom NN</text><text x="202" y="620">Networks</text>
+    <rect x="300" y="560" width="185" height="86" fill="#e6f4fb" stroke="#111827"/>
+    <text x="392" y="590">Embedding</text><text x="392" y="619">Operators</text>
+    <rect x="165" y="360" width="280" height="160" fill="#f7f3ff" stroke="#111827"/>
+    <text x="305" y="406">Feature Interactions</text><text x="305" y="438">Neural Networks</text><text x="305" y="472">(FMs, DCN, Transformer)</text>
+    <rect x="210" y="130" width="185" height="122" transform="skewX(-4)" fill="#fff4cf" stroke="#111827"/>
+    <text x="304" y="172">Top Neural</text><text x="304" y="204">Networks</text><text x="304" y="236">(MMoE, PLE)</text>
+    <g stroke="#111827" stroke-width="2" fill="none">
+      <path d="M255 805 L255 768"/><path d="M255 682 L202 646"/><path d="M255 682 L392 646"/>
+      <path d="M202 560 L305 520"/><path d="M392 560 L305 520"/><path d="M305 360 L305 252"/>
+    </g>
+    <rect x="500" y="805" width="300" height="30" fill="#e5e7eb" stroke="#111827"/>
+    <text x="650" y="827">Sequentialized Unified Features</text>
+    <rect x="520" y="760" width="260" height="30" fill="#f8fafc" stroke="#111827"/>
+    <text x="650" y="782">Preprocessing</text>
+    <g font-size="20">
+      <rect x="545" y="680" width="210" height="46" fill="#dff0f7" stroke="#111827"/>
+      <text x="650" y="710">U,Q,K,V = φ₁(f₁(X))</text>
+      <rect x="520" y="622" width="215" height="46" fill="#dff0f7" stroke="#111827"/>
+      <text x="628" y="651">A(X)=φ₂(QKᵀ+rab)</text>
+      <rect x="748" y="622" width="88" height="46" fill="#dff0f7" stroke="#111827"/>
+      <text x="792" y="651">U(X)</text>
+      <rect x="535" y="562" width="280" height="46" fill="#dff0f7" stroke="#111827"/>
+      <text x="675" y="592">Norm(A(X)V(X))⊙U(X)</text>
+      <rect x="575" y="496" width="210" height="46" transform="skewX(-10)" fill="#dff0f7" stroke="#111827"/>
+      <text x="675" y="525">Y(X)=f₂(...)</text>
+    </g>
+    <text x="650" y="458" font-size="18">Add &amp; Norm</text>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="835" y="710" width="325" height="96" rx="8" fill="#eef6ff" stroke="#1d4f91"/>
+    <text x="997" y="740" font-size="21" font-weight="700">Input X</text>
+    <text x="997" y="769" font-size="19">8192 × 1024</text>
+    <text x="997" y="796" font-size="18">n affects compute/memory, not weight count</text>
+    <rect x="835" y="565" width="325" height="96" rx="8" fill="#fff5d9" stroke="#8a6a20"/>
+    <text x="997" y="594" font-size="21" font-weight="700">f₁ projection</text>
+    <text x="997" y="622" font-size="19">X → U,Q,K,V    d → 4d</text>
+    <text x="997" y="650" font-size="19">params = 4d² = 4.19M</text>
+    <rect x="835" y="410" width="325" height="115" rx="8" fill="#f4f0ff" stroke="#503a96"/>
+    <text x="997" y="440" font-size="21" font-weight="700">Attention aggregation</text>
+    <text x="997" y="469" font-size="19">A(X)=φ₂(QKᵀ + rabᵖ,ᵗ)</text>
+    <text x="997" y="498" font-size="19">large dense params: ~0</text>
+    <rect x="835" y="285" width="325" height="82" rx="8" fill="#eef8ef" stroke="#2f6b43"/>
+    <text x="997" y="316" font-size="21" font-weight="700">Gate + Norm</text>
+    <text x="997" y="346" font-size="19">params = O(d)</text>
+    <rect x="835" y="145" width="325" height="112" rx="8" fill="#eef6ff" stroke="#1d4f91"/>
+    <text x="997" y="174" font-size="21" font-weight="700">f₂ output projection</text>
+    <text x="997" y="203" font-size="18">paper: d → d, params = d²</text>
+    <text x="997" y="230" font-size="18">concat impl: 3d → d, params = 3d²</text>
+    <rect x="835" y="58" width="325" height="72" rx="8" fill="#fff8f8" stroke="#ef0000" stroke-width="2"/>
+    <text x="997" y="84" font-size="21" font-weight="700" fill="#e11d1d">Single layer total</text>
+    <text x="997" y="108" font-size="18" fill="#e11d1d">paper: 5d² = 5.24M</text>
+    <text x="997" y="128" font-size="18" fill="#e11d1d">concat: 7d² = 7.34M</text>
+    <g stroke="#111827" stroke-width="2" fill="none">
+      <path d="M997 710 L997 663"/><path d="M997 565 L997 525"/><path d="M997 410 L997 367"/><path d="M997 285 L997 257"/><path d="M997 145 L997 130"/>
+    </g>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="1298" y="86" font-size="24" font-weight="700" fill="#164189">A. HSTU Encoder</text>
+    <rect x="1250" y="104" width="300" height="178" rx="4" fill="#f8fbff" stroke="#164189"/>
+    <line x1="1400" y1="104" x2="1400" y2="282" stroke="#164189"/><line x1="1250" y1="140" x2="1550" y2="140" stroke="#164189"/><line x1="1250" y1="176" x2="1550" y2="176" stroke="#164189"/><line x1="1250" y1="212" x2="1550" y2="212" stroke="#164189"/><line x1="1250" y1="248" x2="1550" y2="248" stroke="#164189"/>
+    <text x="1325" y="129" font-size="17" font-weight="700">Item</text><text x="1475" y="129" font-size="17" font-weight="700">Value</text>
+    <text x="1325" y="166" font-size="15">Single layer paper</text><text x="1475" y="166" font-size="15">~5.24M</text>
+    <text x="1325" y="202" font-size="15">Single layer concat</text><text x="1475" y="202" font-size="15">~7.34M</text>
+    <text x="1325" y="238" font-size="15">Encoder paper</text><text x="1475" y="238" font-size="15" fill="#e11d1d">~126M</text>
+    <text x="1325" y="274" font-size="15">Encoder concat</text><text x="1475" y="274" font-size="15" fill="#e11d1d">~176M</text>
+    <text x="1306" y="330" font-size="24" font-weight="700" fill="#14532d">B. Embedding Tables</text>
+    <rect x="1250" y="348" width="300" height="136" rx="4" fill="#f7fff8" stroke="#14532d"/>
+    <line x1="1400" y1="348" x2="1400" y2="484" stroke="#14532d"/><line x1="1250" y1="384" x2="1550" y2="384" stroke="#14532d"/><line x1="1250" y1="420" x2="1550" y2="420" stroke="#14532d"/><line x1="1250" y1="456" x2="1550" y2="456" stroke="#14532d"/>
+    <text x="1325" y="373" font-size="17" font-weight="700">Item</text><text x="1475" y="373" font-size="17" font-weight="700">Value</text>
+    <text x="1325" y="410" font-size="16">Item count</text><text x="1475" y="410" font-size="16">~1.4B</text>
+    <text x="1325" y="446" font-size="16">Embedding dim</text><text x="1475" y="446" font-size="16">1024</text>
+    <text x="1325" y="478" font-size="16">Embedding params</text><text x="1475" y="478" font-size="16" fill="#e11d1d">~1.4336T</text>
+    <text x="1308" y="540" font-size="24" font-weight="700" fill="#312e81">C. Model Total Estimate</text>
+    <rect x="1250" y="558" width="300" height="178" rx="4" fill="#fbfaff" stroke="#312e81"/>
+    <line x1="1400" y1="558" x2="1400" y2="736" stroke="#312e81"/><line x1="1250" y1="594" x2="1550" y2="594" stroke="#312e81"/><line x1="1250" y1="630" x2="1550" y2="630" stroke="#312e81"/><line x1="1250" y1="666" x2="1550" y2="666" stroke="#312e81"/><line x1="1250" y1="702" x2="1550" y2="702" stroke="#312e81"/>
+    <text x="1325" y="583" font-size="17" font-weight="700">Item</text><text x="1475" y="583" font-size="17" font-weight="700">Value</text>
+    <text x="1325" y="620" font-size="16">Embedding tables</text><text x="1475" y="620" font-size="16">~1.4336T</text>
+    <text x="1325" y="656" font-size="15">Encoder paper</text><text x="1475" y="656" font-size="15">~126M</text>
+    <text x="1325" y="692" font-size="15">Total paper</text><text x="1475" y="692" font-size="15" fill="#e11d1d">~1.4337T</text>
+    <text x="1325" y="728" font-size="15">Total concat</text><text x="1475" y="728" font-size="15" fill="#e11d1d">~1.4338T</text>
+    <text x="1400" y="762" font-size="21" font-weight="700">~1.434T estimated parameters</text>
+    <rect x="1250" y="790" width="292" height="45" fill="#1667d9" stroke="#111827"/><rect x="1542" y="790" width="8" height="45" fill="#e11d1d" stroke="#111827"/>
+    <text x="1396" y="820" font-size="18" fill="#ffffff" font-weight="700">Embedding tables ~99.99%</text>
+    <text x="1398" y="862" font-size="14" fill="#1641c8">Embedding tables ~1.4336T</text>
+    <text x="1398" y="884" font-size="14" fill="#e11d1d">HSTU encoder ~126M / ~176M</text>
+  </g>
+</svg>

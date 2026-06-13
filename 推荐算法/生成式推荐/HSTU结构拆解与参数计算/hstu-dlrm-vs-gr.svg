@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="720" viewBox="0 0 1180 720" role="img" aria-labelledby="title desc">
+  <title id="title">DLRM 与 HSTU 结构对比</title>
+  <desc id="desc">根据 HSTU 论文 Figure 3 思路重绘，展示传统 DLRM 三段式结构与 HSTU 堆叠结构</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <rect width="1180" height="720" fill="#fbfcff"/>
+  <text x="590" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#152033">从 DLRM 三段式到 HSTU 序列主干</text>
+  <g font-family="Arial, sans-serif">
+    <text x="300" y="98" text-anchor="middle" font-size="25" font-weight="700" fill="#1f2937">传统 DLRM</text>
+    <rect x="72" y="130" width="456" height="502" rx="18" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    <g text-anchor="middle" font-size="20">
+      <rect x="142" y="552" width="136" height="52" rx="8" fill="#e6f0ff" stroke="#2c5f9e"/>
+      <text x="210" y="584" fill="#1f3f67">数值特征</text>
+      <rect x="322" y="552" width="136" height="52" rx="8" fill="#e1f3ee" stroke="#35705b"/>
+      <text x="390" y="584" fill="#214d40">类别特征</text>
+      <rect x="116" y="458" width="188" height="62" rx="8" fill="#e7f0ff" stroke="#2c5f9e"/>
+      <text x="210" y="484" fill="#1f3f67">Bottom NN</text>
+      <text x="210" y="508" fill="#1f3f67">数值编码</text>
+      <rect x="296" y="458" width="188" height="62" rx="8" fill="#e6f7ef" stroke="#35705b"/>
+      <text x="390" y="484" fill="#214d40">Embedding</text>
+      <text x="390" y="508" fill="#214d40">Operators</text>
+      <rect x="158" y="314" width="284" height="90" rx="8" fill="#f4e8fb" stroke="#785198"/>
+      <text x="300" y="348" fill="#4c3061">Feature Interaction</text>
+      <text x="300" y="376" fill="#4c3061">FM / DCN / Transformer</text>
+      <rect x="202" y="178" width="196" height="76" rx="8" fill="#fff2d7" stroke="#8a6a20"/>
+      <text x="300" y="209" fill="#4b3507">Top Network</text>
+      <text x="300" y="235" fill="#4b3507">MMoE / PLE</text>
+    </g>
+    <g fill="none" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M210 552 L210 523"/>
+      <path d="M390 552 L390 523"/>
+      <path d="M210 458 L254 407"/>
+      <path d="M390 458 L346 407"/>
+      <path d="M300 314 L300 258"/>
+    </g>
+    <text x="300" y="656" text-anchor="middle" font-size="18" fill="#526071">特征抽取 → 特征交互 → 表示变换</text>
+  </g>
+  <g font-family="Arial, sans-serif">
+    <text x="880" y="98" text-anchor="middle" font-size="25" font-weight="700" fill="#1f2937">HSTU / GR 主干</text>
+    <rect x="650" y="130" width="456" height="502" rx="18" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    <g text-anchor="middle">
+      <rect x="740" y="552" width="280" height="48" rx="8" fill="#e1f3ee" stroke="#35705b"/>
+      <text x="880" y="582" font-size="19" fill="#214d40">Sequentialized Unified Features</text>
+      <rect x="760" y="490" width="240" height="38" rx="8" fill="#eef2f7" stroke="#64748b"/>
+      <text x="880" y="516" font-size="18" fill="#334155">Preprocessing</text>
+      <g font-size="17">
+        <rect x="742" y="398" width="276" height="66" rx="8" fill="#e7f0ff" stroke="#2c5f9e"/>
+        <text x="880" y="424" fill="#1f3f67">U,Q,K,V = φ₁(f₁(X))</text>
+        <text x="880" y="450" fill="#1f3f67">A(X), Norm, Gate, f₂</text>
+        <rect x="742" y="298" width="276" height="66" rx="8" fill="#fff2d7" stroke="#8a6a20"/>
+        <text x="880" y="324" fill="#4b3507">U,Q,K,V = φ₁(f₁(X))</text>
+        <text x="880" y="350" fill="#4b3507">A(X), Norm, Gate, f₂</text>
+        <rect x="742" y="198" width="276" height="66" rx="8" fill="#f4e8fb" stroke="#785198"/>
+        <text x="880" y="224" fill="#4c3061">U,Q,K,V = φ₁(f₁(X))</text>
+        <text x="880" y="250" fill="#4c3061">A(X), Norm, Gate, f₂</text>
+      </g>
+      <text x="1042" y="344" font-size="18" fill="#526071" transform="rotate(90 1042 344)">stacked HSTU layers</text>
+    </g>
+    <g fill="none" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M880 552 L880 531"/>
+      <path d="M880 490 L880 467"/>
+      <path d="M880 398 L880 367"/>
+      <path d="M880 298 L880 267"/>
+      <path d="M880 198 L880 166"/>
+    </g>
+    <text x="880" y="656" text-anchor="middle" font-size="18" fill="#526071">统一序列输入 → 多层 HSTU → 序列表示</text>
+  </g>
+  <text x="590" y="700" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#526071">根据论文 Figure 3 的结构关系重绘，突出 HSTU 替代 DLRM 中特征交互与表示变换的主干角色。</text>
+</svg>

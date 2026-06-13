@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="680" viewBox="0 0 1100 680" role="img" aria-labelledby="title desc">
+  <title id="title">HSTU Spatial Aggregation</title>
+  <desc id="desc">HSTU spatial aggregation flow from Q, K, V to score matrix, relative attention bias, SiLU attention weights, and weighted value aggregation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #111827; }
+      .h { font: 700 18px Arial, sans-serif; fill: #111827; }
+      .t { font: 16px Arial, sans-serif; fill: #111827; }
+      .s { font: 14px Arial, sans-serif; fill: #4b5563; }
+      .formula { font: 17px Arial, sans-serif; fill: #111827; }
+      .box { stroke: #1f2937; stroke-width: 1.6; rx: 10; }
+      .arrow { stroke: #1f2937; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .thin { stroke: #6b7280; stroke-width: 1.2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1100" height="680" fill="#ffffff"/>
+  <text x="550" y="42" text-anchor="middle" class="title">HSTU Spatial Aggregation：从 Q/K/V 到 A(X)V(X)</text>
+
+  <g>
+    <rect x="44" y="92" width="240" height="170" fill="#eff6ff" class="box"/>
+    <text x="164" y="125" text-anchor="middle" class="h">输入序列投影结果</text>
+    <text x="72" y="160" class="formula">Q = [Q_1, Q_2, ..., Q_n]</text>
+    <text x="72" y="194" class="formula">K = [K_1, K_2, ..., K_n]</text>
+    <text x="72" y="228" class="formula">V = [V_1, V_2, ..., V_n]</text>
+    <text x="164" y="250" text-anchor="middle" class="s">每个位置都有 Q_i/K_i/V_i</text>
+  </g>
+
+  <g>
+    <rect x="370" y="82" width="300" height="190" fill="#fff7ed" class="box"/>
+    <text x="520" y="116" text-anchor="middle" class="h">Pairwise 打分</text>
+    <text x="520" y="154" text-anchor="middle" class="formula">s_ij = dot(Q_i, K_j) + rab_ij(p,t)</text>
+    <text x="520" y="190" text-anchor="middle" class="s">Qᵢ 与每个 Kⱼ 做点积</text>
+    <text x="520" y="216" text-anchor="middle" class="s">再加相对位置/时间 bias</text>
+    <text x="520" y="244" text-anchor="middle" class="s">形成 score 矩阵 S：n × n</text>
+  </g>
+
+  <g>
+    <rect x="780" y="82" width="276" height="190" fill="#f0fdf4" class="box"/>
+    <text x="918" y="116" text-anchor="middle" class="h">Relative Attention Bias</text>
+    <text x="918" y="150" text-anchor="middle" class="formula">rab_ij(p,t)</text>
+    <text x="918" y="184" text-anchor="middle" class="s">bucket(j - i)</text>
+    <text x="918" y="211" text-anchor="middle" class="s">bucket(t_j - t_i)</text>
+    <text x="918" y="244" text-anchor="middle" class="s">每个 token pair 一个标量 bias</text>
+  </g>
+
+  <path d="M284 177 C315 177 334 177 370 177" class="arrow"/>
+  <path d="M780 177 C740 177 712 177 670 177" class="arrow"/>
+
+  <g>
+    <rect x="130" y="350" width="230" height="230" fill="#f8fafc" stroke="#374151" stroke-width="1.4" rx="8"/>
+    <text x="245" y="326" text-anchor="middle" class="h">Score 矩阵 S</text>
+    <text x="245" y="604" text-anchor="middle" class="s">S = QK^T + rab(p,t)，单头形状 n × n</text>
+    <g transform="translate(168 382)">
+      <rect x="0" y="0" width="154" height="154" fill="#ffffff" stroke="#4b5563"/>
+      <line x1="38.5" y1="0" x2="38.5" y2="154" class="thin"/>
+      <line x1="77" y1="0" x2="77" y2="154" class="thin"/>
+      <line x1="115.5" y1="0" x2="115.5" y2="154" class="thin"/>
+      <line x1="0" y1="38.5" x2="154" y2="38.5" class="thin"/>
+      <line x1="0" y1="77" x2="154" y2="77" class="thin"/>
+      <line x1="0" y1="115.5" x2="154" y2="115.5" class="thin"/>
+      <text x="19" y="25" text-anchor="middle" class="s">s11</text>
+      <text x="58" y="25" text-anchor="middle" class="s">s12</text>
+      <text x="96" y="25" text-anchor="middle" class="s">...</text>
+      <text x="135" y="25" text-anchor="middle" class="s">s1n</text>
+      <text x="19" y="64" text-anchor="middle" class="s">s21</text>
+      <text x="58" y="64" text-anchor="middle" class="s">s22</text>
+      <text x="96" y="64" text-anchor="middle" class="s">...</text>
+      <text x="135" y="64" text-anchor="middle" class="s">s2n</text>
+      <text x="19" y="103" text-anchor="middle" class="s">...</text>
+      <text x="58" y="103" text-anchor="middle" class="s">...</text>
+      <text x="96" y="103" text-anchor="middle" class="s">...</text>
+      <text x="135" y="103" text-anchor="middle" class="s">...</text>
+      <text x="19" y="141" text-anchor="middle" class="s">sn1</text>
+      <text x="58" y="141" text-anchor="middle" class="s">sn2</text>
+      <text x="96" y="141" text-anchor="middle" class="s">...</text>
+      <text x="135" y="141" text-anchor="middle" class="s">snn</text>
+    </g>
+  </g>
+
+  <g>
+    <rect x="438" y="366" width="226" height="150" fill="#fef2f2" class="box"/>
+    <text x="551" y="400" text-anchor="middle" class="h">phi_2 = SiLU</text>
+    <text x="551" y="436" text-anchor="middle" class="formula">A_ij = SiLU(s_ij)</text>
+    <text x="551" y="472" text-anchor="middle" class="s">不是 softmax</text>
+    <text x="551" y="498" text-anchor="middle" class="s">不做行归一化</text>
+  </g>
+
+  <g>
+    <rect x="742" y="350" width="284" height="230" fill="#f5f3ff" class="box"/>
+    <text x="884" y="326" text-anchor="middle" class="h">Attention 权重与聚合</text>
+    <text x="884" y="390" text-anchor="middle" class="formula">A(X): n x n</text>
+    <text x="884" y="426" text-anchor="middle" class="formula">(A V)_i = sum_j A_ij * V_j</text>
+    <text x="884" y="466" text-anchor="middle" class="s">第 i 行权重聚合所有允许看到的 V_j</text>
+    <text x="884" y="494" text-anchor="middle" class="s">因果 mask 下只聚合历史位置</text>
+    <text x="884" y="540" text-anchor="middle" class="formula">A(X)V(X): n x d</text>
+  </g>
+
+  <path d="M245 272 L245 350" class="arrow"/>
+  <path d="M360 465 C392 465 408 445 438 445" class="arrow"/>
+  <path d="M664 445 C696 445 710 445 742 445" class="arrow"/>
+
+  <g>
+    <rect x="366" y="606" width="386" height="42" rx="21" fill="#ecfeff" stroke="#0e7490" stroke-width="1.4"/>
+    <text x="559" y="633" text-anchor="middle" class="s">多头形式：A(X): h x n x n，rab(p,t) 可在同一层内跨 heads 共享</text>
+  </g>
+</svg>

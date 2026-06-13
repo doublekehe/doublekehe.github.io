@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="720" viewBox="0 0 1180 720" role="img" aria-labelledby="title desc">
+  <title id="title">HSTU 输入序列构造示意图</title>
+  <desc id="desc">根据 HSTU 论文 Figure 2 思路重绘，展示主行为序列、辅助类别特征、时间特征如何合并为统一序列输入</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#233044"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+  <rect width="1180" height="720" fill="#fbfcff"/>
+  <text x="590" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#152033">从异构推荐特征到统一序列 X</text>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <rect x="64" y="92" width="300" height="506" rx="18" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+    <text x="214" y="132" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937">原始特征</text>
+    <rect x="96" y="170" width="236" height="62" rx="12" fill="#e1f3ee" stroke="#35705b"/>
+    <text x="214" y="208" text-anchor="middle" font-size="21" fill="#214d40">item_id / content_id</text>
+    <rect x="96" y="258" width="236" height="62" rx="12" fill="#fff2d7" stroke="#8a6a20"/>
+    <text x="214" y="296" text-anchor="middle" font-size="21" fill="#4b3507">action: click / like</text>
+    <rect x="96" y="346" width="236" height="62" rx="12" fill="#e6f0ff" stroke="#2c5f9e"/>
+    <text x="214" y="384" text-anchor="middle" font-size="21" fill="#1f3f67">timestamp / gap</text>
+    <rect x="96" y="434" width="236" height="62" rx="12" fill="#f4e8fb" stroke="#785198"/>
+    <text x="214" y="472" text-anchor="middle" font-size="21" fill="#4c3061">aux categorical</text>
+    <rect x="96" y="522" width="236" height="44" rx="12" fill="#fff0f0" stroke="#a24b4b"/>
+    <text x="214" y="551" text-anchor="middle" font-size="18" fill="#653030">dense stats as targets</text>
+  </g>
+  <g fill="none" stroke="#233044" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M366 344 C416 344 430 344 480 344"/>
+  </g>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <rect x="482" y="92" width="308" height="506" rx="18" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    <text x="636" y="132" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937">合并与编码</text>
+    <text x="636" y="172" text-anchor="middle" font-size="18" fill="#526071">主时间线：用户交互过的内容</text>
+    <g font-size="18" text-anchor="middle">
+      <rect x="530" y="202" width="72" height="56" rx="10" fill="#e1f3ee" stroke="#35705b"/>
+      <text x="566" y="237" fill="#214d40">Φ₀</text>
+      <rect x="614" y="202" width="72" height="56" rx="10" fill="#fff2d7" stroke="#8a6a20"/>
+      <text x="650" y="237" fill="#4b3507">a₀</text>
+      <rect x="698" y="202" width="72" height="56" rx="10" fill="#e6f0ff" stroke="#2c5f9e"/>
+      <text x="734" y="237" fill="#1f3f67">t₀</text>
+      <rect x="530" y="294" width="72" height="56" rx="10" fill="#e1f3ee" stroke="#35705b"/>
+      <text x="566" y="329" fill="#214d40">Φ₁</text>
+      <rect x="614" y="294" width="72" height="56" rx="10" fill="#fff2d7" stroke="#8a6a20"/>
+      <text x="650" y="329" fill="#4b3507">a₁</text>
+      <rect x="698" y="294" width="72" height="56" rx="10" fill="#e6f0ff" stroke="#2c5f9e"/>
+      <text x="734" y="329" fill="#1f3f67">t₁</text>
+    </g>
+    <text x="636" y="402" text-anchor="middle" font-size="18" fill="#526071">慢变化类别特征压缩后插入</text>
+    <rect x="540" y="430" width="192" height="50" rx="10" fill="#f4e8fb" stroke="#785198"/>
+    <text x="636" y="462" text-anchor="middle" font-size="18" fill="#4c3061">G / H / user context</text>
+    <text x="636" y="530" text-anchor="middle" font-size="18" fill="#526071">每个位置编码为 token embedding</text>
+  </g>
+  <g fill="none" stroke="#233044" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M792 344 C840 344 854 344 902 344"/>
+  </g>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <rect x="902" y="92" width="214" height="506" rx="18" fill="#f9fbff" stroke="#334155" stroke-width="2"/>
+    <text x="1009" y="132" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937">HSTU 输入</text>
+    <text x="1009" y="176" text-anchor="middle" font-size="20" fill="#334155">X ∈ Rⁿˣᵈ</text>
+    <g font-size="17" text-anchor="middle">
+      <rect x="944" y="214" width="130" height="44" rx="9" fill="#eef6ff" stroke="#2c5f9e"/>
+      <text x="1009" y="242" fill="#243447">x₀</text>
+      <rect x="944" y="274" width="130" height="44" rx="9" fill="#eef6ff" stroke="#2c5f9e"/>
+      <text x="1009" y="302" fill="#243447">x₁</text>
+      <rect x="944" y="334" width="130" height="44" rx="9" fill="#eef6ff" stroke="#2c5f9e"/>
+      <text x="1009" y="362" fill="#243447">x₂</text>
+      <text x="1009" y="424" fill="#64748b">...</text>
+      <rect x="944" y="462" width="130" height="44" rx="9" fill="#eef6ff" stroke="#2c5f9e"/>
+      <text x="1009" y="490" fill="#243447">xₙ₋₁</text>
+    </g>
+    <text x="1009" y="552" text-anchor="middle" font-size="16" fill="#526071">每个 xᵢ 是融合后的</text>
+    <text x="1009" y="576" text-anchor="middle" font-size="16" fill="#526071">d 维向量</text>
+  </g>
+  <text x="590" y="664" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#526071">根据论文 Figure 2 的 sequentialize 思路重绘；用于解释输入构造，不替代论文原图。</text>
+</svg>
