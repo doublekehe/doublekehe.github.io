@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420" role="img" aria-label="混杂变量示意图">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#65777a"/>
+    </marker>
+  </defs>
+  <rect width="900" height="420" fill="#ffffff"/>
+  <rect x="334" y="46" width="232" height="78" rx="14" fill="#f5efe3" stroke="#c9b99e" stroke-width="2"/>
+  <text x="450" y="94" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="28" font-weight="700" fill="#263238">病情严重程度</text>
+  <rect x="116" y="256" width="220" height="78" rx="14" fill="#eaf2f8" stroke="#8db4d6" stroke-width="2"/>
+  <text x="226" y="304" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="28" font-weight="700" fill="#263238">治疗方案</text>
+  <rect x="564" y="256" width="220" height="78" rx="14" fill="#faeee9" stroke="#dda08c" stroke-width="2"/>
+  <text x="674" y="304" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="28" font-weight="700" fill="#263238">治疗结果</text>
+  <line x1="398" y1="124" x2="266" y2="256" stroke="#65777a" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="504" y1="124" x2="636" y2="256" stroke="#65777a" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="336" y1="295" x2="564" y2="295" stroke="#65777a" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="292" y="184" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="20" fill="#5d6b6e">影响选择</text>
+  <text x="608" y="184" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="20" fill="#5d6b6e">影响结果</text>
+  <text x="450" y="354" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="20" fill="#5d6b6e">如果不控制病情，方案与结果的关系会被混杂</text>
+</svg>

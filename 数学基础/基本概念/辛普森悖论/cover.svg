@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="辛普森悖论封面图">
+  <rect width="1280" height="720" fill="#f7f1e7"/>
+  <rect x="88" y="84" width="1104" height="552" rx="34" fill="#fffaf2" stroke="#d8cab5" stroke-width="2"/>
+  <text x="640" y="164" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="60" font-weight="700" fill="#263238">辛普森悖论</text>
+  <text x="640" y="218" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="28" fill="#5f6b6d">分组都成立，合并后反转</text>
+  <line x1="190" y1="560" x2="1090" y2="560" stroke="#7b8a8b" stroke-width="3"/>
+  <line x1="190" y1="300" x2="190" y2="560" stroke="#7b8a8b" stroke-width="3"/>
+  <rect x="280" y="368" width="72" height="192" rx="8" fill="#3f7cac"/>
+  <rect x="372" y="396" width="72" height="164" rx="8" fill="#d9795f"/>
+  <text x="362" y="598" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" fill="#263238">轻症</text>
+  <rect x="538" y="418" width="72" height="142" rx="8" fill="#3f7cac"/>
+  <rect x="630" y="438" width="72" height="122" rx="8" fill="#d9795f"/>
+  <text x="620" y="598" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" fill="#263238">重症</text>
+  <rect x="796" y="402" width="72" height="158" rx="8" fill="#3f7cac"/>
+  <rect x="888" y="388" width="72" height="172" rx="8" fill="#d9795f"/>
+  <text x="878" y="598" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" fill="#263238">总体</text>
+  <path d="M766 326 C817 276, 902 276, 958 326" fill="none" stroke="#c14953" stroke-width="8" stroke-linecap="round"/>
+  <path d="M958 326 L928 318 L944 346 Z" fill="#c14953"/>
+  <text x="862" y="288" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="600" fill="#c14953">结论反转</text>
+  <rect x="420" y="260" width="24" height="24" rx="4" fill="#3f7cac"/>
+  <text x="458" y="281" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" fill="#263238">方案 A</text>
+  <rect x="560" y="260" width="24" height="24" rx="4" fill="#d9795f"/>
+  <text x="598" y="281" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="24" fill="#263238">方案 B</text>
+</svg>
