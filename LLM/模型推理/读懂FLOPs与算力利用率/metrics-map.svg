@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <rect width="1200" height="600" fill="#f8faf9"/>
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#18332d">MFU 的计算链路</text>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="60" y="120" width="180" height="130" rx="8" fill="#294f46"/>
+    <text x="150" y="200" font-size="32" font-weight="700" fill="#ffffff">MFU</text>
+
+    <text x="280" y="199" font-size="38" font-weight="700" fill="#52615d">=</text>
+
+    <rect x="330" y="110" width="330" height="150" rx="8" fill="#fff0d3" stroke="#d59b2a" stroke-width="3"/>
+    <text x="495" y="171" font-size="26" font-weight="700" fill="#805a10">模型有效 FLOP/s</text>
+    <text x="495" y="217" font-size="21" fill="#805a10">有效计算吞吐</text>
+
+    <text x="705" y="199" font-size="38" font-weight="700" fill="#52615d">÷</text>
+
+    <rect x="750" y="110" width="390" height="150" rx="8" fill="#f7ded5" stroke="#d98762" stroke-width="3"/>
+    <text x="945" y="171" font-size="26" font-weight="700" fill="#8b4227">硬件峰值 FLOP/s</text>
+    <text x="945" y="217" font-size="21" fill="#8b4227">全部 GPU 理论峰值之和</text>
+
+    <path d="M495 365 L495 282" fill="none" stroke="#52615d" stroke-width="4"/>
+    <polygon points="485,292 505,292 495,274" fill="#52615d"/>
+
+    <rect x="180" y="390" width="260" height="130" rx="8" fill="#dceaf8" stroke="#4f86c6" stroke-width="3"/>
+    <text x="310" y="443" font-size="25" font-weight="700" fill="#214f80">模型计算量</text>
+    <text x="310" y="485" font-size="22" fill="#214f80">FLOPs / step</text>
+
+    <text x="495" y="470" font-size="36" font-weight="700" fill="#52615d">×</text>
+
+    <rect x="550" y="390" width="260" height="130" rx="8" fill="#dff0e4" stroke="#55a06f" stroke-width="3"/>
+    <text x="680" y="443" font-size="25" font-weight="700" fill="#28633c">训练吞吐</text>
+    <text x="680" y="485" font-size="22" fill="#28633c">steps / second</text>
+  </g>
+</svg>

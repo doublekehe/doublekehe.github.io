@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#f8faf9"/>
+
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#18332d">矩阵乘法的 FLOPs</text>
+
+  <g font-family="Arial, sans-serif" fill="#18332d" text-anchor="middle">
+    <text x="190" y="116" font-size="24" font-weight="700">A：3×4</text>
+    <text x="525" y="116" font-size="24" font-weight="700">B：4×3</text>
+    <text x="875" y="116" font-size="24" font-weight="700">C：3×3</text>
+  </g>
+
+  <g stroke="#ffffff" stroke-width="4">
+    <rect x="100" y="150" width="180" height="300" rx="4" fill="#4f86c6"/>
+    <line x1="100" y1="250" x2="280" y2="250"/>
+    <line x1="100" y1="350" x2="280" y2="350"/>
+    <line x1="145" y1="150" x2="145" y2="450"/>
+    <line x1="190" y1="150" x2="190" y2="450"/>
+    <line x1="235" y1="150" x2="235" y2="450"/>
+
+    <rect x="435" y="150" width="180" height="300" rx="4" fill="#55a06f"/>
+    <line x1="435" y1="225" x2="615" y2="225"/>
+    <line x1="435" y1="300" x2="615" y2="300"/>
+    <line x1="435" y1="375" x2="615" y2="375"/>
+    <line x1="495" y1="150" x2="495" y2="450"/>
+    <line x1="555" y1="150" x2="555" y2="450"/>
+
+    <rect x="770" y="150" width="210" height="300" rx="4" fill="#d98762"/>
+    <line x1="770" y1="250" x2="980" y2="250"/>
+    <line x1="770" y1="350" x2="980" y2="350"/>
+    <line x1="840" y1="150" x2="840" y2="450"/>
+    <line x1="910" y1="150" x2="910" y2="450"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#52615d" text-anchor="middle">
+    <text x="355" y="315">x</text>
+    <text x="695" y="315">=</text>
+  </g>
+
+  <rect x="100" y="150" width="180" height="100" fill="#f4c95d" opacity="0.88"/>
+  <rect x="435" y="150" width="60" height="300" fill="#f4c95d" opacity="0.88"/>
+  <rect x="770" y="150" width="70" height="100" fill="#f4c95d" opacity="0.88"/>
+
+  <g font-family="Arial, sans-serif" font-size="21" fill="#18332d" text-anchor="middle">
+    <text x="190" y="510">取 A 的一行：长度 4</text>
+    <text x="525" y="510">取 B 的一列：长度 4</text>
+    <text x="875" y="510">得到 C 的一个元素</text>
+  </g>
+
+  <path d="M205 245 C290 540, 430 540, 465 245" fill="none" stroke="#b25738" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 10"/>
+  <path d="M465 245 C565 540, 730 540, 805 245" fill="none" stroke="#b25738" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 10"/>
+
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="585" font-size="24" fill="#18332d">一个输出元素：4 次乘法 + 3 次加法 = 7 FLOPs，工程估算约 8 FLOPs</text>
+    <text x="600" y="630" font-size="28" font-weight="700" fill="#b25738">总量：9×(2×4 - 1) = 63 FLOPs；近似为 2×3×4×3 = 72 FLOPs</text>
+  </g>
+</svg>

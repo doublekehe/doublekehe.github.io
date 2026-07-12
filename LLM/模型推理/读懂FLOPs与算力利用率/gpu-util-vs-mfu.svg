@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+  <rect width="1200" height="650" fill="#f8faf9"/>
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#18332d">GPU-Util 高，不代表 MFU 高</text>
+  <g font-family="Arial, sans-serif">
+    <line x1="140" y1="530" x2="1080" y2="530" stroke="#52615d" stroke-width="4"/>
+    <line x1="140" y1="530" x2="140" y2="120" stroke="#52615d" stroke-width="4"/>
+    <polygon points="1075,520 1095,530 1075,540" fill="#52615d"/>
+    <polygon points="130,130 140,105 150,130" fill="#52615d"/>
+    <text x="610" y="595" text-anchor="middle" font-size="24" fill="#18332d">GPU 利用率：忙碌时间比例</text>
+    <text x="48" y="330" text-anchor="middle" font-size="24" fill="#18332d" transform="rotate(-90 48 330)">MFU：模型有效计算占峰值比例</text>
+    <line x1="140" y1="325" x2="1080" y2="325" stroke="#cbd5d1" stroke-width="2" stroke-dasharray="10 10"/>
+    <line x1="610" y1="120" x2="610" y2="530" stroke="#cbd5d1" stroke-width="2" stroke-dasharray="10 10"/>
+    <rect x="175" y="150" width="400" height="140" rx="8" fill="#dff0e4"/>
+    <text x="375" y="205" text-anchor="middle" font-size="26" font-weight="700" fill="#28633c">计算集中但存在空档</text>
+    <text x="375" y="250" text-anchor="middle" font-size="22" fill="#28633c">较高 MFU，较低 GPU-Util</text>
+    <rect x="645" y="150" width="400" height="140" rx="8" fill="#dceaf8"/>
+    <text x="845" y="205" text-anchor="middle" font-size="26" font-weight="700" fill="#214f80">高吞吐矩阵计算</text>
+    <text x="845" y="250" text-anchor="middle" font-size="22" fill="#214f80">高 MFU，高 GPU-Util</text>
+    <rect x="175" y="360" width="400" height="140" rx="8" fill="#edf0ef"/>
+    <text x="375" y="415" text-anchor="middle" font-size="26" font-weight="700" fill="#52615d">数据或同步等待</text>
+    <text x="375" y="460" text-anchor="middle" font-size="22" fill="#52615d">低 MFU，低 GPU-Util</text>
+    <rect x="645" y="360" width="400" height="140" rx="8" fill="#f7ded5"/>
+    <text x="845" y="415" text-anchor="middle" font-size="26" font-weight="700" fill="#8b4227">小 kernel、访存或通信</text>
+    <text x="845" y="460" text-anchor="middle" font-size="22" fill="#8b4227">低 MFU，高 GPU-Util</text>
+  </g>
+</svg>

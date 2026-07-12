@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>读懂FLOPs与算力利用率 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="模型训练效率里最容易混在一起的，是“模型要算多少”“硬件实际算了多少”“峰值算力有多少转化成模型进度”和“GPU 到底忙不忙”。FLOPs、HFU、MFU 和 GPU 利用率分别回答这些问题。  1. FLOP：一次浮点运算 FLOP 是 Floating-Point Operation 的缩写，表示一次浮点运算。这个缩写通常理解为从 FLoating-point 取 FL，从 OPeratio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读懂FLOPs与算力利用率">
+<meta property="og:url" content="https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="模型训练效率里最容易混在一起的，是“模型要算多少”“硬件实际算了多少”“峰值算力有多少转化成模型进度”和“GPU 到底忙不忙”。FLOPs、HFU、MFU 和 GPU 利用率分别回答这些问题。  1. FLOP：一次浮点运算 FLOP 是 Floating-Point Operation 的缩写，表示一次浮点运算。这个缩写通常理解为从 FLoating-point 取 FL，从 OPeratio">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg">
+<meta property="article:published_time" content="2026-07-12T01:36:37.000Z">
+<meta property="article:modified_time" content="2026-07-12T01:45:54.413Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="FLOPs">
+<meta property="article:tag" content="MFU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "读懂FLOPs与算力利用率",
+  "url": "https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/",
+  "image": "https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg",
+  "datePublished": "2026-07-12T01:36:37.000Z",
+  "dateModified": "2026-07-12T01:45:54.413Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '读懂FLOPs与算力利用率',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">90</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">读懂FLOPs与算力利用率</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">读懂FLOPs与算力利用率</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-12T01:36:37.000Z" title="发表于 2026-07-12 09:36:37">2026-07-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-12T01:45:54.413Z" title="更新于 2026-07-12 09:45:54">2026-07-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/">模型推理</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>模型训练效率里最容易混在一起的，是“模型要算多少”“硬件实际算了多少”“峰值算力有多少转化成模型进度”和“GPU 到底忙不忙”。FLOPs、HFU、MFU 和 GPU 利用率分别回答这些问题。</p>
+</blockquote>
+<h2 id="1-FLOP：一次浮点运算">1. FLOP：一次浮点运算</h2>
+<p>FLOP 是 <strong>Floating-Point Operation</strong> 的缩写，表示一次浮点运算。这个缩写通常理解为从 <strong>FLoating-point</strong> 取 <code>FL</code>，从 <strong>OPeration</strong> 取 <code>OP</code>，合成 <strong>FLOP</strong>。浮点数是计算机表示实数的一种方式，例如 <code>3.14</code>、<code>-0.125</code> 和 <code>1.2e-5</code>。一次浮点加法或乘法通常各记作 1 FLOP。</p>
+<p>这里有三个容易混淆的写法：</p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>常见含义</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOP</td>
+<td>一次浮点运算</td>
+<td>一次操作是什么</td>
+</tr>
+<tr>
+<td>FLOPs</td>
+<td>浮点运算总次数</td>
+<td>这项任务要算多少</td>
+</tr>
+<tr>
+<td>FLOP/s</td>
+<td>每秒浮点运算次数</td>
+<td>设备算得多快</td>
+</tr>
+</tbody>
+</table>
+<p>注意：用 <strong>FLOPs</strong> 表示总计算量，用 <strong>FLOP/s</strong> 表示计算速度。下面我们用一个矩阵乘法的例子来说明如何计算一个任务有多少FLOPs。</p>
+<h3 id="1-1-矩阵乘法有多少-FLOPs">1.1 矩阵乘法有多少 FLOPs</h3>
+<p>设有两个矩阵：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>A</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>m</mi><mo>×</mo><mi>k</mi></mrow></msup><mo separator="true">,</mo><mspace width="2em"/><mi>B</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>k</mi><mo>×</mo><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">A \in \mathbb{R}^{m \times k}, \qquad
+B \in \mathbb{R}^{k \times n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0935em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8991em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>矩阵乘法得到：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>C</mi><mo>=</mo><mi>A</mi><mi>B</mi><mo separator="true">,</mo><mspace width="2em"/><mi>C</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>m</mi><mo>×</mo><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">C = AB, \qquad C \in \mathbb{R}^{m \times n}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8213em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8213em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span></span></span></span> 一共需要通过 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m \times n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 次 <strong>点积</strong> 计算得到，每次点积运算需要 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> 次乘法和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 次加法，故矩阵乘法需要的运算次数为：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>matmul</mtext></msub><mo>=</mo><mi>m</mi><mi>n</mi><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{matmul}}
+= mn(2k-1)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">matmul</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">mn</span><span class="mopen">(</span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span></p>
+<p>工程估算更常使用近似口径，把一次乘加看作 2 FLOPs：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>FLOPs</mtext><mtext>matmul</mtext></msub><mo>≈</mo><mn>2</mn><mi>m</mi><mi>k</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\text{FLOPs}_{\text{matmul}} \approx 2mkn
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">FLOPs</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">matmul</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.03148em;">mk</span><span class="mord mathnormal">n</span></span></span></span></span></p>
+<div style="text-align:center">
+  <style>.lawnjnaplvsn{max-width:760px;width:100%;height:auto;}</style><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/matrix-flops.svg" class="lawnjnaplvsn" alt="矩阵乘法 FLOPs 计算示意图">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 1：矩阵乘法的 FLOPs。示例中 A 为 3×4，B 为 4×3，输出 C 为 3×3</div>
+</div>
+<p>神经网络里的 Linear、Attention 和 FFN 等，底层都包含大量矩阵乘法。矩阵乘法的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>m</mi><mi>k</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">2mkn</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.03148em;">mk</span><span class="mord mathnormal">n</span></span></span></span> 估算，会反复出现在模型 FLOPs 的计算里。后面分析 MFU 时，也是在这个约定口径下讨论“模型理论上需要算多少”。</p>
+<h2 id="2-MFU：模型有效计算占了多少峰值算力">2. MFU：模型有效计算占了多少峰值算力</h2>
+<p>MFU（<strong>Model FLOPs Utilization</strong>）即模型 FLOPs 利用率，表示模型有效计算吞吐占全部 GPU 理论峰值吞吐的比例。MFU 的分子不是硬件实际执行过的全部计算量，而是按模型结构估算的理论有效 FLOPs，通信、等待、数据加载不增加模型有效 FLOPs，却会消耗训练时间，因此会拉低 MFU。</p>
+<h3 id="2-1-MFU-的计算">2.1 MFU 的计算</h3>
+<p>MFU 的计算可以统一写成：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>MFU</mtext><mo>=</mo><mfrac><mrow><msub><mi>F</mi><mrow><mi>u</mi><mi>n</mi><mi>i</mi><mi>t</mi></mrow></msub><mo>×</mo><mi>R</mi></mrow><msub><mi>P</mi><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">\text{MFU}
+=
+\frac{F_{unit} \times R}
+{P_{total}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">MFU</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">ni</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mrow><mi>u</mi><mi>n</mi><mi>i</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F_{unit}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">ni</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是完成一个训练单位所需的模型 FLOPs，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 是每秒完成的训练单位数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{total}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是全部 GPU 的理论峰值 FLOP/s。训练单位可以是 token、sample 或 step，但 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mrow><mi>u</mi><mi>n</mi><mi>i</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F_{unit}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">ni</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 的单位必须一致。例如，使用每个 token 的 FLOPs 时，吞吐就要使用 tokens/s。</p>
+<p>token、sample 和 step 描述的是不同粒度的训练工作：</p>
+<table>
+<thead>
+<tr>
+<th>训练单位</th>
+<th>含义</th>
+<th>对应吞吐</th>
+<th>使用时要注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>token</td>
+<td>文本经过 tokenizer 切分后的基本单位</td>
+<td>tokens/s</td>
+<td>最适合语言模型；一个 sample 往往包含多个 token</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>一条训练样本，例如一段文本或一组问答</td>
+<td>samples/s</td>
+<td>不同 sample 的 token 数可能不同，单看 samples/s 容易忽略长度差异</td>
+</tr>
+<tr>
+<td>step</td>
+<td>训练日志中的一次迭代计数</td>
+<td>step/s</td>
+<td>它指一次 micro-batch</td>
+</tr>
+</tbody>
+</table>
+<p><strong>模型 FLOPs</strong> 表示完成一个训练单位理论上需要多少浮点运算，由模型结构和统计口径决定，不是 GPU 实际执行的指令数。</p>
+<p><strong>训练吞吐</strong> 表示单位时间完成多少训练工作，例如 tokens/s、samples/s 或 step/s。</p>
+<p><strong>GPU 峰值 FLOP/s</strong> 表示硬件理论上每秒最多能完成多少浮点运算。若使用 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span> 张相同 GPU，单卡峰值为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>p</mi><mi>e</mi><mi>a</mi><mi>k</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{peak}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">ak</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>，则总峰值为：$ P_{total}=G \times P_{peak} $。</p>
+<p>假设完成一个 step 模型需要进行运算 100 TFLOPs，实测吞吐为 2 step/s，全部 GPU 的理论峰值为 1000 TFLOP/s，则：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>MFU</mtext><mo>=</mo><mfrac><mrow><mn>100</mn><mo>×</mo><mn>2</mn></mrow><mn>1000</mn></mfrac><mo>=</mo><mn>20</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\text{MFU}
+=
+\frac{100 \times 2}{1000}
+=20\%
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">MFU</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1000</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">100</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">20%</span></span></span></span></span></p>
+<p>这表示全部 GPU 理论峰值算力中，有 20% 转化成了模型有效计算。</p>
+<div style="text-align:center">
+  <style>.rurlhxdqiyvq{max-width:760px;width:100%;height:auto;}</style><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/metrics-map.svg" class="rurlhxdqiyvq" alt="FLOPs、吞吐、峰值算力与 MFU 的关系">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 2：MFU 等于模型有效 FLOP/s 除以硬件峰值 FLOP/s；其中，模型有效 FLOP/s 由每个 step 的模型计算量乘以实测 step 吞吐得到。</div>
+</div>
+<h2 id="3-HFU：硬件实际发挥了多少算力">3. HFU：硬件实际发挥了多少算力</h2>
+<p>HFU 是 <strong>Hardware FLOPs Utilization</strong>，即硬件 FLOPs 利用率。它表示 GPU 实际执行的浮点运算吞吐，占理论峰值吞吐的比例：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>HFU</mtext><mo>=</mo><mfrac><mrow><msub><mi>F</mi><mrow><mi>h</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>w</mi><mi>a</mi><mi>r</mi><mi>e</mi></mrow></msub><mi mathvariant="normal">/</mi><mi>t</mi></mrow><msub><mi>P</mi><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">\text{HFU}
+=
+\frac{F_{hardware}/t}
+{P_{total}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">HFU</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.263em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ha</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mrow><mi>h</mi><mi>a</mi><mi>r</mi><mi>d</mi><mi>w</mi><mi>a</mi><mi>r</mi><mi>e</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F_{hardware}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ha</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是一段时间内硬件实际执行的浮点运算量，单位是 FLOPs；<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 是这段计算的真实耗时；<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{total}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是全部 GPU 的理论峰值 FLOP/s。</p>
+<p>假设 GPU 在 0.5 秒内实际执行了 300 TFLOPs，而 GPU 的理论峰值为 1000 TFLOP/s，那么：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>HFU</mtext><mo>=</mo><mfrac><mrow><mn>300</mn><mi mathvariant="normal">/</mi><mn>0.5</mn></mrow><mn>1000</mn></mfrac><mo>=</mo><mn>60</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\text{HFU}
+=
+\frac{300/0.5}{1000}
+=60\%
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">HFU</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1000</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">300/0.5</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord">60%</span></span></span></span></span></p>
+<p>这表示硬件实际浮点运算吞吐达到了理论峰值的 60%。</p>
+<p>HFU 和 MFU 的区别在分子，MFU 统计模型定义中的有效计算，HFU 统计硬件实际执行的全部浮点运算。Activation Checkpointing 是一个典型例子：它在反向传播时重新计算部分前向结果，这些重计算会消耗硬件算力，因此计入 HFU；但它们没有增加模型本身的有效训练工作，通常不计入 MFU。在这种情况下，HFU 会高于 MFU。</p>
+<p>三个指标可以这样区分：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>统计口径</th>
+<th>主要回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU-Util</td>
+<td>GPU 执行 kernel 的时间比例</td>
+<td>GPU 忙不忙</td>
+</tr>
+<tr>
+<td>HFU</td>
+<td>硬件实际执行的 FLOP/s ÷ 理论峰值 FLOP/s</td>
+<td>计算硬件发挥了多少峰值能力</td>
+</tr>
+<tr>
+<td>MFU</td>
+<td>模型有效 FLOP/s ÷ 理论峰值 FLOP/s</td>
+<td>峰值算力有多少转化成模型进度</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-GPU-利用率：GPU-有多少时间在忙">4. GPU 利用率：GPU 有多少时间在忙</h2>
+<p>我们常说的 GPU 利用率，通常指 <code>nvidia-smi</code> 中的 GPU-Util。它大致表示：在最近一个采样周期内，有一个或多个 kernel 在 GPU 上执行的时间比例。</p>
+<p>如果采样窗口内 GPU 始终有 kernel 在运行，GPU-Util 可以接近 100%。但这个指标不会告诉我们：</p>
+<ul>
+<li>kernel 使用了多少个计算单元；</li>
+<li>执行的是高吞吐矩阵乘法，还是低算术强度的逐元素操作；</li>
+<li>多张 GPU 是否在等待通信或同步。</li>
+</ul>
+<p>因此，GPU-Util 为 100% 只能说明“GPU 基本没有完全闲下来”，不能说明“GPU 已达到峰值算力”。</p>
+<div style="text-align:center">
+  <style>.qdjgjxaovucr{max-width:760px;width:100%;height:auto;}</style><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/gpu-util-vs-mfu.svg" class="qdjgjxaovucr" alt="GPU 利用率与 MFU 的对比示意图">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 3：GPU 利用率关注忙碌时间，MFU 关注模型有效计算吞吐，两者可以同时很高，也可以明显背离。</div>
+</div>
+<p>GPU-Util 高、MFU 低，通常说明时间花在了“让 GPU 忙起来”的事情上，但没有持续产出高吞吐的模型 FLOPs。常见原因有几类：</p>
+<ul>
+<li>矩阵太小：batch size、sequence length 或 hidden size 太小时，kernel 虽然在运行，却没有足够的并行任务填满所有计算单元。</li>
+<li>通信和同步占用时间：数据并行、Tensor Parallel、Pipeline Parallel、FSDP/ZeRO 都会引入不同形式的通信或等待。通信操作可能让 GPU 看起来活跃，但它们不增加模型理论 FLOPs。</li>
+<li>数据加载形成空档：dataloader、tokenization、数据解压或远程存储跟不上时，GPU 会在 step 之间等待。</li>
+</ul>
+<div style="text-align:center">
+  <style>.fpqhwjrhayqt{max-width:820px;width:100%;height:auto;}</style><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/step-breakdown.svg" class="fpqhwjrhayqt" alt="训练步骤耗时拆解图">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 4：只有一部分 step 时间用于高吞吐矩阵计算，其余时间可能花在访存、通信、同步和数据等待上。</div>
+</div>
+<h2 id="5-总结">5. 总结</h2>
+<p>几个概念可以压缩成四句话：</p>
+<ol>
+<li><strong>FLOPs</strong> 描述完成模型计算理论上需要做多少浮点运算。</li>
+<li><strong>MFU</strong> 描述模型有效 FLOP/s 占 GPU 理论峰值 FLOP/s 的比例。</li>
+<li><strong>HFU</strong> 描述硬件实际执行的 FLOP/s 占理论峰值 FLOP/s 的比例。</li>
+<li><strong>GPU 利用率</strong> 描述 GPU 有多少时间在执行 kernel，不等于算力利用率。</li>
+</ol>
+<p>GPU 利用率接近 100% 而 MFU 不高，并不矛盾。GPU 可能一直在执行小 kernel、搬运数据或参与通信，却没有持续运行高吞吐矩阵计算。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FLOPs/">FLOPs</a><a class="post-meta__tags" href="/tags/MFU/">MFU</a></div><div class="post-share"><div class="social-share" data-image="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/" title="HSTU结构拆解与参数计算"><img class="cover" src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">HSTU结构拆解与参数计算</div></div><div class="info-2"><div class="info-item-1"> HSTU 是 Meta 在 2024 年提出的推荐序列建模结构，全称是 Hierarchical Sequential Transduction Unit。它的核心思路是把推荐系统里的异构特征统一成时间序列，然后用堆叠的 HSTU block 对序列做表示学习。HSTU 在推荐系统里承担 sequence encoder 的角色，输出一串序列表示。本文只讨论 HSTU 结构本身：输入序列如何构造，单层 HSTU 如何计算，输出张量是什么形状，以及在一个典型配置下如何估算模型参数量。  1. HSTU 在推荐模型中的位置 HSTU，全称 Hierarchical Sequential Transduction Unit，出现在 Meta 的 generative recommendation 工作中。完整的 Generative Recommender 并不只有 HSTU：前面要把用户行为、item、action、时间和上下文特征整理成序列化输入，后面还会接 retrieval、ranking 或生成式训练目标。HSTU 模块承担 sequence encoder 的角色。 传统...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">90</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-FLOP%EF%BC%9A%E4%B8%80%E6%AC%A1%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97"><span class="toc-text">1. FLOP：一次浮点运算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95%E6%9C%89%E5%A4%9A%E5%B0%91-FLOPs"><span class="toc-text">1.1 矩阵乘法有多少 FLOPs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-MFU%EF%BC%9A%E6%A8%A1%E5%9E%8B%E6%9C%89%E6%95%88%E8%AE%A1%E7%AE%97%E5%8D%A0%E4%BA%86%E5%A4%9A%E5%B0%91%E5%B3%B0%E5%80%BC%E7%AE%97%E5%8A%9B"><span class="toc-text">2. MFU：模型有效计算占了多少峰值算力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-MFU-%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-text">2.1 MFU 的计算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-HFU%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E9%99%85%E5%8F%91%E6%8C%A5%E4%BA%86%E5%A4%9A%E5%B0%91%E7%AE%97%E5%8A%9B"><span class="toc-text">3. HFU：硬件实际发挥了多少算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-GPU-%E5%88%A9%E7%94%A8%E7%8E%87%EF%BC%9AGPU-%E6%9C%89%E5%A4%9A%E5%B0%91%E6%97%B6%E9%97%B4%E5%9C%A8%E5%BF%99"><span class="toc-text">4. GPU 利用率：GPU 有多少时间在忙</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/" title="读懂FLOPs与算力利用率"><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="读懂FLOPs与算力利用率"/></a><div class="content"><a class="title" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/" title="读懂FLOPs与算力利用率">读懂FLOPs与算力利用率</a><time datetime="2026-07-12T01:36:37.000Z" title="发表于 2026-07-12 09:36:37">2026-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/" title="HSTU结构拆解与参数计算"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HSTU结构拆解与参数计算"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/" title="HSTU结构拆解与参数计算">HSTU结构拆解与参数计算</a><time datetime="2026-06-13T12:42:51.000Z" title="发表于 2026-06-13 20:42:51">2026-06-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/" title="ReLU系列激活函数"><img src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ReLU系列激活函数"/></a><div class="content"><a class="title" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/" title="ReLU系列激活函数">ReLU系列激活函数</a><time datetime="2026-06-06T14:01:04.000Z" title="发表于 2026-06-06 22:01:04">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/" title="transformer中的FFN详解"><img src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="transformer中的FFN详解"/></a><div class="content"><a class="title" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/" title="transformer中的FFN详解">transformer中的FFN详解</a><time datetime="2026-06-06T02:40:25.000Z" title="发表于 2026-06-06 10:40:25">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E4%BB%8E%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0%E5%88%B0%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" title="从似然函数到损失函数"><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E4%BB%8E%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0%E5%88%B0%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从似然函数到损失函数"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/%E4%BB%8E%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0%E5%88%B0%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/" title="从似然函数到损失函数">从似然函数到损失函数</a><time datetime="2026-06-02T23:12:04.000Z" title="发表于 2026-06-03 07:12:04">2026-06-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
