@@ -173,7 +173,7 @@
 <p>与传统编程不同——传统编程是&quot;人写规则，机器执行&quot;，而机器学习是&quot;人给数据+目标，机器自己学规则&quot;。比如让机器识别猫的图片，你不再需要写&quot;猫有尖耳朵、胡须、圆瞳孔&quot;这些规则，而是喂给它大量标注好&quot;这是猫 / 这不是猫&quot;的图片，让模型自己找出区分猫的特征。</p>
 <p>一个完整的机器学习系统，由五个核心要素构成：</p>
 <div style="text-align:center">
-  <style>.oyjwvcwcdowf{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_02.jpg" class="oyjwvcwcdowf" alt="机器学习五要素串联关系图">
+  <style>.yddpqtdrjrss{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_02.jpg" class="yddpqtdrjrss" alt="机器学习五要素串联关系图">
 </div>
 <p>这五个要素环环相扣：<strong>数据</strong>决定上限，<strong>模型</strong>提供假设空间，<strong>目标函数</strong>定义什么是&quot;好&quot;，<strong>优化算法</strong>找到最好的参数，<strong>评估指标</strong>检验真正的效果。</p>
 <hr>
@@ -196,7 +196,7 @@
 </ul>
 <h3 id="3-2-过拟合与欠拟合">3.2 过拟合与欠拟合</h3>
 <div style="text-align:center">
-  <style>.qxqnsvihlbal{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_04.jpg" class="qxqnsvihlbal" alt="过拟合与欠拟合示意图">
+  <style>.mdjkijcihcvh{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_04.jpg" class="mdjkijcihcvh" alt="过拟合与欠拟合示意图">
 </div>
 <ul>
 <li><strong>欠拟合</strong>：模型太简单，连训练数据本身的规律都学不到。训练误差和验证误差都很高。</li>
@@ -208,7 +208,7 @@
 <p>目标函数告诉模型&quot;什么是对的&quot;。模型学习的过程，本质上就是在<strong>最小化（或最大化）目标函数</strong>。</p>
 <h3 id="4-1-常用损失函数">4.1 常用损失函数</h3>
 <div style="text-align:center">
-  <style>.mjnedgxsefei{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_05.jpg" class="mjnedgxsefei" alt="损失函数对比示意图">
+  <style>.fvdolbcfunqm{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_05.jpg" class="fvdolbcfunqm" alt="损失函数对比示意图">
 </div>
 <p><strong>回归任务</strong>——预测连续值：</p>
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>MSE</mtext><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
@@ -239,7 +239,7 @@
 <p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi></mrow><annotation encoding="application/x-tex">\eta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">η</span></span></span></span> 是学习率，控制每步迈多大。</p>
 <h3 id="5-2-从-SGD-到-Adam">5.2 从 SGD 到 Adam</h3>
 <div style="text-align:center">
-  <style>.hbueuqxrkfrx{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_06.jpg" class="hbueuqxrkfrx" alt="优化路径对比图">
+  <style>.eybvbcnsqtqq{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_06.jpg" class="eybvbcnsqtqq" alt="优化路径对比图">
 </div>
 <p><strong>SGD（随机梯度下降）</strong>：每次随机抽一个小批量（mini-batch）计算梯度。计算快，但梯度有噪声，收敛路径震荡。</p>
 <p><strong>SGD + Momentum</strong>：在 SGD 基础上加入&quot;惯性&quot;，像小球滚下山坡，减少震荡，加速收敛。</p>
@@ -306,7 +306,7 @@
 <p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>F</mi><mn>1</mn><mo>=</mo><mn>2</mn><mo>×</mo><mfrac><mrow><mtext>精确率</mtext><mo>×</mo><mtext>召回率</mtext></mrow><mrow><mtext>精确率</mtext><mo>+</mo><mtext>召回率</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">F1 = 2 \times \frac{\text{精确率} \times \text{召回率}}{\text{精确率} + \text{召回率}}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.1297em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">精确率</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord cjk_fallback">召回率</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">精确率</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord cjk_fallback">召回率</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 <div style="text-align:center">
-  <style>.odxvqrwplxcn{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_07.jpg" class="odxvqrwplxcn" alt="混淆矩阵示意图">
+  <style>.gpxmaummujun{max-width:720px;width:100%;height:auto;}</style><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0/img_07.jpg" class="gpxmaummujun" alt="混淆矩阵示意图">
 </div>
 <p><strong>选哪个？</strong> 取决于场景：</p>
 <ul>

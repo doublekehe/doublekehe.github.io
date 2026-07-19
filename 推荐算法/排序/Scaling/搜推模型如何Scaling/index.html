@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png">
 <meta property="article:published_time" content="2026-07-19T23:20:12.000Z">
-<meta property="article:modified_time" content="2026-07-19T23:31:25.964Z">
+<meta property="article:modified_time" content="2026-07-19T23:36:46.472Z">
 <meta property="article:author" content="doubleke">
 <meta property="article:tag" content="Scaling">
 <meta property="article:tag" content="排序模型">
@@ -20,7 +20,7 @@
   "url": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/",
   "image": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png",
   "datePublished": "2026-07-19T23:20:12.000Z",
-  "dateModified": "2026-07-19T23:31:25.964Z",
+  "dateModified": "2026-07-19T23:36:46.472Z",
   "author": [
     {
       "@type": "Person",
@@ -161,7 +161,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">93</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">搜推模型如何Scaling</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">搜推模型如何Scaling</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-19T23:20:12.000Z" title="发表于 2026-07-20 07:20:12">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-19T23:31:25.964Z" title="更新于 2026-07-20 07:31:25">2026-07-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">推荐算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/">排序</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/">Scaling</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">93</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">搜推模型如何Scaling</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">搜推模型如何Scaling</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-19T23:20:12.000Z" title="发表于 2026-07-20 07:20:12">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-19T23:36:46.472Z" title="更新于 2026-07-20 07:36:46">2026-07-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">推荐算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/">排序</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/">Scaling</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
 <p>排序模型 scaling up，是让搜索与推荐中的排序模型像 LLM <code>scaling law</code> 一样：随着有效参数量、训练计算量和数据规模增加，模型效果仍能稳定变好。这篇文章重点介绍搜推排序模型如何从 <code>Embedding + MLP</code> 范式走向 <code>Embedding + Tokenization + Transformer-like Backbone</code> 新架构，从而实现模型 Scaling Up。</p>
 </blockquote>
 <h2 id="1-搜推系统基本架构">1. 搜推系统基本架构</h2>
@@ -174,7 +174,7 @@
 <li><strong>重排（Re-Rank）</strong>：在主排序分数之上做列表级决策，处理多样性、新鲜度、去重、探索、业务规则和生态约束，最终选出展示给用户的几十条结果。</li>
 </ul>
 <div style="text-align:center">
-  <style>.nnrfbshczsir{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/system-pipeline.png" class="nnrfbshczsir" alt="搜索与推荐系统的底池、召回、粗排、精排和重排漏斗，以及精排模块的特征与打分流程">
+  <style>.svbfwyqrdxqr{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/system-pipeline.png" class="svbfwyqrdxqr" alt="搜索与推荐系统的底池、召回、粗排、精排和重排漏斗，以及精排模块的特征与打分流程">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 1：搜推系统多阶段级联架构，精排综合 用户、物品和上下文特征完成打分。</div>
 </div>
 <p>在整条搜推链路中，排序模型使用的特征最丰富、模型结构最复杂，对最终效果的影响也最大。它需要综合 Query、用户、物品、行为序列与上下文信息，对候选物品逐一预估 CTR、CVR、GMV、观看时长等目标，其预测精度会直接影响点击、转化、时长和收入。</p>
@@ -228,7 +228,7 @@
 <li>最后输出 CTR、CVR、完播率、观看时长等预测值。</li>
 </ul>
 <div style="text-align:center">
-  <style>.wwxmcbbxvrkw{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/base-ranker.png" class="wwxmcbbxvrkw" alt="基础点式排序模型结构">
+  <style>.ovgqydfdebre{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/base-ranker.png" class="ovgqydfdebre" alt="基础点式排序模型结构">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 2：排序模型的基础框架。</div>
 </div>
 <p>排序模型可以是 LR、GBDT，也可以是 DNN、Transformer-like的模型。但无论内部结构如何变化，排序模型的基本任务始终没有改变：<strong>预估当前用户对每个候选物品上的潜在价值</strong>。模型的演进，也主要围绕着 <strong>特征如何表示</strong>、<strong>不同特征如何交叉</strong>、<strong>行为序列做兴趣建模</strong>，以及<strong>模型如何Scaling，从更多参数和计算中</strong> 持续获益。沿着这条主线，下面回顾排序模型如何从协同过滤与浅层模型，逐步走向深度学习、序列建模与 Scaling 时代。</p>
@@ -238,7 +238,7 @@
 但这一阶段学习的主要依据仍是用户 ID、物品 ID 及其交互关系：没有历史行为的新用户、新物品难以得到可靠表示，也不容易直接利用内容、Query、上下文和行为时序等信息。</p>
 <p><strong>第二阶段是特征工程与浅层排序。</strong> <strong>这一阶段核心解决的问题是：如何突破仅依赖用户 ID、物品 ID 和历史交互的局限，把用户、物品、Query 和上下文等多源业务信息引入排序，并表达特征之间的组合关系。</strong> 随着搜索广告和工业推荐发展，排序模型开始显式使用用户、物品、Query 和上下文特征。LR 对一阶特征进行线性加权；POLY2 为每一对特征组合学习独立权重，显式建模二阶交互，但参数量随特征规模快速增长，并且难以估计训练数据中未出现过的稀疏组合；FM 则用两个特征隐向量的内积表示交互权重，在大幅压缩参数的同时，让稀疏特征之间能够共享统计信息。另一条路线由树模型推动：GBDT 学习非线性划分，GBDT+LR 再把树的叶节点转化为稀疏组合特征交给 LR 预测。模型由此获得了比单纯 LR 更强的特征交互能力，但整体效果仍然高度依赖特征设计，能够表达的交互阶数和结构也受到模型形式限制。</p>
 <div style="text-align:center">
-  <style>.rkscopzuxmsr{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/evolution-timeline-v2.png" class="rkscopzuxmsr" alt="排序模型从协同过滤与矩阵分解、浅层排序、深度特征交互、行为序列建模走向 Scaling">
+  <style>.mbeushbwspix{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/evolution-timeline-v2.png" class="mbeushbwspix" alt="排序模型从协同过滤与矩阵分解、浅层排序、深度特征交互、行为序列建模走向 Scaling">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 3：排序模型的五个演进阶段</div>
 </div>
 <p><strong>第三阶段是深度特征表示与交互。</strong> <strong>这一阶段核心解决的问题是：如何减少对人工特征交叉的依赖，让模型从大规模稀疏特征中自动学习低维表示以及复杂的高阶交互。</strong> 2016 年前后，Embedding + DNN 开始成为工业排序模型的基础范式。Wide &amp; Deep（W&amp;D，也常简称 WDL）将 Wide 侧对高频共现的记忆能力与 Deep 侧的泛化能力结合起来；Deep Crossing 用 Embedding、Stacking Layer 和残差网络隐式学习高阶特征组合。随后，DeepFM 在 2017 年让 FM 与 DNN 共享 Embedding，在同一模型中分别学习低阶和高阶交互；DCN 使用 Cross Network 显式、逐层学习有界阶交互；xDeepFM 又在 2018 年通过 CIN 显式建模向量级高阶交互，并与 DNN 的隐式交互能力结合。排序模型由此开始自动学习稀疏 ID 的表示和复杂特征组合，显著减少对人工交叉特征的依赖。不过，这些模型的主干仍以固定长度特征向量为中心，后续提升往往依赖继续增加新的交互模块。</p>
@@ -259,103 +259,103 @@
 <tr>
 <td>协同过滤与矩阵分解</td>
 <td>Herlocker UserCF Framework（1999）</td>
-<td><style>.kfwdyufohnqq{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/usercf-framework-v2.png" class="kfwdyufohnqq" alt="UserCF 用户相似度、近邻选择与偏好加权聚合示意图"></td>
+<td><style>.wwtgceuikyov{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/usercf-framework-v2.png" class="wwtgceuikyov" alt="UserCF 用户相似度、近邻选择与偏好加权聚合示意图"></td>
 <td>将 UserCF 拆解为用户相似度计算、近邻选择和近邻偏好加权聚合；目标用户未交互的物品，可以由多个相似近邻的反馈共同估计。</td>
 </tr>
 <tr>
 <td>协同过滤与矩阵分解</td>
 <td>Netflix Prize Matrix Factorization（2006—2009）</td>
-<td><style>.bnylkcihxunq{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/matrix-factorization-framework-v2.png" class="bnylkcihxunq" alt="用户—物品交互矩阵分解为用户与物品隐向量矩阵的示意图"></td>
+<td><style>.deswvnxxvhhw{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/matrix-factorization-framework-v2.png" class="deswvnxxvhhw" alt="用户—物品交互矩阵分解为用户与物品隐向量矩阵的示意图"></td>
 <td>Netflix Prize 推动正则化隐因子模型从 FunkSVD 等方法快速演进；将稀疏交互矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 分解为用户隐向量矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span> 与物品隐向量矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span>，以 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mi>u</mi><mi mathvariant="sans-serif">T</mi></msubsup><msub><mi>q</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_u^\mathsf{T}q_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0961em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathsf mtight">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 估计用户对物品的偏好。</td>
 </tr>
 <tr>
 <td>特征工程与浅层排序</td>
 <td>GBDT+LR（2014）</td>
-<td><style>.deoianjyrtik{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-gbdt-lr.png" class="deoianjyrtik" alt="GBDT+LR 原论文 Figure 1"></td>
+<td><style>.xqmhbpgmegmb{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-gbdt-lr.png" class="xqmhbpgmegmb" alt="GBDT+LR 原论文 Figure 1"></td>
 <td>将 GBDT 的叶节点转化为稀疏特征，再由 LR 完成预测。</td>
 </tr>
 <tr>
 <td>深度特征表示与交互</td>
 <td>Wide &amp; Deep（2016）</td>
-<td><style>.jhvhbpcunnmj{max-width:260px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wide-deep.png" class="jhvhbpcunnmj" alt="Wide and Deep 原论文 Figure 4"></td>
+<td><style>.yvrjmtiscrws{max-width:260px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wide-deep.png" class="yvrjmtiscrws" alt="Wide and Deep 原论文 Figure 4"></td>
 <td>Wide 侧记忆高频共现，Deep 侧用 Embedding + DNN 获得泛化能力。</td>
 </tr>
 <tr>
 <td>深度特征表示与交互</td>
 <td>Deep Crossing（2016）</td>
-<td><style>.fvyngqlwitfz{max-width:230px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deep-crossing.png" class="fvyngqlwitfz" alt="Deep Crossing 原论文 Figure 1"></td>
+<td><style>.jtzckuukddvl{max-width:230px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deep-crossing.png" class="jtzckuukddvl" alt="Deep Crossing 原论文 Figure 1"></td>
 <td>将异构特征分别 Embedding 后拼接，通过多层残差单元隐式学习特征组合。</td>
 </tr>
 <tr>
 <td>深度特征表示与交互</td>
 <td>DeepFM（2017）</td>
-<td><style>.oviswyfljwvy{max-width:270px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deepfm.png" class="oviswyfljwvy" alt="DeepFM 原论文 Figure 1"></td>
+<td><style>.rlrgpczqpfri{max-width:270px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deepfm.png" class="rlrgpczqpfri" alt="DeepFM 原论文 Figure 1"></td>
 <td>FM 与 DNN 共享 Embedding，同时学习低阶交互与隐式高阶交互。</td>
 </tr>
 <tr>
 <td>深度特征表示与交互</td>
 <td>DCN（2017）</td>
-<td><style>.yffhcvusnntv{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-dcn.png" class="yffhcvusnntv" alt="DCN 原论文 Figure 1"></td>
+<td><style>.tmdgnsxvkpln{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-dcn.png" class="tmdgnsxvkpln" alt="DCN 原论文 Figure 1"></td>
 <td>Cross Network 与 Deep Network 并联，显式学习有界阶特征交互。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>YouTube DNN（2016）</td>
-<td><style>.zkbfqqonjhtp{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-youtube-dnn.png" class="zkbfqqonjhtp" alt="YouTube DNN 原论文 Figure 3"></td>
+<td><style>.remuofwairfi{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-youtube-dnn.png" class="remuofwairfi" alt="YouTube DNN 原论文 Figure 3"></td>
 <td>将观看与搜索历史 Embedding 后 Average Pooling 为固定向量。该图是候选生成网络，代表早期工业行为聚合，不显式保留行为顺序。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>DIN（2017/2018）</td>
-<td><style>.wfxhlbumdvjb{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-din.png" class="wfxhlbumdvjb" alt="DIN 原论文 Figure 2"></td>
+<td><style>.hpcectplhndp{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-din.png" class="hpcectplhndp" alt="DIN 原论文 Figure 2"></td>
 <td>用当前候选物品对历史行为加权，固定用户向量变为 target-aware 兴趣。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>BST（2019）</td>
-<td><style>.kdvnxfrivtpk{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-bst.png" class="kdvnxfrivtpk" alt="BST 原论文 Figure 1"></td>
+<td><style>.onigflmcvdch{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-bst.png" class="onigflmcvdch" alt="BST 原论文 Figure 1"></td>
 <td>将位置特征、行为序列与目标物品共同输入 Transformer，显式建模行为间依赖。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>MIND（2019，召回）/ DMIN（2020，排序）</td>
-<td><style>.qftvhomfpxjg{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mind.png" class="qftvhomfpxjg" alt="MIND 原论文 Figure 2"></td>
+<td><style>.pfjukpcdbstb{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mind.png" class="pfjukpcdbstb" alt="MIND 原论文 Figure 2"></td>
 <td>MIND 用动态路由从行为中提取多个兴趣向量；DMIN 将多兴趣表示扩展到 CTR 预估，两者的任务位置不同。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>SIM（2020）</td>
-<td><style>.vkmcufmmnoce{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-sim.png" class="vkmcufmmnoce" alt="SIM 原论文 Figure 1"></td>
+<td><style>.fddvqkbtkobt{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-sim.png" class="fddvqkbtkobt" alt="SIM 原论文 Figure 1"></td>
 <td>先从超长历史中检索相关子序列，再进行精确建模，降低在线计算成本。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>ETA（2021）</td>
-<td><style>.ttdrtaoqrkro{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-eta.png" class="ttdrtaoqrkro" alt="ETA 原论文 Figure 2"></td>
+<td><style>.hnshbsomyqyu{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-eta.png" class="hnshbsomyqyu" alt="ETA 原论文 Figure 2"></td>
 <td>用 SimHash/LSH 从长序列中端到端找到与候选相关的行为，再做 Multi-head Target Attention。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>TWIN（2023）</td>
-<td><style>.pvboweufarjr{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-twin.png" class="pvboweufarjr" alt="TWIN 原论文 Figure 2"></td>
+<td><style>.vgqguynbpkpq{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-twin.png" class="vgqguynbpkpq" alt="TWIN 原论文 Figure 2"></td>
 <td>GSU 与 ESU 使用一致的目标—行为相关度计算并共享参数，减少两阶段的表示与目标差异。</td>
 </tr>
 <tr>
 <td>行为序列与兴趣建模</td>
 <td>LONGER（2025）</td>
-<td><style>.cvztolwdyglx{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-longer.png" class="cvztolwdyglx" alt="LONGER 原论文 Figure 1"></td>
+<td><style>.bsfdydfrsicv{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-longer.png" class="bsfdydfrsicv" alt="LONGER 原论文 Figure 1"></td>
 <td>以 Global Token、Token Merge、Cross/Self Causal Attention 与 GPU 训练服务优化，将长序列建模推向 Scaling。</td>
 </tr>
 <tr>
 <td>Token 化与 Transformer-like 主干 Scaling</td>
 <td>HSTU（2024）</td>
-<td><style>.bpbatjdjbjem{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="bpbatjdjbjem" alt="HSTU 原论文 Figure 3"></td>
+<td><style>.dqzghcbyjwyi{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="dqzghcbyjwyi" alt="HSTU 原论文 Figure 3"></td>
 <td>将用户 Action 与关联特征组织为统一时间序列，以推荐特化的 Attention、Pointwise Transformation 和可堆叠 Block 扩展序列长度与计算规模。</td>
 </tr>
 <tr>
 <td>Token 化与 Transformer-like 主干 Scaling</td>
 <td>RankMixer（2025）</td>
-<td><style>.lyvbscgvqngk{max-width:300px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="lyvbscgvqngk" alt="RankMixer 原论文 Figure 1"></td>
+<td><style>.nloterphlhwi{max-width:300px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="nloterphlhwi" alt="RankMixer 原论文 Figure 1"></td>
 <td>将语义分组 Tokenization、Token Mixing 和 Per-token FFN 组织成可重复堆叠的统一 Block。</td>
 </tr>
 </tbody>
@@ -371,7 +371,7 @@
 <li>2）<strong>判别式模型也能做Scaling</strong>，保留现有搜推多阶段级联结构，主要聚焦于扩展模型的有效参数和计算量，典型工作如字节的rankmxier系列。</li>
 </ul>
 <div style="text-align:center">
-  <style>.qumjqgublirj{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-two-routes.png" class="qumjqgublirj" alt="搜推模型 Scaling Up 的生成式与判别式两条路线">
+  <style>.dxmobwhlrreh{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-two-routes.png" class="dxmobwhlrreh" alt="搜推模型 Scaling Up 的生成式与判别式两条路线">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 4：搜推模型 Scaling Up 的两条路线</div>
 </div>
 <p>生成式路线和判别式路线在任务形式、系统链路上存在着核心差异。</p>
@@ -426,14 +426,14 @@
 <h3 id="3-2-判别式搜推模型-Scaling-的基础范式">3.2 判别式搜推模型 Scaling 的基础范式</h3>
 <p>判别式搜推模型通过借鉴 LLM 统一输入表示、可堆叠主干和持续扩展有效计算的方式，将原本不断在 <strong>Embedding + MLP</strong> 上堆叠碎片化结构的范式，升级为规整、可重复堆叠的 <strong>Embedding + Tokenization + Transformer-like</strong> 结构。</p>
 <div style="text-align:center">
-  <style>.twctadoyukna{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/token-transformer.png" class="twctadoyukna" alt="Embedding 加 MLP 与 Embedding 加 Tokenization 加 Transformer-like 两种排序模型基础范式对比">
+  <style>.bwblwiyqmauh{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/token-transformer.png" class="bwblwiyqmauh" alt="Embedding 加 MLP 与 Embedding 加 Tokenization 加 Transformer-like 两种排序模型基础范式对比">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 7：两种判别式排序模型基础范式</div>
 </div>
 <p>在新的建模范式下，扩容方式从“继续外挂序列建模模块、CrossNet 或手工交叉模块”，转变为增加 Token 数量和维度、Block 层数、主干宽度或专家容量。要让这套范式真正适用于搜推排序，核心需要解决两个问题。</p>
 <p><strong>问题一：异构特征如何 Token 化。</strong> LLM 的原始输入是文本，文本天然具有顺序结构，并且可以通过统一的词表和 Tokenizer 映射为统一的离散 Token 序列。搜推排序的输入则同时包含用户与物品 ID、数值统计、Query、上下文、交叉特征和变长行为序列。这些特征的来源、语义、粒度和时序属性都不相同，无法像文本一样直接组成统一的 Token 序列。因此，需要设计适合搜推特征的 Tokenizer：对异构特征进行分组、切分与投影，对齐到统一维度，并注入类型、位置、时间等信息，最终形成 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>T</mi><mo>×</mo><mi>D</mi></mrow></msup></mrow><annotation encoding="application/x-tex">X\in\mathbb R^{T\times D}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">D</span></span></span></span></span></span></span></span></span></span></span></span> 的结构化 Token 表示。其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> 是 Token 数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> 是统一的 Token 维度。</p>
 <p><strong>问题二：如何构建可扩展且高效的 Transformer-like 主干。</strong> 即使完成了 Tokenization，也不能直接把标准 Transformer 搬到线上精排。Self-Attention 的计算复杂度约为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>T</mi><mn>2</mn></msup><mi>D</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(T^2D)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mclose">)</span></span></span></span>，随着 Token 数量和行为序列长度增加，计算量与时延会快速增长；而线上排序同时受到严格的 RT 和成本约束。因此，新的主干一方面能够通过增加深度、宽度或专家容量持续扩展模型能力，另一方面也要简化 Self-Attention 的计算，让新增参数能够高效执行，在满足线上 RT 的前提下转化为效果收益。</p>
 <div style="text-align:center">
-  <style>.feolqxioviof{max-width:1100px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-paradigm-challenges.png" class="feolqxioviof" alt="Embedding 加 Token 加 Transformer-like 新范式需要解决的两个核心问题">
+  <style>.zhxstkryjepm{max-width:1100px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-paradigm-challenges.png" class="zhxstkryjepm" alt="Embedding 加 Token 加 Transformer-like 新范式需要解决的两个核心问题">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 8：新建模范式需要解决的两个核心问题</div>
 </div>
 <p>围绕这两个问题，不同工作对异构特征的组织粒度、Token 生成方式以及 Transformer-like 主干的结构选择各不相同，接下来将通过相关代表性工作，进一步梳理这两条主线上的主要设计思路。</p>
@@ -475,7 +475,7 @@
   <tbody>
     <tr>
       <td>Wukong（2024）</td>
-      <td><style>.gsvyiiqxfvfc{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wukong.png" class="gsvyiiqxfvfc" alt="Wukong Figure 2"></td>
+      <td><style>.vkxycrruczfk{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wukong.png" class="vkxycrruczfk" alt="Wukong Figure 2"></td>
       <td>将多值类别特征和 Dense 特征统一组织为 n × d Embedding 矩阵</td>
       <td>不使用标准 Self-Attention；通过 Factorization Machine Block 建模高阶交互，Linear Compression 保留低阶信息</td>
       <td>不采用标准 Transformer FFN；通过增加 Wukong Layer、FMB 数量和隐藏宽度扩展容量</td>
@@ -483,7 +483,7 @@
     </tr>
     <tr>
       <td>HSTU（2024）</td>
-      <td><style>.hfkkqfvsrwbc{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="hfkkqfvsrwbc" alt="HSTU Figure 3"></td>
+      <td><style>.flgvskibuenc{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="flgvskibuenc" alt="HSTU Figure 3"></td>
       <td>将用户 Action 及其关联特征组织为统一的时间序列</td>
       <td>Pointwise Aggregated Attention，不依赖标准 Softmax 归一化，更贴合推荐序列</td>
       <td>Pointwise Projection/Transformation 承担通道变换与容量扩展</td>
@@ -491,7 +491,7 @@
     </tr>
     <tr>
       <td>RankMixer（2025）</td>
-      <td><style>.xoaisosqmjup{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="xoaisosqmjup" alt="RankMixer Figure 1"></td>
+      <td><style>.rvymvqxvhxkg{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="rvymvqxvhxkg" alt="RankMixer Figure 1"></td>
       <td>按用户、物品、序列、交叉特征等语义分组，拼接、切分并投影为固定 T × D Token</td>
       <td>Multi-head Token Mixing 通过 Split、Reshape 和 Merge 完成跨 Token 信息重组，不计算 QKᵀ 与 Softmax</td>
       <td>Per-token FFN 区分不同 Token 的语义空间；Sparse MoE 通过稀疏激活扩展容量</td>
@@ -499,7 +499,7 @@
     </tr>
     <tr>
       <td>OneTrans（2025）</td>
-      <td><style>.glueylbtpgtf{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-onetrans.png" class="glueylbtpgtf" alt="OneTrans Figure 2"></td>
+      <td><style>.lhhrzkdudupb{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-onetrans.png" class="lhhrzkdudupb" alt="OneTrans Figure 2"></td>
       <td>将序列和非序列特征统一成一个 Token 序列，并用 <code>[SEP]</code> 分隔不同序列</td>
       <td>Mixed Causal Attention 统一序列与非序列交互；金字塔结构逐层压缩序列</td>
       <td>序列 Token 共享 QKV/FFN，非序列 Token 使用 Token-specific 参数</td>
@@ -507,7 +507,7 @@
     </tr>
     <tr>
       <td>MTGR（2025）</td>
-      <td><style>.muhflkeyfhpt{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mtgr.png" class="muhflkeyfhpt" alt="MTGR Figure 2"></td>
+      <td><style>.dqtspxoyrcob{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mtgr.png" class="dqtspxoyrcob" alt="MTGR Figure 2"></td>
       <td>将用户特征、行为序列、实时特征与多个候选统一 Token 化</td>
       <td>基于 HSTU 的注意力结构，并通过定制 Mask 避免候选间信息泄漏</td>
       <td>沿用推荐特化的投影与非线性变换扩展主干容量</td>
@@ -515,7 +515,7 @@
     </tr>
     <tr>
       <td>TokenMixer-Large（2026）</td>
-      <td><style>.ikvuzesqfuol{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-tokenmixer-large.png" class="ikvuzesqfuol" alt="TokenMixer-Large Figure 1"></td>
+      <td><style>.qxkffnhepugg{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-tokenmixer-large.png" class="qxkffnhepugg" alt="TokenMixer-Large Figure 1"></td>
       <td>Semantic Group-wise Tokenizer 将特征按语义分组，并增加 Global Token</td>
       <td>Mixing-and-Reverting 在完成跨 Token 交互后恢复原 Token 形状</td>
       <td>Sparse Per-token SwiGLU MoE 通过增加专家数扩大总容量，同时控制激活参数</td>
@@ -523,7 +523,7 @@
     </tr>
     <tr>
       <td>UniMixer（2026）</td>
-      <td><style>.matgbshmkowm{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-unimixer.png" class="matgbshmkowm" alt="UniMixer Figure 2"></td>
+      <td><style>.nmifhjhckydw{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-unimixer.png" class="nmifhjhckydw" alt="UniMixer Figure 2"></td>
       <td>按用户、物品、行为序列、Query 等 Domain 分组，再用 Token-specific 线性层投影</td>
       <td>将规则式 TokenMixer 参数化，统一 Attention、TokenMixer 与 FM 的交互视角</td>
       <td>Per-token SwiGLU 与 Sparse Per-token MoE 扩展不同 Token 的通道容量</td>
