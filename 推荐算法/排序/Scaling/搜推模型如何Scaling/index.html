@@ -1,0 +1,659 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>搜推模型如何Scaling | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="排序模型 scaling up，是让搜索与推荐中的排序模型像 LLM scaling law 一样：随着有效参数量、训练计算量和数据规模增加，模型效果仍能稳定变好。这篇文章重点介绍搜推排序模型如何从 Embedding + MLP 范式走向 Embedding + Tokenization + Transformer-like Backbone 新架构，从而实现模型 Scaling Up。  1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搜推模型如何Scaling">
+<meta property="og:url" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="排序模型 scaling up，是让搜索与推荐中的排序模型像 LLM scaling law 一样：随着有效参数量、训练计算量和数据规模增加，模型效果仍能稳定变好。这篇文章重点介绍搜推排序模型如何从 Embedding + MLP 范式走向 Embedding + Tokenization + Transformer-like Backbone 新架构，从而实现模型 Scaling Up。  1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png">
+<meta property="article:published_time" content="2026-07-19T23:20:12.000Z">
+<meta property="article:modified_time" content="2026-07-19T23:31:25.964Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="Scaling">
+<meta property="article:tag" content="排序模型">
+<meta property="article:tag" content="搜索推荐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "搜推模型如何Scaling",
+  "url": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/",
+  "image": "https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png",
+  "datePublished": "2026-07-19T23:20:12.000Z",
+  "dateModified": "2026-07-19T23:31:25.964Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '搜推模型如何Scaling',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">93</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">搜推模型如何Scaling</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">搜推模型如何Scaling</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-19T23:20:12.000Z" title="发表于 2026-07-20 07:20:12">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-19T23:31:25.964Z" title="更新于 2026-07-20 07:31:25">2026-07-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/">推荐算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/">排序</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/">Scaling</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>排序模型 scaling up，是让搜索与推荐中的排序模型像 LLM <code>scaling law</code> 一样：随着有效参数量、训练计算量和数据规模增加，模型效果仍能稳定变好。这篇文章重点介绍搜推排序模型如何从 <code>Embedding + MLP</code> 范式走向 <code>Embedding + Tokenization + Transformer-like Backbone</code> 新架构，从而实现模型 Scaling Up。</p>
+</blockquote>
+<h2 id="1-搜推系统基本架构">1. 搜推系统基本架构</h2>
+<p>一个完整的工业界搜索或推荐系统，因为ms级的RT限制，无法实现全库打分，通常会拆分为<strong>底池 → 召回 → 粗排 → 精排 → 重排</strong>几个阶段  ，整体形状像一个倒漏斗。</p>
+<ul>
+<li><strong>底池（Corpus）</strong>：存放所有可被检索或分发的商品、视频、文档、音乐、广告、POI 等内容，规模通常在百万到十亿级。底池决定了系统“有什么可以推荐”，通常还会通过上下架、地域、权限和安全规则完成最基础的过滤。</li>
+<li><strong>召回（Retrieval）</strong>：从全量底池中快速找回数千到数万条可能相关的候选。这个阶段更看重召回率，通常并行使用协同过滤、向量检索、规则召回、图召回等多条通道，尽量避免有价值的物品过早漏掉。</li>
+<li><strong>粗排（Pre-Rank）</strong>：用计算成本较低的模型对召回结果做第一次统一比较，把候选进一步压缩到百级或千级。它需要在速度和精度之间取平衡：既不能像召回一样只做近似匹配，也承担不起精排模型的完整计算。</li>
+<li><strong>精排（Ranking）</strong>：对留下来的候选逐一做更准确的偏好预测。模型会综合用户、物品、查询、上下文、历史行为和交叉特征，输出 CTR、CVR、GMV、观看时长、完播率等分数，再据此形成排序结果。</li>
+<li><strong>重排（Re-Rank）</strong>：在主排序分数之上做列表级决策，处理多样性、新鲜度、去重、探索、业务规则和生态约束，最终选出展示给用户的几十条结果。</li>
+</ul>
+<div style="text-align:center">
+  <style>.nnrfbshczsir{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/system-pipeline.png" class="nnrfbshczsir" alt="搜索与推荐系统的底池、召回、粗排、精排和重排漏斗，以及精排模块的特征与打分流程">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 1：搜推系统多阶段级联架构，精排综合 用户、物品和上下文特征完成打分。</div>
+</div>
+<p>在整条搜推链路中，排序模型使用的特征最丰富、模型结构最复杂，对最终效果的影响也最大。它需要综合 Query、用户、物品、行为序列与上下文信息，对候选物品逐一预估 CTR、CVR、GMV、观看时长等目标，其预测精度会直接影响点击、转化、时长和收入。</p>
+<p>因此，如何持续提升排序模型的能力，一直是搜索与推荐系统优化的核心问题。本文重点讨论的正是<strong>排序模型的 scaling up</strong>：如何在严格的线上时延约束下扩大模型的有效参数量和计算量，并让模型效果随着规模增长继续稳定提升。</p>
+<h2 id="2-排序模型的任务与技术演进">2. 排序模型的任务与技术演进</h2>
+<p>在具体讨论排序模型如何做scaling之前，我们先回顾一下排序模型的基本任务和技术演进，看看排序模型是如何从简单的UserCF、LR，逐步发展到深度学习、序列建模，再走向scaling的。</p>
+<h3 id="2-1-排序模型的基本任务：用户-x-商品-→-score">2.1 排序模型的基本任务：用户 x 商品 → score</h3>
+<p>经过召回和粗排后，系统已经从海量底池中筛出了数百到数千个候选物品。排序模型的基本任务，就是结合当前用户、候选物品、Query、上下文和用户历史行为，<strong>对每个候选物品逐一预测用户发生点击、转化、观看等行为的可能性或价值</strong>，再根据这些预测结果完成排序。</p>
+<p>对用户 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 和候选物品 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span>，可以把这个任务写成：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi mathvariant="bold-italic">y</mi><mo>^</mo></mover><mrow><mi>u</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub><mo>=</mo><msub><mi>f</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>q</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">\hat{\boldsymbol y}_{u,i}=f_\theta(u,i,q,c),
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0881em;vertical-align:-0.3802em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7079em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span></span><span style="top:-3.0134em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2175em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3802em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mpunct">,</span></span></span></span></span></p>
+<p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span> 是搜索场景中的 Query，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span> 是时间、位置、入口等上下文。</p>
+<p>不同业务场景下，用户会产生不同的关键动作，排序模型需要针对这些动作预测相应的发生概率或期望价值：</p>
+<div class="paper-table-title">表 2-1　不同业务场景中的关键用户动作与模型预测目标</div>
+<table>
+<thead>
+<tr>
+<th>业务场景</th>
+<th>关键用户动作</th>
+<th>模型预测目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>电商</td>
+<td>点击、下单、支付金额</td>
+<td>CTR、CVR、CTCVR、成交GMV</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>听完、收藏</td>
+<td>完播率、播放时长、收藏率</td>
+</tr>
+<tr>
+<td>短视频</td>
+<td>点击、观看、完播、点赞、关注</td>
+<td>CTR、预期观看时长、完播率、点赞率、关注率</td>
+</tr>
+<tr>
+<td>本地生活</td>
+<td>点击、到店、下单、核销</td>
+<td>CTR、到店率、CVR、核销率、预期交易金额</td>
+</tr>
+</tbody>
+</table>
+<div class="paper-table-note"><strong>注：</strong>同一业务通常采用多任务学习同时预测多个目标。概率类目标用于衡量动作发生的可能性，时长与金额类目标用于衡量用户行为产生的预期价值；实际排序分数还会结合业务目标进行加权或约束。</div>
+<p>排序模型基础结构包含三部分：</p>
+<ul>
+<li>输入用户、物品、上下文和行为序列等相关特征，搜索场景还会输入 Query 特征；</li>
+<li>中间由排序模型完成从特征到目标的映射；</li>
+<li>最后输出 CTR、CVR、完播率、观看时长等预测值。</li>
+</ul>
+<div style="text-align:center">
+  <style>.wwxmcbbxvrkw{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/base-ranker.png" class="wwxmcbbxvrkw" alt="基础点式排序模型结构">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 2：排序模型的基础框架。</div>
+</div>
+<p>排序模型可以是 LR、GBDT，也可以是 DNN、Transformer-like的模型。但无论内部结构如何变化，排序模型的基本任务始终没有改变：<strong>预估当前用户对每个候选物品上的潜在价值</strong>。模型的演进，也主要围绕着 <strong>特征如何表示</strong>、<strong>不同特征如何交叉</strong>、<strong>行为序列做兴趣建模</strong>，以及<strong>模型如何Scaling，从更多参数和计算中</strong> 持续获益。沿着这条主线，下面回顾排序模型如何从协同过滤与浅层模型，逐步走向深度学习、序列建模与 Scaling 时代。</p>
+<h3 id="2-2-排序模型的五个演进阶段">2.2 排序模型的五个演进阶段</h3>
+<p>回顾推荐与排序模型的发展，不断引入新的信息和新的建模方式，其结构演进大致可以概括为五个代表阶段。</p>
+<p><strong>第一阶段是协同过滤与矩阵分解。</strong> <strong>这一阶段核心解决的问题是：在用户只与少量物品发生交互的情况下，如何利用群体行为中的协同信号，推断用户对未交互物品的偏好。</strong> Herlocker 等人在 1999 年将 UserCF 从早期系统实践整理为较完整的邻域协同过滤算法框架：先计算目标用户与其他用户的相似度，再选择一组近邻，最后对近邻评分加权聚合得到预测；论文还系统比较了相似度、近邻选择和权重修正等组件。ItemCF 沿用相同的邻域思路，只是将相似性建模对象从用户换成物品。矩阵分解则进一步把稀疏的用户—物品交互矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 近似分解为两个低秩矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span>：每个用户对应一个隐向量 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>u</mi></msub></mrow><annotation encoding="application/x-tex">p_u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，每个物品对应一个隐向量 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">q_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，两者的内积 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mi>u</mi><mi mathvariant="sans-serif">T</mi></msubsup><msub><mi>q</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_u^\mathsf{T}q_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0961em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathsf mtight">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 就是用户对物品的基础偏好分数。2006 年 Netflix Prize 发布大规模用户评分数据后，Simon Funk 公开了使用随机梯度下降、仅针对已观测评分训练正则化隐因子的方法，后来通常被称为 FunkSVD。竞赛推动矩阵分解在偏置建模、隐式反馈、时间动态和模型融合等方向快速演进；Koren、Bell 和 Volinsky 在 2009 年对这一范式进行了系统总结。矩阵分解由此能够利用低秩结构在稀疏交互之间共享统计信息，获得更紧凑、泛化性更好的用户和物品表示。<br>
+但这一阶段学习的主要依据仍是用户 ID、物品 ID 及其交互关系：没有历史行为的新用户、新物品难以得到可靠表示，也不容易直接利用内容、Query、上下文和行为时序等信息。</p>
+<p><strong>第二阶段是特征工程与浅层排序。</strong> <strong>这一阶段核心解决的问题是：如何突破仅依赖用户 ID、物品 ID 和历史交互的局限，把用户、物品、Query 和上下文等多源业务信息引入排序，并表达特征之间的组合关系。</strong> 随着搜索广告和工业推荐发展，排序模型开始显式使用用户、物品、Query 和上下文特征。LR 对一阶特征进行线性加权；POLY2 为每一对特征组合学习独立权重，显式建模二阶交互，但参数量随特征规模快速增长，并且难以估计训练数据中未出现过的稀疏组合；FM 则用两个特征隐向量的内积表示交互权重，在大幅压缩参数的同时，让稀疏特征之间能够共享统计信息。另一条路线由树模型推动：GBDT 学习非线性划分，GBDT+LR 再把树的叶节点转化为稀疏组合特征交给 LR 预测。模型由此获得了比单纯 LR 更强的特征交互能力，但整体效果仍然高度依赖特征设计，能够表达的交互阶数和结构也受到模型形式限制。</p>
+<div style="text-align:center">
+  <style>.rkscopzuxmsr{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/evolution-timeline-v2.png" class="rkscopzuxmsr" alt="排序模型从协同过滤与矩阵分解、浅层排序、深度特征交互、行为序列建模走向 Scaling">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 3：排序模型的五个演进阶段</div>
+</div>
+<p><strong>第三阶段是深度特征表示与交互。</strong> <strong>这一阶段核心解决的问题是：如何减少对人工特征交叉的依赖，让模型从大规模稀疏特征中自动学习低维表示以及复杂的高阶交互。</strong> 2016 年前后，Embedding + DNN 开始成为工业排序模型的基础范式。Wide &amp; Deep（W&amp;D，也常简称 WDL）将 Wide 侧对高频共现的记忆能力与 Deep 侧的泛化能力结合起来；Deep Crossing 用 Embedding、Stacking Layer 和残差网络隐式学习高阶特征组合。随后，DeepFM 在 2017 年让 FM 与 DNN 共享 Embedding，在同一模型中分别学习低阶和高阶交互；DCN 使用 Cross Network 显式、逐层学习有界阶交互；xDeepFM 又在 2018 年通过 CIN 显式建模向量级高阶交互，并与 DNN 的隐式交互能力结合。排序模型由此开始自动学习稀疏 ID 的表示和复杂特征组合，显著减少对人工交叉特征的依赖。不过，这些模型的主干仍以固定长度特征向量为中心，后续提升往往依赖继续增加新的交互模块。</p>
+<p><strong>第四阶段是行为序列与兴趣建模。</strong> <strong>这一阶段核心解决的问题是：如何突破单一静态用户向量的表达限制，从历史行为序列中刻画不断变化、多样化、长期且与当前候选相关的用户兴趣。</strong> 这一阶段围绕序列加宽、序列加长、多兴趣和不同序列建模方式四个方向展开。<strong>序列加宽</strong>，为每个行为加入类目、品牌、动作类型、时间间隔、位置、场景与多模态信息；<strong>序列加长</strong>，从近期几十次行为扩展到千级、万级乃至全生命周期；<strong>多兴趣建模</strong>，将单一固定用户向量扩展为候选感知的兴趣表示或多个兴趣向量；<strong>序列建模方式</strong>，则从 Avg Pooling 逐步走向 Target Attention、Self-Attention/Transformer，以及面向超长序列的检索、采样与压缩等。比如，YouTube DNN 将用户历史观看/行为过的物品 Embedding 后做 Average Pooling，是工业界利用行为序列的重要起点。DIN 通过target attention 用候选物品激活相关行为，BST 进一步用位置特征和 Transformer 建模行为间依赖。MIND 通过多个兴趣向量服务召回，DMIN 则将多兴趣思想用于 CTR 预估。SIM、ETA 和 TWIN 继续向超长序列推进，分别探索两阶段检索、端到端哈希检索和两阶段一致性；LONGER 又将长序列 Transformer、Token Merge 与 GPU 系统优化结合起来。逐步把用户表示从静态画像推进为更丰富、更长、更细粒度且与候选相关的动态兴趣。</p>
+<p><strong>第五阶段是 Token 化与 Transformer-like 主干 Scaling。</strong> <strong>这一阶段核心解决的问题是：如何摆脱不断堆叠定制模块所带来的结构碎片化，构建统一、可重复堆叠且硬件友好的模型主干，让更多 Token、参数和计算能够更稳定地转化为模型效果。</strong> 传统排序模型通常将特征 Embedding 后直接拼接或池化，再交给 MLP 和各类定制交互模块；模块越叠越多，结构越容易碎片化，新增参数和计算也未必能稳定转化为效果。新范式先将用户、物品、上下文和行为序列等异构特征组织成结构化 Token，再交给可重复堆叠的 Transformer-like Backbone 统一建模，也就是从 <strong>Embedding + MLP</strong> 升级为 <strong>Embedding + Tokenization + Transformer-like Backbone</strong>。这里的 Transformer-like 并不等于照搬标准 Transformer，关键是形成“结构化 Token + 可重复堆叠 Block”的扩展接口，使模型能够沿深度、宽度、Token 数、序列长度等维度扩展。Wukong、HSTU、RankMixer、OneTrans、UniMixer 和 TokenMixer-Large 等工作，则从不同角度改造 Tokenization、Attention、FFN、Norm 与 Residual 等模块，以可重复堆叠的 Block 统一特征交互与序列建模。</p>
+<p>围绕这个5个阶段，一些比较有代表性的工作如下。</p>
+<div class="paper-table-title">表 2-2　排序模型五个演进阶段的代表工作与结构变化</div>
+<table>
+<thead>
+<tr>
+<th>演进阶段</th>
+<th>代表工作</th>
+<th>代表性结构图</th>
+<th>结构变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>协同过滤与矩阵分解</td>
+<td>Herlocker UserCF Framework（1999）</td>
+<td><style>.kfwdyufohnqq{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/usercf-framework-v2.png" class="kfwdyufohnqq" alt="UserCF 用户相似度、近邻选择与偏好加权聚合示意图"></td>
+<td>将 UserCF 拆解为用户相似度计算、近邻选择和近邻偏好加权聚合；目标用户未交互的物品，可以由多个相似近邻的反馈共同估计。</td>
+</tr>
+<tr>
+<td>协同过滤与矩阵分解</td>
+<td>Netflix Prize Matrix Factorization（2006—2009）</td>
+<td><style>.bnylkcihxunq{max-width:460px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/matrix-factorization-framework-v2.png" class="bnylkcihxunq" alt="用户—物品交互矩阵分解为用户与物品隐向量矩阵的示意图"></td>
+<td>Netflix Prize 推动正则化隐因子模型从 FunkSVD 等方法快速演进；将稀疏交互矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> 分解为用户隐向量矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span> 与物品隐向量矩阵 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span>，以 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mi>u</mi><mi mathvariant="sans-serif">T</mi></msubsup><msub><mi>q</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_u^\mathsf{T}q_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0961em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathsf mtight">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 估计用户对物品的偏好。</td>
+</tr>
+<tr>
+<td>特征工程与浅层排序</td>
+<td>GBDT+LR（2014）</td>
+<td><style>.deoianjyrtik{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-gbdt-lr.png" class="deoianjyrtik" alt="GBDT+LR 原论文 Figure 1"></td>
+<td>将 GBDT 的叶节点转化为稀疏特征，再由 LR 完成预测。</td>
+</tr>
+<tr>
+<td>深度特征表示与交互</td>
+<td>Wide &amp; Deep（2016）</td>
+<td><style>.jhvhbpcunnmj{max-width:260px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wide-deep.png" class="jhvhbpcunnmj" alt="Wide and Deep 原论文 Figure 4"></td>
+<td>Wide 侧记忆高频共现，Deep 侧用 Embedding + DNN 获得泛化能力。</td>
+</tr>
+<tr>
+<td>深度特征表示与交互</td>
+<td>Deep Crossing（2016）</td>
+<td><style>.fvyngqlwitfz{max-width:230px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deep-crossing.png" class="fvyngqlwitfz" alt="Deep Crossing 原论文 Figure 1"></td>
+<td>将异构特征分别 Embedding 后拼接，通过多层残差单元隐式学习特征组合。</td>
+</tr>
+<tr>
+<td>深度特征表示与交互</td>
+<td>DeepFM（2017）</td>
+<td><style>.oviswyfljwvy{max-width:270px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-deepfm.png" class="oviswyfljwvy" alt="DeepFM 原论文 Figure 1"></td>
+<td>FM 与 DNN 共享 Embedding，同时学习低阶交互与隐式高阶交互。</td>
+</tr>
+<tr>
+<td>深度特征表示与交互</td>
+<td>DCN（2017）</td>
+<td><style>.yffhcvusnntv{max-width:240px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-dcn.png" class="yffhcvusnntv" alt="DCN 原论文 Figure 1"></td>
+<td>Cross Network 与 Deep Network 并联，显式学习有界阶特征交互。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>YouTube DNN（2016）</td>
+<td><style>.zkbfqqonjhtp{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-youtube-dnn.png" class="zkbfqqonjhtp" alt="YouTube DNN 原论文 Figure 3"></td>
+<td>将观看与搜索历史 Embedding 后 Average Pooling 为固定向量。该图是候选生成网络，代表早期工业行为聚合，不显式保留行为顺序。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>DIN（2017/2018）</td>
+<td><style>.wfxhlbumdvjb{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-din.png" class="wfxhlbumdvjb" alt="DIN 原论文 Figure 2"></td>
+<td>用当前候选物品对历史行为加权，固定用户向量变为 target-aware 兴趣。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>BST（2019）</td>
+<td><style>.kdvnxfrivtpk{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-bst.png" class="kdvnxfrivtpk" alt="BST 原论文 Figure 1"></td>
+<td>将位置特征、行为序列与目标物品共同输入 Transformer，显式建模行为间依赖。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>MIND（2019，召回）/ DMIN（2020，排序）</td>
+<td><style>.qftvhomfpxjg{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mind.png" class="qftvhomfpxjg" alt="MIND 原论文 Figure 2"></td>
+<td>MIND 用动态路由从行为中提取多个兴趣向量；DMIN 将多兴趣表示扩展到 CTR 预估，两者的任务位置不同。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>SIM（2020）</td>
+<td><style>.vkmcufmmnoce{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-sim.png" class="vkmcufmmnoce" alt="SIM 原论文 Figure 1"></td>
+<td>先从超长历史中检索相关子序列，再进行精确建模，降低在线计算成本。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>ETA（2021）</td>
+<td><style>.ttdrtaoqrkro{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-eta.png" class="ttdrtaoqrkro" alt="ETA 原论文 Figure 2"></td>
+<td>用 SimHash/LSH 从长序列中端到端找到与候选相关的行为，再做 Multi-head Target Attention。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>TWIN（2023）</td>
+<td><style>.pvboweufarjr{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-twin.png" class="pvboweufarjr" alt="TWIN 原论文 Figure 2"></td>
+<td>GSU 与 ESU 使用一致的目标—行为相关度计算并共享参数，减少两阶段的表示与目标差异。</td>
+</tr>
+<tr>
+<td>行为序列与兴趣建模</td>
+<td>LONGER（2025）</td>
+<td><style>.cvztolwdyglx{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-longer.png" class="cvztolwdyglx" alt="LONGER 原论文 Figure 1"></td>
+<td>以 Global Token、Token Merge、Cross/Self Causal Attention 与 GPU 训练服务优化，将长序列建模推向 Scaling。</td>
+</tr>
+<tr>
+<td>Token 化与 Transformer-like 主干 Scaling</td>
+<td>HSTU（2024）</td>
+<td><style>.bpbatjdjbjem{max-width:280px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="bpbatjdjbjem" alt="HSTU 原论文 Figure 3"></td>
+<td>将用户 Action 与关联特征组织为统一时间序列，以推荐特化的 Attention、Pointwise Transformation 和可堆叠 Block 扩展序列长度与计算规模。</td>
+</tr>
+<tr>
+<td>Token 化与 Transformer-like 主干 Scaling</td>
+<td>RankMixer（2025）</td>
+<td><style>.lyvbscgvqngk{max-width:300px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="lyvbscgvqngk" alt="RankMixer 原论文 Figure 1"></td>
+<td>将语义分组 Tokenization、Token Mixing 和 Per-token FFN 组织成可重复堆叠的统一 Block。</td>
+</tr>
+</tbody>
+</table>
+<div class="paper-table-note"><strong>注：</strong>表中时间表示代表工作的公开年份；同一阶段内部并非严格的替代关系，而是围绕输入信息、特征交互、序列建模和主干扩展持续演进。结构图选取论文核心框架或本文重绘示意图，用于突出该工作的主要结构变化。</div>
+<p>当前，搜推排序模型已进入到 基于Transformer-like 主干 实现Scaling 的阶段。接下来，我们重点讨论搜推排序模型如何实现 Scaling Up。</p>
+<h2 id="3-搜推排序模型如何Scaling">3. 搜推排序模型如何Scaling</h2>
+<p>随着用户和物品规模、特征数量、行为序列长度和业务目标不断增加，搜推任务变得越来越复杂，在<strong>Embedding + MLP</strong> 的范式下，通常会外挂大量特征交叉、多种序列建模方式和多个辅助任务，结构偏碎片化，存在大量Concat/Pooling/小矩阵运算，MFU较低（通常&lt;10%），而LLM的MFU通常在30%~50%或更高。能否借鉴 LLM 的 Scaling 思路，构建统一、可扩展且硬件友好的模型主干，使更多有效参数和计算持续转化为效果提升，是搜推模型 Scaling Up 的核心目标。</p>
+<h3 id="3-1-搜推-Scaling-Up-的两条路线：生成式模型与判别式模型">3.1 搜推 Scaling Up 的两条路线：生成式模型与判别式模型</h3>
+<p>对于搜推模型如何Scaling，有2个主流的路线：</p>
+<ul>
+<li>1）<strong>生成式模型才能更好地做scaling</strong>，将搜推改造成NTP任务，直接生成下一物品序列，典型工作如快手的OneRec/OneSearch系列；</li>
+<li>2）<strong>判别式模型也能做Scaling</strong>，保留现有搜推多阶段级联结构，主要聚焦于扩展模型的有效参数和计算量，典型工作如字节的rankmxier系列。</li>
+</ul>
+<div style="text-align:center">
+  <style>.qumjqgublirj{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-two-routes.png" class="qumjqgublirj" alt="搜推模型 Scaling Up 的生成式与判别式两条路线">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 4：搜推模型 Scaling Up 的两条路线</div>
+</div>
+<p>生成式路线和判别式路线在任务形式、系统链路上存在着核心差异。</p>
+<div class="paper-table-title">表 3-1　搜推 Scaling Up 的生成式路线与判别式路线对比</div>
+<table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>生成式模型</th>
+<th>判别式模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务形式</td>
+<td>NTP / Next Action Prediction</td>
+<td>Point-wise / Multi-task Prediction</td>
+</tr>
+<tr>
+<td>系统链路</td>
+<td>尝试统一召回、排序甚至整个搜推链路</td>
+<td>保留召回—粗排—精排漏斗，重点升级精排主干</td>
+</tr>
+<tr>
+<td>输入组织</td>
+<td>用户行为、物品或 Semantic ID 组成 Token 序列</td>
+<td>用户、物品、Query、上下文和行为序列等异构特征</td>
+</tr>
+<tr>
+<td>输出形式</td>
+<td>直接生成下一物品或一组物品</td>
+<td>为每个候选输出 CTR、CVR、时长、GMV 等预测分数</td>
+</tr>
+<tr>
+<td>主要扩展对象</td>
+<td>序列长度、训练 Token 数、生成主干和码本容量</td>
+<td>稠密参数、主干深度与宽度、Token 数和维度</td>
+</tr>
+<tr>
+<td>代表工作</td>
+<td>OneRec、OneSearch</td>
+<td>RankMixer、OneTrans、TokenMixer-Large</td>
+</tr>
+<tr>
+<td>主要挑战</td>
+<td>SID质量、业务策略约束和系统迁移成本</td>
+<td>异构特征Token化、线上RT</td>
+</tr>
+</tbody>
+</table>
+<div class="paper-table-note"><strong>注：</strong>生成式路线尝试将搜推任务改写为序列生成问题，并可能进一步统一召回与排序；判别式路线保留现有多阶段级联链路，重点扩展精排模型的有效参数和计算量。两条路线并非完全互斥，实际系统也可能采用混合架构。</div>
+<h3 id="3-2-判别式搜推模型-Scaling-的基础范式">3.2 判别式搜推模型 Scaling 的基础范式</h3>
+<p>判别式搜推模型通过借鉴 LLM 统一输入表示、可堆叠主干和持续扩展有效计算的方式，将原本不断在 <strong>Embedding + MLP</strong> 上堆叠碎片化结构的范式，升级为规整、可重复堆叠的 <strong>Embedding + Tokenization + Transformer-like</strong> 结构。</p>
+<div style="text-align:center">
+  <style>.twctadoyukna{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/token-transformer.png" class="twctadoyukna" alt="Embedding 加 MLP 与 Embedding 加 Tokenization 加 Transformer-like 两种排序模型基础范式对比">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 7：两种判别式排序模型基础范式</div>
+</div>
+<p>在新的建模范式下，扩容方式从“继续外挂序列建模模块、CrossNet 或手工交叉模块”，转变为增加 Token 数量和维度、Block 层数、主干宽度或专家容量。要让这套范式真正适用于搜推排序，核心需要解决两个问题。</p>
+<p><strong>问题一：异构特征如何 Token 化。</strong> LLM 的原始输入是文本，文本天然具有顺序结构，并且可以通过统一的词表和 Tokenizer 映射为统一的离散 Token 序列。搜推排序的输入则同时包含用户与物品 ID、数值统计、Query、上下文、交叉特征和变长行为序列。这些特征的来源、语义、粒度和时序属性都不相同，无法像文本一样直接组成统一的 Token 序列。因此，需要设计适合搜推特征的 Tokenizer：对异构特征进行分组、切分与投影，对齐到统一维度，并注入类型、位置、时间等信息，最终形成 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>T</mi><mo>×</mo><mi>D</mi></mrow></msup></mrow><annotation encoding="application/x-tex">X\in\mathbb R^{T\times D}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">D</span></span></span></span></span></span></span></span></span></span></span></span> 的结构化 Token 表示。其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> 是 Token 数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> 是统一的 Token 维度。</p>
+<p><strong>问题二：如何构建可扩展且高效的 Transformer-like 主干。</strong> 即使完成了 Tokenization，也不能直接把标准 Transformer 搬到线上精排。Self-Attention 的计算复杂度约为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>T</mi><mn>2</mn></msup><mi>D</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(T^2D)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mclose">)</span></span></span></span>，随着 Token 数量和行为序列长度增加，计算量与时延会快速增长；而线上排序同时受到严格的 RT 和成本约束。因此，新的主干一方面能够通过增加深度、宽度或专家容量持续扩展模型能力，另一方面也要简化 Self-Attention 的计算，让新增参数能够高效执行，在满足线上 RT 的前提下转化为效果收益。</p>
+<div style="text-align:center">
+  <style>.feolqxioviof{max-width:1100px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/scaling-paradigm-challenges.png" class="feolqxioviof" alt="Embedding 加 Token 加 Transformer-like 新范式需要解决的两个核心问题">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 8：新建模范式需要解决的两个核心问题</div>
+</div>
+<p>围绕这两个问题，不同工作对异构特征的组织粒度、Token 生成方式以及 Transformer-like 主干的结构选择各不相同，接下来将通过相关代表性工作，进一步梳理这两条主线上的主要设计思路。</p>
+<h3 id="3-3-搜推模型-Scaling-的代表工作">3.3 搜推模型 Scaling 的代表工作</h3>
+<p>不同工作虽然采用了不同的结构，但基本都是围绕着：一是如何把异构搜推特征组织成 Token，二是如何构建可扩展且高效的 Transformer-like 主干。下表先从这两个问题出发，对代表工作进行整体比较；其中，Transformer-like 主干进一步拆分为 Self-Attention/Token 交互、FFN/容量扩展和 Norm/Residual 三部分。</p>
+<style>
+  .paper-table, .paper-table-title + table { width:100%; border-collapse:collapse; border-top:2px solid #444; border-bottom:2px solid #444; font-size:14px; }
+  .paper-table caption { caption-side:top; text-align:center; font-weight:600; font-size:15px; padding:0 0 10px 0; }
+  .paper-table-title { text-align:center; font-weight:600; font-size:15px; margin:14px 0 10px 0; }
+  .paper-table th, .paper-table-title + table th { padding:10px 8px; text-align:center; vertical-align:middle; border-top:none; border-left:none; border-right:none; border-bottom:1.5px solid #666; }
+  .paper-table td, .paper-table-title + table td { padding:10px 8px; vertical-align:top; border-top:none; border-left:none; border-right:none; border-bottom:1px solid #ddd; }
+  .paper-table tbody tr:last-child td, .paper-table-title + table tbody tr:last-child td { border-bottom:none; }
+  .paper-table-note { margin:8px 2px 18px 2px; font-size:13px; line-height:1.65; color:#555; }
+</style>
+<div style="overflow-x:auto;">
+<table class="paper-table" style="min-width:1670px;">
+  <caption>表 3-2　代表工作围绕两个核心问题的解决方式对比</caption>
+  <colgroup>
+    <col style="width:130px;" />
+    <col style="width:280px;" />
+    <col style="width:280px;" />
+    <col style="width:300px;" />
+    <col style="width:280px;" />
+    <col style="width:260px;" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th rowspan="2" style="text-align:center;vertical-align:middle;">工作</th>
+      <th rowspan="2" style="text-align:center;vertical-align:middle;">关键结构图</th>
+      <th rowspan="2" style="text-align:center;vertical-align:middle;">异构特征 Tokenization</th>
+      <th colspan="3" style="text-align:center;vertical-align:middle;">Transformer-like 主干</th>
+    </tr>
+    <tr>
+      <th style="text-align:center;vertical-align:middle;">Self-Attention / Token 交互</th>
+      <th style="text-align:center;vertical-align:middle;">FFN / 容量扩展</th>
+      <th style="text-align:center;vertical-align:middle;">Norm / Residual</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Wukong（2024）</td>
+      <td><style>.gsvyiiqxfvfc{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-wukong.png" class="gsvyiiqxfvfc" alt="Wukong Figure 2"></td>
+      <td>将多值类别特征和 Dense 特征统一组织为 n × d Embedding 矩阵</td>
+      <td>不使用标准 Self-Attention；通过 Factorization Machine Block 建模高阶交互，Linear Compression 保留低阶信息</td>
+      <td>不采用标准 Transformer FFN；通过增加 Wukong Layer、FMB 数量和隐藏宽度扩展容量</td>
+      <td>未将 Norm/Residual 作为核心创新，主要依靠规则化 Layer 堆叠</td>
+    </tr>
+    <tr>
+      <td>HSTU（2024）</td>
+      <td><style>.hfkkqfvsrwbc{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-hstu.png" class="hfkkqfvsrwbc" alt="HSTU Figure 3"></td>
+      <td>将用户 Action 及其关联特征组织为统一的时间序列</td>
+      <td>Pointwise Aggregated Attention，不依赖标准 Softmax 归一化，更贴合推荐序列</td>
+      <td>Pointwise Projection/Transformation 承担通道变换与容量扩展</td>
+      <td>使用 Norm、Residual 支持深层堆叠</td>
+    </tr>
+    <tr>
+      <td>RankMixer（2025）</td>
+      <td><style>.xoaisosqmjup{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-rankmixer.png" class="xoaisosqmjup" alt="RankMixer Figure 1"></td>
+      <td>按用户、物品、序列、交叉特征等语义分组，拼接、切分并投影为固定 T × D Token</td>
+      <td>Multi-head Token Mixing 通过 Split、Reshape 和 Merge 完成跨 Token 信息重组，不计算 QKᵀ 与 Softmax</td>
+      <td>Per-token FFN 区分不同 Token 的语义空间；Sparse MoE 通过稀疏激活扩展容量</td>
+      <td>Add &amp; Norm 支持 Block 重复堆叠</td>
+    </tr>
+    <tr>
+      <td>OneTrans（2025）</td>
+      <td><style>.glueylbtpgtf{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-onetrans.png" class="glueylbtpgtf" alt="OneTrans Figure 2"></td>
+      <td>将序列和非序列特征统一成一个 Token 序列，并用 <code>[SEP]</code> 分隔不同序列</td>
+      <td>Mixed Causal Attention 统一序列与非序列交互；金字塔结构逐层压缩序列</td>
+      <td>序列 Token 共享 QKV/FFN，非序列 Token 使用 Token-specific 参数</td>
+      <td>使用 RMSNorm 支持统一主干堆叠</td>
+    </tr>
+    <tr>
+      <td>MTGR（2025）</td>
+      <td><style>.muhflkeyfhpt{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-mtgr.png" class="muhflkeyfhpt" alt="MTGR Figure 2"></td>
+      <td>将用户特征、行为序列、实时特征与多个候选统一 Token 化</td>
+      <td>基于 HSTU 的注意力结构，并通过定制 Mask 避免候选间信息泄漏</td>
+      <td>沿用推荐特化的投影与非线性变换扩展主干容量</td>
+      <td>Group-Layer Normalization 对齐不同语义空间</td>
+    </tr>
+    <tr>
+      <td>TokenMixer-Large（2026）</td>
+      <td><style>.ikvuzesqfuol{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-tokenmixer-large.png" class="ikvuzesqfuol" alt="TokenMixer-Large Figure 1"></td>
+      <td>Semantic Group-wise Tokenizer 将特征按语义分组，并增加 Global Token</td>
+      <td>Mixing-and-Reverting 在完成跨 Token 交互后恢复原 Token 形状</td>
+      <td>Sparse Per-token SwiGLU MoE 通过增加专家数扩大总容量，同时控制激活参数</td>
+      <td>RMSNorm、Inter-layer Residual 和辅助损失支持深层训练</td>
+    </tr>
+    <tr>
+      <td>UniMixer（2026）</td>
+      <td><style>.matgbshmkowm{width:240px;max-width:240px;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/paper-unimixer.png" class="matgbshmkowm" alt="UniMixer Figure 2"></td>
+      <td>按用户、物品、行为序列、Query 等 Domain 分组，再用 Token-specific 线性层投影</td>
+      <td>将规则式 TokenMixer 参数化，统一 Attention、TokenMixer 与 FM 的交互视角</td>
+      <td>Per-token SwiGLU 与 Sparse Per-token MoE 扩展不同 Token 的通道容量</td>
+      <td>SiameseNorm 对齐异构 Token 的分布</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="paper-table-note"><strong>注：</strong>“异构特征 Tokenization”对应问题一；“Self-Attention / Token 交互”“FFN / 容量扩展”和“Norm / Residual”统一归入 Transformer-like 主干，对应问题二的模型结构设计。第二列仅展示各工作的核心结构，并不代表完整的训练与服务链路。FMB 表示 Factorization Machine Block，FFN 表示 Feed-Forward Network，MoE 表示 Mixture of Experts。</div>
+<h2 id="4-总结与实践建议">4. 总结与实践建议</h2>
+<p>前面从技术演进、Scaling 路线、基础范式和代表工作几个层面，介绍了搜推排序模型从 <strong>Embedding + MLP</strong> 走向 <strong>Embedding + Tokenization + Transformer-like Backbone</strong> 的过程。总体来看，新范式主要围绕两个问题展开：输入侧需要将异构特征组织为结构化 Token，主干侧需要在严格的线上约束下持续扩展有效容量。</p>
+<h3 id="4-1-异构特征-Tokenization">4.1 异构特征 Tokenization</h3>
+<p>代表工作的第一个分歧，是如何确定 Token 的语义边界和粒度。常见做法可以归纳为：</p>
+<div style="overflow-x:auto;">
+<table class="paper-table" style="min-width:900px;">
+  <caption>表 4-1　异构特征 Tokenization 的常见方法及权衡</caption>
+  <thead>
+    <tr>
+      <th>方法</th>
+      <th>核心做法</th>
+      <th>优点</th>
+      <th>主要风险</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Field-wise</td>
+      <td>每个 Field 对应一个 Token</td>
+      <td>字段边界清楚，结构最直观</td>
+      <td>Token 数量过多，计算成本较高</td>
+    </tr>
+    <tr>
+      <td>Semantic group-wise</td>
+      <td>将用户、物品、序列、交叉等同类特征组内拼接后投影</td>
+      <td>兼顾语义边界与计算效率</td>
+      <td>分组依赖业务经验，组内信息可能被压缩</td>
+    </tr>
+    <tr>
+      <td>Sequence item-wise</td>
+      <td>每个行为 Item 对应一个 Token，并叠加动作、时间和位置信息</td>
+      <td>保留完整时序，适合序列建模</td>
+      <td>长行为序列会显著增加 Token 数</td>
+    </tr>
+    <tr>
+      <td>Domain/type-wise</td>
+      <td>按用户、物品、Query、行为序列等 Domain 分组，并采用不同投影参数</td>
+      <td>能够保留不同特征空间的差异</td>
+      <td>参数与工程实现更复杂</td>
+    </tr>
+    <tr>
+      <td>Global/summary token</td>
+      <td>增加 Global Token 汇总全局信息</td>
+      <td>便于不同特征组之间传递信息</td>
+      <td>全局 Token 可能成为信息瓶颈</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="paper-table-note"><strong>注：</strong>上述方法并非互斥，同一个模型通常会组合使用多种 Tokenization。例如，非序列特征可以按语义或 Domain 分组，行为序列可以按 Item 展开，同时增加 Global Token 汇总全局信息。实际选择需要在业务语义保留、Token 数量、主干计算量和工程复杂度之间权衡。</div>
+<p>Tokenization 不只是数据预处理，还决定了后续主干看到的信息结构。除了分组粒度，还需要明确数值特征如何投影、多值 ID 如何聚合、行为序列是否按 Item 展开、时间和动作类型如何注入，以及不同 Token 是否共享投影参数。</p>
+<h3 id="4-2-Transformer-like-主干">4.2 Transformer-like 主干</h3>
+<p>标准 Transformer Block 主要由 Self-Attention、FFN、Norm 和 Residual 组成。搜推模型的结构创新，也可以沿着这几个部分理解。</p>
+<p><strong>1）Self-Attention / Token 间交互。</strong> 标准 Self-Attention 能够根据当前样本动态计算 Token 之间的交互权重，但复杂度约为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>T</mi><mn>2</mn></msup><mi>D</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(T^2D)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mclose">)</span></span></span></span>。面向线上排序，不同工作采用了不同的简化方式：HSTU 使用推荐特化的 Pointwise Aggregated Attention；OneTrans 使用 Mixed Causal Attention、序列压缩和 KV Cache；RankMixer、TokenMixer-Large 使用规则化的重排结构；UniMixer 则进一步把规则交互参数化。除此之外，还可以采用分块、局部、稀疏、低秩等方式降低计算量。</p>
+<p><strong>2）FFN / 容量扩展。</strong> FFN 承担每个 Token 内部的非线性变换，也是增加稠密参数最直接的位置。标准 Transformer 对所有 Token 共享同一套 FFN，但搜推 Token 的语义高度异构，因此出现了 Per-token FFN、Mixed FFN 和 Token-specific FFN。进一步引入 Sparse MoE 后，可以通过增加专家数扩大模型总容量，同时只激活少量专家以控制单次推理 FLOPs。</p>
+<p><strong>3）Norm 与 Residual / 深层稳定性。</strong> 当主干从少量 Block 扩展到更深结构时，Norm 和 Residual 决定新增层数能否被充分训练。RMSNorm、SiameseNorm、Group-Layer Normalization 分别用于简化归一化、对齐异构 Token 分布以及保持不同语义空间。Inter-layer Residual、Mixing-and-Reverting 和辅助损失则用于缓解梯度衰减、表示退化和稀疏路由不均衡等问题。</p>
+<p><strong>4）线上执行 / 有效 Scaling。</strong> 结构可堆叠并不等于能够在线扩展。模型还需要通过规则大算子、序列压缩、用户侧复用、KV Cache、稀疏激活和算子融合提高硬件利用率，并控制 RT 与成本。只有新增参数和 FLOPs 能够被高效执行并带来效果收益，模型才真正实现了 Scaling。</p>
+<h3 id="4-3-两个问题形成的共同演进方向">4.3 两个问题形成的共同演进方向</h3>
+<p>从这些代表工作可以看到，当前搜推模型 Scaling 已经形成两条相对清晰的主线：</p>
+<ol>
+<li><strong>输入侧：从特征拼接走向结构化 Tokenization。</strong> 核心不是简单增加 Token 数，而是在业务语义、信息粒度和计算成本之间取得平衡，把用户、物品、Query、上下文和行为序列组织为统一的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>×</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">T\times D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> 表示。</li>
+<li><strong>主干侧：从碎片化模块走向统一的 Transformer-like Backbone。</strong> Self-Attention 或其替代结构负责跨 Token 交互，FFN/MoE 负责扩展通道容量，Norm/Residual 保证深层训练稳定，系统优化负责把模型规模转化为可承受的线上计算。</li>
+</ol>
+<p>因此，Scaling Up 不能只看总参数量。评估一个方案是否真正实现了有效扩展，还需要同时观察 Dense 参数、Sparse 参数、激活参数、FLOPs、Token 数、序列长度、MFU、线上 RT、成本和业务收益。最终目标不是得到一个更大的模型，而是让增加的参数和计算能够持续转化为更好的排序效果。</p>
+<h3 id="4-4-实践中需要特别注意的问题">4.4 实践中需要特别注意的问题</h3>
+<p>在具体落地时，验证新范式的结构有效性只是第一步。模型从“能够训练”走向“规模增加后仍然持续有效”，还需要同时解决数据供给、参数收敛、热启动、训练稳定性和线上执行等问题。</p>
+<p><strong>1）参数规模扩大后，需要同步增加有效样本量和训练步数。</strong> 模型容量增加并不会自动带来收益，新增参数只有获得足够的训练信号才能收敛。如果仍使用相同的数据窗口、样本量和训练步数，大模型可能表现为收敛不足；反过来，如果在有限样本上反复训练，也容易转向记忆高频用户、物品和特征组合。实践中需要随着 Dense 参数、激活参数和 Token 数增长，同步评估样本规模、数据覆盖度、负样本数量、训练 Token 数和总训练 Compute，并通过训练集—验证集差距判断是欠拟合还是过拟合。</p>
+<p><strong>2）Multi-epoch 训练时，需要特别处理热加载的 Embedding。</strong> 为了让新增的 Dense 主干充分收敛，可以在同一批样本上训练多个 Epoch。但搜推模型通常会从线上或上一版本热加载大规模 Embedding，这些参数已经携带较强的历史记忆；如果继续在同一批样本上反复更新，尤其是高频 ID 的 Embedding，容易比主干更早过拟合。</p>
+<p>一种可用的工程技巧是：<strong>Dense 主干在多个 Epoch 之间连续训练，但每个 Epoch 开始前，都从同一个 Warm-start Checkpoint 重新加载 Embedding 参数。</strong> 这样，Dense 主干可以持续吸收多轮训练信号，而 Embedding 不会在相同样本上累计多轮更新。实现时还应同步重置 Embedding 对应的优化器状态，例如 Adam 的一阶、二阶动量，避免参数已经恢复而优化器状态仍保留上一 Epoch 的更新记忆。该方法并非所有任务都必然收益，需要结合 ID 频次分布、数据新鲜度和验证集表现进行判断。</p>
+<p><strong>3）可以通过 Global Token 实现更平滑的热启动。</strong> 当模型从旧的 Embedding + MLP 结构升级到 Token + Transformer-like 主干时，新旧模型的中间表示通常无法直接一一对应。可以将旧模型已经收敛的高层表示或输出表示经过线性投影，作为一个样本相关的 Global Token 加入新模型的 Token 序列。训练初期，新主干可以通过 Global Token 复用旧模型的稳定信息，再逐步学习其他 Token 带来的增量能力，相当于为结构升级提供一条信息捷径。如果新旧模型都包含可学习的 Global Token，也可以直接从旧 Checkpoint 加载该参数，但样本相关的旧模型表征通常能提供更强的热启动信号。</p>
+<p><strong>4）新参数与热加载参数需要采用不同的优化策略。</strong> 新增的 Tokenizer、Transformer-like Block、FFN 或 MoE 参数从随机初始化开始，而 Embedding 和旧模型模块已经处于相对稳定的区域，两者使用完全相同的学习率容易顾此失彼。实践中可以使用分组学习率：新参数采用较大的学习率和 Warmup，热加载参数采用较小学习率；同时配合 Norm、Residual、梯度裁剪以及必要的辅助损失，观察各层梯度、激活分布和专家负载，确保新增深度与容量真正得到训练。</p>
+<p><strong>5）需要验证新增容量是否能够转化为线上有效计算。</strong> 离线效果提升并不代表具备上线价值。排序模型的计算还会被候选数量放大，因此需要同时观察 P50/P99 RT、QPS、显存、通信开销、MFU、单候选 FLOPs 和激活参数，而不能只报告总参数量。优先将计算组织为规则大矩阵，并结合用户侧表示复用、Cache、序列压缩、稀疏激活和算子融合，把更多时间用于有效计算，而不是消耗在大量小算子、数据搬运和动态调度上。</p>
+<p><strong>6）结构升级需要分阶段验证，并保留回滚路径。</strong> 建议先验证单一模块替换和离线 Scaling 趋势，再进行小流量灰度，最后逐步扩大流量。除了主指标，还需要关注分用户、分场景、分频次和冷启动样本的收益与退化，并检查训练—推理特征一致性、模型稳定性和资源水位。只有效果、RT、成本和稳定性同时满足要求，才能认为新的 Scaling 范式在业务中真正成立。</p>
+<h2 id="参考资料">参考资料</h2>
+<ol>
+<li>Herlocker et al. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/312624.312682">An Algorithmic Framework for Performing Collaborative Filtering</a>, SIGIR 1999.</li>
+<li>He et al. <a target="_blank" rel="noopener" href="https://ai.meta.com/research/publications/practical-lessons-from-predicting-clicks-on-ads-at-facebook/">Practical Lessons from Predicting Clicks on Ads at Facebook</a>, ADKDD 2014.</li>
+<li>Cheng et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1606.07792">Wide &amp; Deep Learning for Recommender Systems</a>, 2016.</li>
+<li>Wang et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.05123">Deep &amp; Cross Network for Ad Click Predictions</a>, 2017.</li>
+<li>Zhou et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.06978">Deep Interest Network for Click-Through Rate Prediction</a>, 2017/2018.</li>
+<li>Zhou et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1809.03672">Deep Interest Evolution Network for Click-Through Rate Prediction</a>, 2018/2019.</li>
+<li>Pi et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.09248">Practice on Long Sequential User Behavior Modeling for CTR Prediction</a>, 2019.</li>
+<li>Qi et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2006.05639">Search-based User Interest Modeling with Lifelong Sequential Behavior Data for CTR Prediction</a>, 2020.</li>
+<li>Zhai et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2402.17152">Actions Speak Louder than Words: Trillion-Parameter Sequential Transducers for Generative Recommendations</a>, 2024.</li>
+<li>Zhang et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2403.02545">Wukong: Towards a Scaling Law for Large-Scale Recommendation</a>, 2024.</li>
+<li>Si et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2407.16357">TWIN V2: Scaling Ultra-Long User Behavior Sequence Modeling for Enhanced CTR Prediction at Kuaishou</a>, 2024.</li>
+<li>Deng et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.18965">OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment</a>, 2025.</li>
+<li>Chai et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2505.04421">LONGER: Scaling Up Long Sequence Modeling in Industrial Recommenders</a>, 2025.</li>
+<li>Han et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2505.18654">MTGR: Industrial-Scale Generative Recommendation Framework in Meituan</a>, 2025.</li>
+<li>Zhu et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2507.15551">RankMixer: Scaling Up Ranking Models in Industrial Recommenders</a>, 2025.</li>
+<li>Chen et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.03236">OneSearch: A Preliminary Exploration of the Unified End-to-End Generative Framework for E-commerce Search</a>, 2025.</li>
+<li>Zhang et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.26104">OneTrans: Unified Feature Interaction and Sequence Modeling with One Transformer in Industrial Recommender</a>, 2025.</li>
+<li>Jiang et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2602.06563">TokenMixer-Large: Scaling Up Large Ranking Models in Industrial Recommenders</a>, 2026.</li>
+<li>Ha et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.00590">UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</a>, 2026.</li>
+<li>Chang et al. <a target="_blank" rel="noopener" href="https://jmlr.org/papers/v11/chang10a.html">Training and Testing Low-degree Polynomial Data Mappings via Linear SVM</a>, JMLR 2010.</li>
+<li>Rendle. <a target="_blank" rel="noopener" href="https://doi.org/10.1109/ICDM.2010.127">Factorization Machines</a>, ICDM 2010.</li>
+<li>Shan et al. <a target="_blank" rel="noopener" href="https://www.kdd.org/kdd2016/papers/files/adf0975-shanA.pdf">Deep Crossing: Web-Scale Modeling without Manually Crafted Combinatorial Features</a>, KDD 2016.</li>
+<li>Guo et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.04247">DeepFM: A Factorization-Machine based Neural Network for CTR Prediction</a>, IJCAI 2017.</li>
+<li>Lian et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.05170">xDeepFM: Combining Explicit and Implicit Feature Interactions for Recommender Systems</a>, KDD 2018.</li>
+<li>Covington et al. <a target="_blank" rel="noopener" href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">Deep Neural Networks for YouTube Recommendations</a>, RecSys 2016.</li>
+<li>Chen et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.06874">Behavior Sequence Transformer for E-commerce Recommendation in Alibaba</a>, 2019.</li>
+<li>Li et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.08030">Multi-Interest Network with Dynamic Routing for Recommendation at Tmall</a>, KDD 2019.</li>
+<li>Xiao et al. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3340531.3412092">Deep Multi-Interest Network for Click-through Rate Prediction</a>, CIKM 2020.</li>
+<li>Chen et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2108.04468">End-to-End User Behavior Retrieval in Click-Through Rate Prediction Model</a>, 2021.</li>
+<li>Chang et al. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.02352">TWIN: TWo-stage Interest Network for Lifelong User Behavior Modeling in CTR Prediction at Kuaishou</a>, KDD 2023.</li>
+<li>Koren, Bell, and Volinsky. <a target="_blank" rel="noopener" href="https://doi.org/10.1109/MC.2009.263">Matrix Factorization Techniques for Recommender Systems</a>, IEEE Computer 2009.</li>
+<li>Bennett and Lanning. <a target="_blank" rel="noopener" href="https://www.cs.uic.edu/~liub/KDD-cup-2007/proceedings/The-Netflix-Prize-Bennett.pdf">The Netflix Prize</a>, KDD Cup and Workshop 2007.</li>
+<li>Funk. <a target="_blank" rel="noopener" href="https://sifter.org/~simon/journal/20061211.html">Netflix Update: Try This at Home</a>, 2006.</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%90%9C%E7%B4%A2%E6%8E%A8%E8%8D%90/">搜索推荐</a><a class="post-meta__tags" href="/tags/%E6%8E%92%E5%BA%8F%E6%A8%A1%E5%9E%8B/">排序模型</a><a class="post-meta__tags" href="/tags/Scaling/">Scaling</a></div><div class="post-share"><div class="social-share" data-image="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/" title="读懂FLOPs与算力利用率"><img class="cover" src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">读懂FLOPs与算力利用率</div></div><div class="info-2"><div class="info-item-1"> 模型训练效率里最容易混在一起的，是“模型要算多少”“硬件实际算了多少”“峰值算力有多少转化成模型进度”和“GPU 到底忙不忙”。FLOPs、HFU、MFU 和 GPU 利用率分别回答这些问题。  1. FLOP：一次浮点运算 FLOP 是 Floating-Point Operation 的缩写，表示一次浮点运算。这个缩写通常理解为从 FLoating-point 取 FL，从 OPeration 取 OP，合成 FLOP。浮点数是计算机表示实数的一种方式，例如 3.14、-0.125 和 1.2e-5。一次浮点加法或乘法通常各记作 1 FLOP。 这里有三个容易混淆的写法：    写法 常见含义 回答的问题     FLOP 一次浮点运算 一次操作是什么   FLOPs 浮点运算总次数 这项任务要算多少   FLOP/s 每秒浮点运算次数 设备算得多快    注意：用 FLOPs 表示总计算量，用 FLOP/s 表示计算速度。下面我们用一个矩阵乘法的例子来说明如何计算一个任务有多少FLOPs。 1.1 矩阵乘法有多少 FLOPs 设有两个矩阵： A∈Rm×k,B∈Rk×nA ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">93</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%90%9C%E6%8E%A8%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-text">1. 搜推系统基本架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%8E%92%E5%BA%8F%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%BB%E5%8A%A1%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B"><span class="toc-text">2. 排序模型的任务与技术演进</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%8E%92%E5%BA%8F%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1%EF%BC%9A%E7%94%A8%E6%88%B7-x-%E5%95%86%E5%93%81-%E2%86%92-score"><span class="toc-text">2.1 排序模型的基本任务：用户 x 商品 → score</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%8E%92%E5%BA%8F%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BA%94%E4%B8%AA%E6%BC%94%E8%BF%9B%E9%98%B6%E6%AE%B5"><span class="toc-text">2.2 排序模型的五个演进阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%90%9C%E6%8E%A8%E6%8E%92%E5%BA%8F%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling"><span class="toc-text">3. 搜推排序模型如何Scaling</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%90%9C%E6%8E%A8-Scaling-Up-%E7%9A%84%E4%B8%A4%E6%9D%A1%E8%B7%AF%E7%BA%BF%EF%BC%9A%E7%94%9F%E6%88%90%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%A4%E5%88%AB%E5%BC%8F%E6%A8%A1%E5%9E%8B"><span class="toc-text">3.1 搜推 Scaling Up 的两条路线：生成式模型与判别式模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%88%A4%E5%88%AB%E5%BC%8F%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B-Scaling-%E7%9A%84%E5%9F%BA%E7%A1%80%E8%8C%83%E5%BC%8F"><span class="toc-text">3.2 判别式搜推模型 Scaling 的基础范式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B-Scaling-%E7%9A%84%E4%BB%A3%E8%A1%A8%E5%B7%A5%E4%BD%9C"><span class="toc-text">3.3 搜推模型 Scaling 的代表工作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="toc-text">4. 总结与实践建议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%BC%82%E6%9E%84%E7%89%B9%E5%BE%81-Tokenization"><span class="toc-text">4.1 异构特征 Tokenization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Transformer-like-%E4%B8%BB%E5%B9%B2"><span class="toc-text">4.2 Transformer-like 主干</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98%E5%BD%A2%E6%88%90%E7%9A%84%E5%85%B1%E5%90%8C%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91"><span class="toc-text">4.3 两个问题形成的共同演进方向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%AE%9E%E8%B7%B5%E4%B8%AD%E9%9C%80%E8%A6%81%E7%89%B9%E5%88%AB%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">4.4 实践中需要特别注意的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/" title="搜推模型如何Scaling"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/cover-v3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="搜推模型如何Scaling"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/Scaling/%E6%90%9C%E6%8E%A8%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95Scaling/" title="搜推模型如何Scaling">搜推模型如何Scaling</a><time datetime="2026-07-19T23:20:12.000Z" title="发表于 2026-07-20 07:20:12">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/" title="读懂FLOPs与算力利用率"><img src="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="读懂FLOPs与算力利用率"/></a><div class="content"><a class="title" href="/LLM/%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/%E8%AF%BB%E6%87%82FLOPs%E4%B8%8E%E7%AE%97%E5%8A%9B%E5%88%A9%E7%94%A8%E7%8E%87/" title="读懂FLOPs与算力利用率">读懂FLOPs与算力利用率</a><time datetime="2026-07-12T01:36:37.000Z" title="发表于 2026-07-12 09:36:37">2026-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/" title="HSTU结构拆解与参数计算"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HSTU结构拆解与参数计算"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/HSTU%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97/" title="HSTU结构拆解与参数计算">HSTU结构拆解与参数计算</a><time datetime="2026-06-13T12:42:51.000Z" title="发表于 2026-06-13 20:42:51">2026-06-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/" title="ReLU系列激活函数"><img src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ReLU系列激活函数"/></a><div class="content"><a class="title" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/ReLU%E7%B3%BB%E5%88%97%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/" title="ReLU系列激活函数">ReLU系列激活函数</a><time datetime="2026-06-06T14:01:04.000Z" title="发表于 2026-06-06 22:01:04">2026-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/" title="transformer中的FFN详解"><img src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/cover.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="transformer中的FFN详解"/></a><div class="content"><a class="title" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Transformer/transformer%E4%B8%AD%E7%9A%84FFN%E8%AF%A6%E8%A7%A3/" title="transformer中的FFN详解">transformer中的FFN详解</a><time datetime="2026-06-06T02:40:25.000Z" title="发表于 2026-06-06 10:40:25">2026-06-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
