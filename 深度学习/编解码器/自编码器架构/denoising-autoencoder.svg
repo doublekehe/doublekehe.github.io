@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="500" viewBox="0 0 1400 500" role="img" aria-labelledby="title desc">
+  <title id="title">Denoising AutoEncoder 示意图</title>
+  <desc id="desc">带噪图像经过编码器和解码器后，恢复为干净图像。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.09"/></filter>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M1,1 L15,8 L1,15 Z" fill="#64748b"/></marker>
+    <style>
+      text { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;fill:#0f172a; }
+      .title { font-size:28px;font-weight:700; } .cn { font-size:24px;font-weight:700; } .en { font-size:18px;font-weight:600;fill:#64748b; }
+      .arrow { stroke:#64748b;stroke-width:4;fill:none;marker-end:url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1400" height="500" rx="28" fill="#f8fafc"/>
+  <text x="700" y="57" text-anchor="middle" class="title">Denoising AutoEncoder：带噪输入 → 干净重建</text>
+  <g filter="url(#shadow)">
+    <rect x="45" y="112" width="250" height="240" rx="20" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+    <rect x="345" y="132" width="205" height="200" rx="20" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <rect x="600" y="142" width="200" height="180" rx="20" fill="#ede9fe" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="850" y="132" width="205" height="200" rx="20" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+    <rect x="1105" y="112" width="250" height="240" rx="20" fill="#fff" stroke="#22c55e" stroke-width="2"/>
+  </g>
+  <text x="170" y="151" text-anchor="middle" class="cn">带噪图像</text>
+  <rect x="70" y="170" width="200" height="125" rx="12" fill="#bfdbfe"/><circle cx="232" cy="195" r="14" fill="#fbbf24"/>
+  <path d="M70 260 L128 203 L172 245 L205 218 L270 273 V295 H70 Z" fill="#64748b"/><path d="M70 272 Q120 249 170 270 T270 260 V295 H70 Z" fill="#86efac"/>
+  <g fill="#334155" opacity="0.78"><circle cx="91" cy="191" r="4"/><circle cx="114" cy="248" r="5"/><circle cx="144" cy="184" r="3"/><circle cx="161" cy="273" r="4"/><circle cx="189" cy="213" r="5"/><circle cx="215" cy="260" r="3"/><circle cx="248" cy="231" r="5"/><circle cx="229" cy="281" r="3"/></g>
+  <text x="170" y="328" text-anchor="middle" class="en">Corrupted Input X̃</text>
+  <text x="447" y="201" text-anchor="middle" class="cn">编码器</text><text x="447" y="241" text-anchor="middle" class="en">Encoder</text><text x="447" y="279" text-anchor="middle" font-size="18" fill="#64748b">提取稳定特征</text>
+  <text x="700" y="185" text-anchor="middle" class="cn">潜在表示</text>
+  <g fill="#fff" stroke="#a78bfa" stroke-width="2"><rect x="632" y="213" width="18" height="60" rx="5"/><rect x="660" y="229" width="18" height="44" rx="5"/><rect x="688" y="201" width="18" height="72" rx="5"/><rect x="716" y="237" width="18" height="36" rx="5"/><rect x="744" y="219" width="18" height="54" rx="5"/></g>
+  <text x="700" y="301" text-anchor="middle" class="en">Robust Code Z</text>
+  <text x="952" y="201" text-anchor="middle" class="cn">解码器</text><text x="952" y="241" text-anchor="middle" class="en">Decoder</text><text x="952" y="279" text-anchor="middle" font-size="18" fill="#64748b">恢复干净结构</text>
+  <text x="1230" y="151" text-anchor="middle" class="cn">干净图像</text>
+  <rect x="1130" y="170" width="200" height="125" rx="12" fill="#bfdbfe"/><circle cx="1292" cy="195" r="14" fill="#fbbf24"/>
+  <path d="M1130 260 L1188 203 L1232 245 L1265 218 L1330 273 V295 H1130 Z" fill="#64748b"/><path d="M1130 272 Q1180 249 1230 270 T1330 260 V295 H1130 Z" fill="#86efac"/>
+  <path d="M1188 203 L1207 223 L1198 220 L1188 229 L1178 220 L1170 222 Z" fill="#f8fafc"/>
+  <text x="1230" y="328" text-anchor="middle" class="en">Clean Target X</text>
+  <path class="arrow" d="M295 232 H332"/><path class="arrow" d="M550 232 H587"/><path class="arrow" d="M800 232 H837"/><path class="arrow" d="M1055 232 H1092"/>
+  <text x="700" y="414" text-anchor="middle" font-size="20" fill="#64748b">训练时输入带噪样本，重建目标仍是干净样本</text>
+</svg>

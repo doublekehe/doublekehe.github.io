@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="500" viewBox="0 0 1400 500" role="img" aria-labelledby="title desc">
+  <title id="title">图像压缩与重建</title>
+  <desc id="desc">原始图像经过编码器变为低维潜在向量，再由解码器重建图像。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.09"/></filter>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M1,1 L15,8 L1,15 Z" fill="#64748b"/></marker>
+    <style>
+      text { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;fill:#0f172a; }
+      .title { font-size:28px;font-weight:700; } .cn { font-size:24px;font-weight:700; } .en { font-size:18px;font-weight:600;fill:#64748b; }
+      .arrow { stroke:#64748b;stroke-width:4;fill:none;marker-end:url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1400" height="500" rx="28" fill="#f8fafc"/>
+  <text x="700" y="57" text-anchor="middle" class="title">图像压缩与重建</text>
+  <g filter="url(#shadow)">
+    <rect x="45" y="112" width="250" height="240" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+    <rect x="345" y="132" width="205" height="200" rx="20" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <rect x="600" y="142" width="200" height="180" rx="20" fill="#ede9fe" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="850" y="132" width="205" height="200" rx="20" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+    <rect x="1105" y="112" width="250" height="240" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+  </g>
+  <text x="170" y="151" text-anchor="middle" class="cn">原始图像</text>
+  <rect x="70" y="170" width="200" height="125" rx="12" fill="#bfdbfe"/><circle cx="232" cy="195" r="14" fill="#fbbf24"/>
+  <path d="M70 260 L128 203 L172 245 L205 218 L270 273 V295 H70 Z" fill="#64748b"/><path d="M70 272 Q120 249 170 270 T270 260 V295 H70 Z" fill="#86efac"/>
+  <path d="M128 203 L147 223 L138 220 L128 229 L118 220 L110 222 Z" fill="#f8fafc"/>
+  <text x="170" y="328" text-anchor="middle" class="en">Input Image</text>
+  <text x="447" y="201" text-anchor="middle" class="cn">编码器</text><text x="447" y="241" text-anchor="middle" class="en">CNN Encoder</text><text x="447" y="279" text-anchor="middle" font-size="18" fill="#64748b">降维</text>
+  <text x="700" y="185" text-anchor="middle" class="cn">潜在向量</text>
+  <g fill="#fff" stroke="#a78bfa" stroke-width="2"><rect x="632" y="213" width="18" height="60" rx="5"/><rect x="660" y="229" width="18" height="44" rx="5"/><rect x="688" y="201" width="18" height="72" rx="5"/><rect x="716" y="237" width="18" height="36" rx="5"/><rect x="744" y="219" width="18" height="54" rx="5"/></g>
+  <text x="700" y="301" text-anchor="middle" class="en">Compact Code Z</text>
+  <text x="952" y="201" text-anchor="middle" class="cn">解码器</text><text x="952" y="241" text-anchor="middle" class="en">CNN Decoder</text><text x="952" y="279" text-anchor="middle" font-size="18" fill="#64748b">上采样</text>
+  <text x="1230" y="151" text-anchor="middle" class="cn">重建图像</text>
+  <rect x="1130" y="170" width="200" height="125" rx="12" fill="#c7d2fe"/><circle cx="1292" cy="195" r="14" fill="#fbbf24" opacity="0.85"/>
+  <path d="M1130 262 L1188 207 L1232 247 L1265 222 L1330 274 V295 H1130 Z" fill="#718096"/><path d="M1130 273 Q1180 252 1230 271 T1330 263 V295 H1130 Z" fill="#86efac"/>
+  <text x="1230" y="328" text-anchor="middle" class="en">Reconstructed Image</text>
+  <path class="arrow" d="M295 232 H332"/><path class="arrow" d="M550 232 H587"/><path class="arrow" d="M800 232 H837"/><path class="arrow" d="M1055 232 H1092"/>
+  <text x="700" y="414" text-anchor="middle" font-size="20" fill="#64748b">潜在表示保留主要结构，重建结果可能损失细节</text>
+</svg>
