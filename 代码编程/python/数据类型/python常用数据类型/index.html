@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Python 常用数据类型 | doubleke's blog</title><meta name="author" content="doubleke,sclzheke@163.com"><meta name="copyright" content="doubleke"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Python 常用数据类型    .paper-table, .paper-table-title + table { width:100%; border-collapse:collapse; border-top:2px solid #444; border-bottom:2px solid #444; font-size:14px; }   .paper-table caption { ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 常用数据类型">
+<meta property="og:url" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="doubleke&#39;s blog">
+<meta property="og:description" content="Python 常用数据类型    .paper-table, .paper-table-title + table { width:100%; border-collapse:collapse; border-top:2px solid #444; border-bottom:2px solid #444; font-size:14px; }   .paper-table caption { ca">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png">
+<meta property="article:published_time" content="2026-08-27T12:10:00.000Z">
+<meta property="article:modified_time" content="2026-08-27T23:37:15.419Z">
+<meta property="article:author" content="doubleke">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="数据类型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Python 常用数据类型",
+  "url": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/",
+  "image": "https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png",
+  "datePublished": "2026-08-27T12:10:00.000Z",
+  "dateModified": "2026-08-27T23:37:15.419Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doubleke",
+      "url": "https://doublekehe.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo_2602.jpeg"><link rel="canonical" href="https://doublekehe.github.io/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Python 常用数据类型',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">107</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">47</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top_pic_2602.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo_2602.jpeg" alt="Logo"><span class="site-name">doubleke's blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Python 常用数据类型</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Python 常用数据类型</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-27T12:10:00.000Z" title="发表于 2026-08-27 20:10:00">2026-08-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-27T23:37:15.419Z" title="更新于 2026-08-28 07:37:15">2026-08-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/">代码编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/">python</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>Python 常用数据类型</h1>
+<style>
+  .paper-table, .paper-table-title + table { width:100%; border-collapse:collapse; border-top:2px solid #444; border-bottom:2px solid #444; font-size:14px; }
+  .paper-table caption { caption-side:top; text-align:center; font-weight:600; font-size:15px; padding:0 0 10px 0; }
+  .paper-table-title { text-align:center; font-weight:600; font-size:15px; margin:14px 0 10px 0; }
+  .paper-table th, .paper-table-title + table th { padding:10px 8px; text-align:center; vertical-align:middle; border-top:none; border-left:none; border-right:none; border-bottom:1.5px solid #666; }
+  .paper-table td, .paper-table-title + table td { padding:10px 8px; vertical-align:top; border-top:none; border-left:none; border-right:none; border-bottom:1px solid #ddd; }
+  .paper-table tbody tr:last-child td, .paper-table-title + table tbody tr:last-child td { border-bottom:none; }
+  .paper-table-note { margin:8px 2px 18px 2px; font-size:13px; line-height:1.65; color:#555; }
+</style>
+<div style="text-align:center">
+  <style>.toknrbmstkkg{max-width:720px;width:100%;height:auto;}</style><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png" class="toknrbmstkkg" alt="数字、文本、序列、映射和集合组成的 Python 数据类型封面图">
+  <div style="font-size:14px;color:#666;margin-top:6px;">图 1：Python 常用数据类型可以分为标量、序列、映射和集合等类别。</div>
+</div>
+<p>Python 中的每个值都有类型。数字 <code>10</code> 是 <code>int</code>，文本 <code>&quot;Python&quot;</code> 是 <code>str</code>，由多个元素组成的 <code>[1, 2, 3]</code> 是 <code>list</code>。类型决定了数据能保存什么、支持哪些操作，以及创建后能否修改。</p>
+<p>Python 是动态类型语言。变量无需预先声明类型，它只是在运行时引用某个对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">value = <span class="number">42</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(value))  <span class="comment"># &lt;class &#x27;int&#x27;&gt;</span></span><br><span class="line"></span><br><span class="line">value = <span class="string">&quot;Python&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(value))  <span class="comment"># &lt;class &#x27;str&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="1-常用数据类型速查">1. 常用数据类型速查</h2>
+<div class="paper-table-title">表 1　Python 常用数据类型</div>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>类型</th>
+<th>示例</th>
+<th>是否可变</th>
+<th>主要用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空值</td>
+<td><code>NoneType</code></td>
+<td><code>None</code></td>
+<td>否</td>
+<td>表示缺少值或暂无结果</td>
+</tr>
+<tr>
+<td>布尔</td>
+<td><code>bool</code></td>
+<td><code>True</code>、<code>False</code></td>
+<td>否</td>
+<td>条件判断</td>
+</tr>
+<tr>
+<td>数字</td>
+<td><code>int</code>、<code>float</code>、<code>complex</code></td>
+<td><code>10</code>、<code>3.14</code>、<code>2+3j</code></td>
+<td>否</td>
+<td>数值计算</td>
+</tr>
+<tr>
+<td>文本</td>
+<td><code>str</code></td>
+<td><code>&quot;Python&quot;</code></td>
+<td>否</td>
+<td>存储 Unicode 文本</td>
+</tr>
+<tr>
+<td>序列</td>
+<td><code>list</code></td>
+<td><code>[1, 2, 3]</code></td>
+<td>是</td>
+<td>存储可修改的有序数据</td>
+</tr>
+<tr>
+<td>序列</td>
+<td><code>tuple</code></td>
+<td><code>(1, 2, 3)</code></td>
+<td>否</td>
+<td>存储固定的有序数据</td>
+</tr>
+<tr>
+<td>序列</td>
+<td><code>range</code></td>
+<td><code>range(5)</code></td>
+<td>否</td>
+<td>表示整数序列</td>
+</tr>
+<tr>
+<td>映射</td>
+<td><code>dict</code></td>
+<td><code>&#123;&quot;name&quot;: &quot;Alice&quot;&#125;</code></td>
+<td>是</td>
+<td>存储键值对</td>
+</tr>
+<tr>
+<td>集合</td>
+<td><code>set</code></td>
+<td><code>&#123;1, 2, 3&#125;</code></td>
+<td>是</td>
+<td>去重和集合运算</td>
+</tr>
+<tr>
+<td>集合</td>
+<td><code>frozenset</code></td>
+<td><code>frozenset(&#123;1, 2&#125;)</code></td>
+<td>否</td>
+<td>存储不可变的集合</td>
+</tr>
+<tr>
+<td>二进制</td>
+<td><code>bytes</code></td>
+<td><code>b&quot;abc&quot;</code></td>
+<td>否</td>
+<td>存储不可变的字节数据</td>
+</tr>
+<tr>
+<td>二进制</td>
+<td><code>bytearray</code></td>
+<td><code>bytearray(b&quot;abc&quot;)</code></td>
+<td>是</td>
+<td>存储可修改的字节数据</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-空值与布尔类型">2. 空值与布尔类型</h2>
+<h3 id="2-1-NoneType">2.1 <code>NoneType</code></h3>
+<p><code>None</code> 用来表示“没有值”或“尚未产生结果”，它是 <code>NoneType</code> 的唯一实例。判断一个值是否为 <code>None</code> 时通常使用 <code>is</code>，不使用 <code>==</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">result = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> result <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;暂无结果&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>没有显式 <code>return</code> 语句的函数也会返回 <code>None</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">show_message</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">result = show_message()</span><br><span class="line"><span class="built_in">print</span>(result)  <span class="comment"># None</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-bool">2.2 <code>bool</code></h3>
+<p><code>bool</code> 只有 <code>True</code> 和 <code>False</code> 两个值。它主要出现在条件判断和比较结果中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">20</span></span><br><span class="line">is_adult = age &gt;= <span class="number">18</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(is_adult)        <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(is_adult))  <span class="comment"># &lt;class &#x27;bool&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<p>数值 <code>0</code>、<code>None</code>、空字符串和空容器的布尔值为 <code>False</code>；大多数其他对象的布尔值为 <code>True</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">bool</span>(<span class="number">0</span>))       <span class="comment"># False</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bool</span>(<span class="string">&quot;&quot;</span>))      <span class="comment"># False</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bool</span>([]))      <span class="comment"># False</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bool</span>(<span class="string">&quot;0&quot;</span>))     <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bool</span>([<span class="number">0</span>]))     <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-数字类型">3. 数字类型</h2>
+<p>Python 有三种主要数字类型：整数 <code>int</code>、浮点数 <code>float</code> 和复数 <code>complex</code>。</p>
+<h3 id="3-1-int">3.1 <code>int</code></h3>
+<p><code>int</code> 表示整数，Python 整数的精度不受固定位数限制，只受可用内存限制。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">count = <span class="number">100</span></span><br><span class="line">large_number = <span class="number">10</span> ** <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(count))         <span class="comment"># &lt;class &#x27;int&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(<span class="built_in">str</span>(large_number)))  <span class="comment"># 101</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-2-float">3.2 <code>float</code></h3>
+<p><code>float</code> 使用二进制浮点数表示小数。某些十进制小数无法被二进制精确表示，因此会出现微小误差。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">0.1</span> + <span class="number">0.2</span>)         <span class="comment"># 0.30000000000000004</span></span><br><span class="line"><span class="built_in">print</span>(<span class="number">0.1</span> + <span class="number">0.2</span> == <span class="number">0.3</span>)  <span class="comment"># False</span></span><br></pre></td></tr></table></figure>
+<p>判断浮点数是否接近时，可以使用 <code>math.isclose()</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(math.isclose(<span class="number">0.1</span> + <span class="number">0.2</span>, <span class="number">0.3</span>))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-3-complex">3.3 <code>complex</code></h3>
+<p><code>complex</code> 表示复数，虚部使用 <code>j</code> 或 <code>J</code> 书写。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">number = <span class="number">2</span> + <span class="number">3j</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(number.real)  <span class="comment"># 2.0</span></span><br><span class="line"><span class="built_in">print</span>(number.imag)  <span class="comment"># 3.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="4-字符串-str">4. 字符串 <code>str</code></h2>
+<p><code>str</code> 用来存储 Unicode 文本。字符串有顺序、允许重复字符，支持索引和切片。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;Python&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(text[<span class="number">0</span>])      <span class="comment"># P</span></span><br><span class="line"><span class="built_in">print</span>(text[-<span class="number">1</span>])     <span class="comment"># n</span></span><br><span class="line"><span class="built_in">print</span>(text[<span class="number">1</span>:<span class="number">4</span>])    <span class="comment"># yth</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(text))    <span class="comment"># 6</span></span><br></pre></td></tr></table></figure>
+<p>字符串是不可变对象，不能直接修改某个位置的字符。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;Python&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># text[0] = &quot;J&quot;  # TypeError</span></span><br><span class="line">text = <span class="string">&quot;J&quot;</span> + text[<span class="number">1</span>:]</span><br><span class="line"><span class="built_in">print</span>(text)        <span class="comment"># Jython</span></span><br></pre></td></tr></table></figure>
+<p><code>replace()</code>、<code>upper()</code> 和 <code>strip()</code> 等字符串方法也不会修改原字符串，它们会返回新字符串。</p>
+<h2 id="5-列表、元组与-range">5. 列表、元组与 <code>range</code></h2>
+<h3 id="5-1-list">5.1 <code>list</code></h3>
+<p><code>list</code> 是最常用的可变序列。它有顺序、允许元素重复，也允许混合存储不同类型的对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">numbers = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>]</span><br><span class="line"></span><br><span class="line">numbers.append(<span class="number">40</span>)</span><br><span class="line">numbers[<span class="number">0</span>] = <span class="number">5</span></span><br><span class="line">numbers.remove(<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(numbers)  <span class="comment"># [5, 30, 40]</span></span><br></pre></td></tr></table></figure>
+<p>虽然列表可以混合存储多种类型，但数据用途一致时，元素类型保持统一通常更容易理解和处理。</p>
+<h3 id="5-2-tuple">5.2 <code>tuple</code></h3>
+<p><code>tuple</code> 是不可变序列，适合表示一组创建后不应改变的值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">point = (<span class="number">10</span>, <span class="number">20</span>)</span><br><span class="line">x, y = point</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x)  <span class="comment"># 10</span></span><br><span class="line"><span class="built_in">print</span>(y)  <span class="comment"># 20</span></span><br></pre></td></tr></table></figure>
+<p>只有一个元素的元组需要保留逗号：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">not_a_tuple = (<span class="number">1</span>)</span><br><span class="line">one_item_tuple = (<span class="number">1</span>,)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(not_a_tuple))     <span class="comment"># &lt;class &#x27;int&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(one_item_tuple))  <span class="comment"># &lt;class &#x27;tuple&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-3-range">5.3 <code>range</code></h3>
+<p><code>range</code> 表示不可变的整数序列。它只保存起点、终点和步长，不会预先将所有整数存入内存。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">numbers = <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(numbers))  <span class="comment"># [0, 2, 4, 6, 8]</span></span><br><span class="line"><span class="built_in">print</span>(numbers[<span class="number">2</span>])     <span class="comment"># 4</span></span><br></pre></td></tr></table></figure>
+<h2 id="6-字典-dict">6. 字典 <code>dict</code></h2>
+<p><code>dict</code> 以键值对的形式存储数据。每个键必须唯一，通过键可以快速查找对应的值。字典会保留键的插入顺序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">user = &#123;</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Alice&quot;</span>,</span><br><span class="line">    <span class="string">&quot;age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(user[<span class="string">&quot;name&quot;</span>])          <span class="comment"># Alice</span></span><br><span class="line"><span class="built_in">print</span>(user.get(<span class="string">&quot;city&quot;</span>))      <span class="comment"># None</span></span><br><span class="line"><span class="built_in">print</span>(user.get(<span class="string">&quot;city&quot;</span>, <span class="string">&quot;Beijing&quot;</span>))  <span class="comment"># Beijing</span></span><br><span class="line"></span><br><span class="line">user[<span class="string">&quot;age&quot;</span>] = <span class="number">21</span></span><br><span class="line">user[<span class="string">&quot;city&quot;</span>] = <span class="string">&quot;Shanghai&quot;</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>user[&quot;city&quot;]</code> 读取不存在的键会引发 <code>KeyError</code>。<code>get()</code> 可以在键不存在时返回默认值。</p>
+<p>字典的键必须是可哈希对象。数字、字符串和由可哈希元素组成的元组可以作为键，列表和字典不可以。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">locations = &#123;</span><br><span class="line">    (<span class="number">31.23</span>, <span class="number">121.47</span>): <span class="string">&quot;Shanghai&quot;</span>,</span><br><span class="line">    (<span class="number">39.90</span>, <span class="number">116.40</span>): <span class="string">&quot;Beijing&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-集合-set-和-frozenset">7. 集合 <code>set</code> 和 <code>frozenset</code></h2>
+<p><code>set</code> 是可变集合，元素不重复，也不支持按下标取值。它常用于去重、成员检查和集合运算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">numbers = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(numbers)  <span class="comment"># &#123;1, 2, 3&#125;</span></span><br><span class="line"></span><br><span class="line">left = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">right = &#123;<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(left | right)  <span class="comment"># 并集：&#123;1, 2, 3, 4, 5&#125;</span></span><br><span class="line"><span class="built_in">print</span>(left &amp; right)  <span class="comment"># 交集：&#123;3&#125;</span></span><br><span class="line"><span class="built_in">print</span>(left - right)  <span class="comment"># 差集：&#123;1, 2&#125;</span></span><br><span class="line"><span class="built_in">print</span>(left ^ right)  <span class="comment"># 对称差：&#123;1, 2, 4, 5&#125;</span></span><br></pre></td></tr></table></figure>
+<p>集合不保证元素的显示顺序，上面的输出顺序只是便于阅读的表示。</p>
+<p>创建空集合必须使用 <code>set()</code>。<code>&#123;&#125;</code> 创建的是空字典。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">empty_set = <span class="built_in">set</span>()</span><br><span class="line">empty_dict = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(empty_set))   <span class="comment"># &lt;class &#x27;set&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(empty_dict))  <span class="comment"># &lt;class &#x27;dict&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>frozenset</code> 是不可变集合。当其元素都可哈希时，<code>frozenset</code> 本身也可以作为字典键或另一个集合的元素。</p>
+<h2 id="8-二进制数据类型">8. 二进制数据类型</h2>
+<h3 id="8-1-bytes">8.1 <code>bytes</code></h3>
+<p><code>bytes</code> 是不可变字节序列，常用于文件、网络协议和图像等二进制数据。文本需要通过编码转换为字节。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;Python编程&quot;</span></span><br><span class="line">data = text.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(data))              <span class="comment"># &lt;class &#x27;bytes&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(data.decode(<span class="string">&quot;utf-8&quot;</span>))    <span class="comment"># Python编程</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-2-bytearray">8.2 <code>bytearray</code></h3>
+<p><code>bytearray</code> 是可变字节序列，适合需要原地修改二进制数据的场景。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data = <span class="built_in">bytearray</span>(<span class="string">b&quot;abc&quot;</span>)</span><br><span class="line">data[<span class="number">0</span>] = <span class="built_in">ord</span>(<span class="string">&quot;A&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(data)  <span class="comment"># bytearray(b&#x27;Abc&#x27;)</span></span><br></pre></td></tr></table></figure>
+<h2 id="9-可变对象与不可变对象">9. 可变对象与不可变对象</h2>
+<p>可变对象可以在原地修改，不可变对象发生“修改”时实际上会创建新对象。</p>
+<div class="paper-table-title">表 2　常用类型的可变性</div>
+<table>
+<thead>
+<tr>
+<th>类型性质</th>
+<th>常用类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不可变</td>
+<td><code>NoneType</code>、<code>bool</code>、<code>int</code>、<code>float</code>、<code>complex</code>、<code>str</code>、<code>tuple</code>、<code>range</code>、<code>frozenset</code>、<code>bytes</code></td>
+</tr>
+<tr>
+<td>可变</td>
+<td><code>list</code>、<code>dict</code>、<code>set</code>、<code>bytearray</code></td>
+</tr>
+</tbody>
+</table>
+<p>可变对象被多个变量引用时，通过其中一个变量修改对象，其他变量也会观察到变化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">first = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">second = first</span><br><span class="line"></span><br><span class="line">second.append(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(first)   <span class="comment"># [1, 2, 3, 4]</span></span><br><span class="line"><span class="built_in">print</span>(second)  <span class="comment"># [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+<p>如果需要一个独立的列表，可以创建浅拷贝。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">first = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">second = first.copy()</span><br><span class="line"></span><br><span class="line">second.append(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(first)   <span class="comment"># [1, 2, 3]</span></span><br><span class="line"><span class="built_in">print</span>(second)  <span class="comment"># [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+<p>浅拷贝只复制最外层容器。容器内部仍然引用同一个可变对象时，需要根据场景考虑 <code>copy.deepcopy()</code>。</p>
+<h2 id="10-类型检查与转换">10. 类型检查与转换</h2>
+<p><code>type()</code> 可以查看对象的具体类型。进行类型判断时，通常使用会考虑继承关系的 <code>isinstance()</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">value = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(value))                  <span class="comment"># &lt;class &#x27;int&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(value, <span class="built_in">int</span>))       <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(value, (<span class="built_in">int</span>, <span class="built_in">float</span>)))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+<p>内置类型可以直接用于转换：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">int</span>(<span class="string">&quot;100&quot;</span>))          <span class="comment"># 100</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">float</span>(<span class="string">&quot;3.14&quot;</span>))       <span class="comment"># 3.14</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">str</span>(<span class="number">2026</span>))            <span class="comment"># &#x27;2026&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="string">&quot;abc&quot;</span>))          <span class="comment"># [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;]</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">tuple</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]))     <span class="comment"># (1, 2, 3)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">set</span>([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]))    <span class="comment"># &#123;1, 2, 3&#125;</span></span><br></pre></td></tr></table></figure>
+<p>转换会改变数据的结构或精度。例如，<code>int(3.9)</code> 直接截去小数部分，不是四舍五入。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">int</span>(<span class="number">3.9</span>))    <span class="comment"># 3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">round</span>(<span class="number">3.9</span>))  <span class="comment"># 4</span></span><br></pre></td></tr></table></figure>
+<h2 id="11-如何选择数据类型">11. 如何选择数据类型</h2>
+<div class="paper-table-title">表 3　常见需求与数据类型</div>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>建议类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保存可修改的有序元素</td>
+<td><code>list</code></td>
+</tr>
+<tr>
+<td>保存创建后不应改变的有序元素</td>
+<td><code>tuple</code></td>
+</tr>
+<tr>
+<td>通过名称、ID 或其他键查找数据</td>
+<td><code>dict</code></td>
+</tr>
+<tr>
+<td>去重、成员检查或集合运算</td>
+<td><code>set</code></td>
+</tr>
+<tr>
+<td>表示文本</td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td>表示文件、网络等二进制数据</td>
+<td><code>bytes</code> 或 <code>bytearray</code></td>
+</tr>
+<tr>
+<td>表示一段整数区间</td>
+<td><code>range</code></td>
+</tr>
+<tr>
+<td>表示缺少值</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-总结">12. 总结</h2>
+<p>选择数据类型时，先看数据是单个值还是一组值，再看是否需要保留顺序、是否允许重复，以及创建后是否需要修改。</p>
+<p><code>list</code> 适合可变的有序数据，<code>tuple</code> 适合固定的有序数据，<code>dict</code> 通过键组织数据，<code>set</code> 用于去重和成员检查。类型本身就在表达数据的用途，合适的类型能让后续操作更直接。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/stdtypes.html">Python 官方文档：内置类型</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/datatypes.html">Python 官方文档：数据类型</a></li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a></div><div class="post-share"><div class="social-share" data-image="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/" title="Python 常用内置函数"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Python 常用内置函数</div></div><div class="info-2"><div class="info-item-1">Python 常用内置函数    .paper-table, .paper-table-title + table { width:100%; border-collapse:collapse; border-top:2px solid #444; border-bottom:2px solid #444; font-size:14px; }   .paper-table caption { caption-side:top; text-align:center; font-weight:600; font-size:15px; padding:0 0 10px 0; }   .paper-table-title { text-align:center; font-weight:600; font-size:15px; margin:14px 0 10px 0; }   .paper-table th, .paper-table-title + table th { padding:10px 8px; text-align:center; vertical-align:middl...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/" title="python判断list中的值是否完全一样"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%ADlist%E4%B8%AD%E7%9A%84%E5%80%BC%E6%98%AF%E5%90%A6%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7/img-cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-23</div><div class="info-item-2">python判断list中的值是否完全一样</div></div><div class="info-2"><div class="info-item-1">对于一个python的list 1a = [1, 2, 3, 1, 1, 1] 需要判断该list中的值是否完全一样，可以通过for循环遍历的方式来判断，只要有值不一致，则返回false 这里给出一种简便的方式，通过将list转变成set，判断set的长度是否为1 123a = [1, 1, 1, 1, 1, 1]if len(set(a)) == 1:    print(&quot;list has same value&quot;) </div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/" title="python常用关键字yield"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97yield/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-24</div><div class="info-item-2">python常用关键字yield</div></div><div class="info-2"><div class="info-item-1">yield是Python中用于定义生成器(Generator)的关键字，主要区别于return关键字，yield可以将普通函数转换为生成器函数，从而能够按需生成值，而不是一次性计算所有值。 与普通函数使用 return 返回一个值并结束不同，yield 可以在函数执行过程中暂停并返回一个值，下次调用时从上次暂停的地方继续执行。 让函数有如下特性：  惰性求值：只有当使用  next()  函数或者  for  循环遍历这个生成器对象时，函数才会开始执行。   状态保持：函数执行到  yield  语句时，会暂停并返回一个值。此时，函数的所有局部变量和执行位置都会被“冻结”保存起来。当下次调用  next()  时，函数会从上次暂停的地方继续执行，而不是从头开始 。  yield和return的区别：   普通函数：调用一次，执行完就结束，返回一个结果。 生成器函数：调用后返回一个 生成器对象，可以多次“产出”（yield）值，状态被保存。  yield会让函数每次执行到yield处，并返回当次结果，一般可以用多个yield或者是for循环，多次执行。比如： 用多个yield关键字...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/" title="python判断两个浮点数是否相等"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/python%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E6%98%AF%E5%90%A6%E7%9B%B8%E7%AD%89/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-01</div><div class="info-item-2">python判断两个浮点数是否相等</div></div><div class="info-2"><div class="info-item-1"> 0.1 + 0.2 竟然不等于 0.3？  1. ==判断浮点数是否相等的问题 运行下面这段代码： 1print(0.1 + 0.2 == 0.3) 输出是： 1False 而如果我们把结果打印出来看： 1print(0.1 + 0.2)  # 0.30000000000000004 明明看起来应该相等，为什么 == 判断却返回 False？这是所有遵循 IEEE 754 浮点标准的编程语言都会遇到的问题。 2.1 根源：浮点数的表示误差 计算机底层用 IEEE 754 双精度浮点数（64-bit） 存储小数。一个浮点数由三部分组成：    部分 位数 作用     符号位 S 1 bit 正负   指数位 E 11 bits 决定数量级   尾数位 M 52 bits 决定精度    十进制分数 110\frac{1}{10}101​（即 0.1）转换为二进制是无限循环的： 110=0.0001100110011001100110011001100110011…(2)\frac{1}{10} = 0.0001100110011001100110011001100110011\...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/" title="python中not的用法"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E4%B8%ADnot%E7%9A%84%E7%94%A8%E6%B3%95/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-09</div><div class="info-item-2">python中not的用法</div></div><div class="info-2"><div class="info-item-1">not是python中的一个逻辑运算符，用于取反，将True变为False，将False变为True。 例如： 123a = Trueb = not aprint(b)  # 输出False 123a = Falseb = not aprint(b)  # 输出True 哪些值算False python中哪些情况会返回False，包括  None False 数字 0，0.0 空容器：“” 空字符串、[] 空列表、{} 空字典、() 空元组、set() 空集合  例如： 123a = Noneb = not aprint(b)  # 输出True 123a = 0b = not aprint(b)  # 输出True not常用场景 常用于判断空/无值等场景 123456789# 如果列表为空lst = []if not lst:    print(&quot;列表是空的&quot;)# 如果字符串为空s = &quot;&quot;if not s:    print(&quot;字符串为空&quot;)</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/" title="python常用关键字with"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%85%B3%E9%94%AE%E5%AD%97/python%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97with/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-24</div><div class="info-item-2">python常用关键字with</div></div><div class="info-2"><div class="info-item-1">with 是 Python 中用于上下文管理（Context Management）的关键字，它的主要作用是确保资源被正确地获取和释放，即使在代码执行过程中发生异常。比如一些成对使用的操作：  打开文件 → 关闭文件 获取锁 → 释放锁 连接数据库 → 断开连接 进入网络连接 → 关闭连接  如果手动管理，容易忘记关闭，或在异常时漏掉清理，导致资源泄漏。with 语句通过 上下文管理器（Context Manager） 自动处理这些“进入”和“退出”逻辑。当进入 with 块时，自动调用上下文管理器的 enter() 方法；当退出 with 块时（无论正常结束还是抛出异常），自动调用 exit() 方法。 一个经典的例子： 12345678910# 不推荐这样子来打开文件f = open(&#x27;file.txt&#x27;, &#x27;r&#x27;)data = f.read()f.close()  # 如果 read() 报错，可能不会执行到这！# 推荐使用withwith open(&#x27;file.txt&#x27;, &#x27;r&#x27;) as f:...</div></div></div></a><a class="pagination-related" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/" title="python中的zip函数"><img class="cover" src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E4%B8%AD%E7%9A%84zip%E5%87%BD%E6%95%B0/img-cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-25</div><div class="info-item-2">python中的zip函数</div></div><div class="info-2"><div class="info-item-1">Python 中的 zip() 函数是一个内置函数，可以将多个可迭代对象（如列表、元组、字符串等）“打包”成一个迭代器，该迭代器会生成由各输入可迭代对象中对应位置元素组成的元组。 基础用法 123zip(*iterables)# *iterables：可以是任意数量的可迭代对象（如 list, tuple, str 等）。 应用举例 123456789101112131415a = [1, 2, 3]b = [&#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;]zipped = zip(a, b)print(list(zipped))# 输出: [(1, &#x27;x&#x27;), (2, &#x27;y&#x27;), (3, &#x27;z&#x27;)]# zip() 会在最短的可迭代对象耗尽时停止a = [1, 2, 3, 4]b = [&#x27;a&#x27;, &#x27;b&#x27;]print(list(zip(a, b)))# 输出: [(1, &#x27;a&#x27;), (2, &#x27;b&#x27;)] 核...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_wuliuqi_2603.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">doubleke</div><div class="author-info-description">Do the right things, and find the meaning of life.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">107</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">47</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">构建自己的AI算法知识树，也希望和大家共同交流讨论进步。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Python 常用数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E9%80%9F%E6%9F%A5"><span class="toc-text">1. 常用数据类型速查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%A9%BA%E5%80%BC%E4%B8%8E%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8B"><span class="toc-text">2. 空值与布尔类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-NoneType"><span class="toc-text">2.1 NoneType</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-bool"><span class="toc-text">2.2 bool</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B"><span class="toc-text">3. 数字类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-int"><span class="toc-text">3.1 int</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-float"><span class="toc-text">3.2 float</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-complex"><span class="toc-text">3.3 complex</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AD%97%E7%AC%A6%E4%B8%B2-str"><span class="toc-text">4. 字符串 str</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%88%97%E8%A1%A8%E3%80%81%E5%85%83%E7%BB%84%E4%B8%8E-range"><span class="toc-text">5. 列表、元组与 range</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-list"><span class="toc-text">5.1 list</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-tuple"><span class="toc-text">5.2 tuple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-range"><span class="toc-text">5.3 range</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%AD%97%E5%85%B8-dict"><span class="toc-text">6. 字典 dict</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%9B%86%E5%90%88-set-%E5%92%8C-frozenset"><span class="toc-text">7. 集合 set 和 frozenset</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">8. 二进制数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-bytes"><span class="toc-text">8.1 bytes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-bytearray"><span class="toc-text">8.2 bytearray</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1%E4%B8%8E%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1"><span class="toc-text">9. 可变对象与不可变对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E4%B8%8E%E8%BD%AC%E6%8D%A2"><span class="toc-text">10. 类型检查与转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">11. 如何选择数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E6%80%BB%E7%BB%93"><span class="toc-text">12. 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" title="Python 常用数据类型"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 常用数据类型"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/python%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" title="Python 常用数据类型">Python 常用数据类型</a><time datetime="2026-08-27T12:10:00.000Z" title="发表于 2026-08-27 20:10:00">2026-08-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/" title="Python 常用内置函数"><img src="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 常用内置函数"/></a><div class="content"><a class="title" href="/%E4%BB%A3%E7%A0%81%E7%BC%96%E7%A8%8B/python/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/python%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/" title="Python 常用内置函数">Python 常用内置函数</a><time datetime="2026-08-27T12:00:00.000Z" title="发表于 2026-08-27 20:00:00">2026-08-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/MiniOneRec%E8%AF%A6%E8%A7%A3/" title="MiniOneRec框架详解"><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/MiniOneRec%E8%AF%A6%E8%A7%A3/minionerec-framework.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MiniOneRec框架详解"/></a><div class="content"><a class="title" href="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/MiniOneRec%E8%AF%A6%E8%A7%A3/" title="MiniOneRec框架详解">MiniOneRec框架详解</a><time datetime="2026-08-09T06:00:00.000Z" title="发表于 2026-08-09 14:00:00">2026-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%E6%9E%B6%E6%9E%84/" title="自编码器架构"><img src="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%E6%9E%B6%E6%9E%84/img-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自编码器架构"/></a><div class="content"><a class="title" href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%E6%9E%B6%E6%9E%84/" title="自编码器架构">自编码器架构</a><time datetime="2026-08-09T02:00:00.000Z" title="发表于 2026-08-09 10:00:00">2026-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/AI%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/" title="AI常用术语"><img src="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/AI%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AI常用术语"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/AI%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/" title="AI常用术语">AI常用术语</a><time datetime="2026-08-08T02:30:00.000Z" title="发表于 2026-08-08 10:30:00">2026-08-08</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/top_pic_2602.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By doubleke</span></div><div class="footer_custom_text">Do the right things, and find the meaning of life.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
