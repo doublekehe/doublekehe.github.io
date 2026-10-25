@@ -1,0 +1,78 @@
+/* Opt in with table.blog-paper-table, or put a .blog-paper-table-title
+   immediately before a Markdown table. Both plain and theme-wrapped tables
+   are supported. Unmarked tables retain the theme's styles. */
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) {
+  width: 100%;
+  border-collapse: collapse;
+  border: none;
+  border-top: 2px solid #444;
+  border-bottom: 2px solid #444;
+  font-size: 14px;
+}
+
+#article-container .blog-paper-table-title,
+#article-container table.blog-paper-table caption {
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#article-container .blog-paper-table-title {
+  margin: 14px 0 10px;
+}
+
+#article-container table.blog-paper-table caption {
+  caption-side: top;
+  padding: 0 0 10px;
+}
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) :is(thead, tr) {
+  background: transparent;
+  border: none;
+}
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) :is(th, td) {
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+}
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) th {
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1.5px solid #666;
+}
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) td {
+  vertical-align: top;
+  border-bottom: 1px solid #ddd;
+}
+
+#article-container :is(
+  table.blog-paper-table,
+  .blog-paper-table-title + table,
+  .blog-paper-table-title + .table-wrap > table
+) tbody tr:last-child td {
+  border-bottom: none;
+}

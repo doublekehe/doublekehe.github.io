@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">OneRec 系列统一技术框架</title>
+  <desc id="desc">用户多尺度历史与物品多模态特征经 Itemic Tokenizer 形成离散表示，生成 Backbone 自回归输出推荐 Session，监督学习、偏好优化与真实反馈形成训练闭环。</desc>
+  <defs>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif;fill:#263548}.title{font-size:29px;font-weight:700}.section{font-size:17px;font-weight:750;letter-spacing:1.4px}.label{font-size:21px;font-weight:650}.body{font-size:17px}.small{font-size:15px;fill:#64748B}.tiny{font-size:13px;fill:#718096}.mono{font-family:"SFMono-Regular",Consolas,monospace;font-size:15px;font-weight:650}
+    </style>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="6.2" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0 0L7 3.5 0 7Z" fill="#718198"/></marker>
+    <marker id="blueArrow" markerWidth="7" markerHeight="7" refX="6.2" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0 0L7 3.5 0 7Z" fill="#4D78C4"/></marker>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#19324E" flood-opacity=".08"/></filter>
+    <linearGradient id="backbone" x1="0" x2="1"><stop stop-color="#EAF3FF"/><stop offset=".5" stop-color="#F4F0FF"/><stop offset="1" stop-color="#FFF2E9"/></linearGradient>
+  </defs>
+  <rect width="1600" height="980" fill="#F7F9FC"/>
+
+  <!-- stage labels -->
+  <g><rect x="62" y="42" width="284" height="40" rx="20" fill="#E8F1FF"/><text x="204" y="68" text-anchor="middle" class="section" fill="#4E76B9">01 · CONTEXT</text><rect x="378" y="42" width="284" height="40" rx="20" fill="#EDF7E9"/><text x="520" y="68" text-anchor="middle" class="section" fill="#648C52">02 · TOKENIZATION</text><rect x="694" y="42" width="490" height="40" rx="20" fill="#F1ECFB"/><text x="939" y="68" text-anchor="middle" class="section" fill="#7D66A7">03 · GENERATION</text><rect x="1216" y="42" width="322" height="40" rx="20" fill="#FFF0E6"/><text x="1377" y="68" text-anchor="middle" class="section" fill="#B66D3E">04 · SESSION</text></g>
+
+  <!-- context panel -->
+  <g filter="url(#shadow)"><rect x="62" y="104" width="284" height="588" rx="18" fill="#FFF" stroke="#B5C2D1"/></g>
+  <text x="88" y="141" class="title">用户与场景上下文</text>
+  <rect x="86" y="168" width="236" height="112" rx="13" fill="#F3F7FC" stroke="#A9B8CA"/>
+  <circle cx="120" cy="207" r="17" fill="#92A7C0"/><path d="M96 256c2-23 13-34 24-34s22 11 24 34" fill="#C9D4E1"/>
+  <text x="158" y="204" class="label">User Profile</text><text x="158" y="232" class="small">ID · 兴趣 · 统计特征</text><text x="158" y="255" class="small">实时状态</text>
+  <text x="87" y="322" class="section" fill="#718096">MULTI-SCALE HISTORY</text>
+  <g>
+    <rect x="86" y="342" width="236" height="68" rx="11" fill="#EAF3FF" stroke="#83A4D7"/><text x="106" y="370" class="label">Short-term</text><text x="106" y="394" class="small">最近点击 / 有效观看</text>
+    <rect x="86" y="422" width="236" height="68" rx="11" fill="#EFF7EB" stroke="#8DB37A"/><text x="106" y="450" class="label">Periodical</text><text x="106" y="474" class="small">周期兴趣 / 活跃模式</text>
+    <rect x="86" y="502" width="236" height="68" rx="11" fill="#F4EEFC" stroke="#A08AC5"/><text x="106" y="530" class="label">Long-term</text><text x="106" y="554" class="small">长期偏好 / 作者关系</text>
+  </g>
+  <rect x="86" y="600" width="236" height="63" rx="11" fill="#F7F8FA" stroke="#C2CBD5" stroke-dasharray="6 5"/><text x="106" y="628" class="label">Context</text><text x="106" y="651" class="small">时间 · 位置 · 场景</text>
+
+  <!-- tokenization -->
+  <path d="M346 394H374" stroke="#4D78C4" stroke-width="2.5" marker-end="url(#blueArrow)"/>
+  <g filter="url(#shadow)"><rect x="378" y="104" width="284" height="588" rx="18" fill="#FFF" stroke="#A9C39D"/></g>
+  <text x="404" y="141" class="title">Itemic Tokenizer</text>
+  <rect x="403" y="168" width="234" height="126" rx="13" fill="#F6F8FA" stroke="#B6C0CB"/>
+  <text x="423" y="199" class="section" fill="#6C7B8B">ITEM MULTIMODAL</text>
+  <g><rect x="423" y="216" width="50" height="50" rx="8" fill="#DCEBFA"/><circle cx="438" cy="231" r="6" fill="#7EA4D0"/><path d="M429 258l12-13 8 8 8-11 9 16z" fill="#7EA4D0"/><rect x="485" y="216" width="50" height="50" rx="8" fill="#F8E6D9"/><path d="M503 228v25m0-17c13-8 19 11 4 12" fill="none" stroke="#D98C56" stroke-width="4"/><rect x="547" y="216" width="70" height="50" rx="8" fill="#E8E2F5"/><text x="582" y="247" text-anchor="middle" class="small">Text</text></g>
+  <path d="M520 294V331" stroke="#718198" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="403" y="343" width="234" height="104" rx="13" fill="#EEF7EA" stroke="#84AF70"/>
+  <text x="520" y="374" text-anchor="middle" class="label">Collaborative RQ</text><text x="520" y="400" text-anchor="middle" class="small">content + behavior signals</text>
+  <g fill="#FFF" stroke="#79A864"><rect x="431" y="413" width="50" height="25" rx="6"/><rect x="495" y="413" width="50" height="25" rx="6"/><rect x="559" y="413" width="50" height="25" rx="6"/></g><text x="456" y="431" text-anchor="middle" class="mono">q¹</text><text x="520" y="431" text-anchor="middle" class="mono">q²</text><text x="584" y="431" text-anchor="middle" class="mono">q³</text>
+  <path d="M520 447V484" stroke="#718198" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="403" y="513" class="section" fill="#6B8D5A">ITEMIC SEQUENCE</text>
+  <g filter="url(#shadow)"><rect x="403" y="531" width="234" height="80" rx="13" fill="#FFF" stroke="#88AE76"/></g>
+  <g fill="#EEF7EA" stroke="#79A864"><rect x="424" y="550" width="53" height="42" rx="8"/><rect x="489" y="550" width="53" height="42" rx="8"/><rect x="554" y="550" width="53" height="42" rx="8"/></g><text x="450" y="577" text-anchor="middle" class="mono">a₉</text><text x="515" y="577" text-anchor="middle" class="mono">b₇</text><text x="580" y="577" text-anchor="middle" class="mono">c₁</text>
+  <text x="520" y="643" text-anchor="middle" class="small">coarse → fine semantic codes</text>
+
+  <!-- backbone -->
+  <path d="M662 394H690" stroke="#4D78C4" stroke-width="2.5" marker-end="url(#blueArrow)"/>
+  <g filter="url(#shadow)"><rect x="694" y="104" width="490" height="588" rx="18" fill="url(#backbone)" stroke="#9282B7" stroke-width="1.5"/></g>
+  <text x="720" y="141" class="title">Generative Backbone</text><text x="1155" y="161" text-anchor="end" class="small">shared autoregressive interface</text>
+  <rect x="720" y="168" width="438" height="74" rx="13" fill="#FFF" stroke="#9DB1CD"/>
+  <text x="742" y="199" class="label">Context Representation</text><text x="742" y="224" class="small">Encoder · Context Processor · LLM Prompt</text>
+  <path d="M939 242V280" stroke="#718198" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="720" y="292" width="438" height="224" rx="15" fill="#FFF" stroke="#917FB7" stroke-width="1.5"/>
+    <rect x="742" y="313" width="394" height="49" rx="10" fill="#F0ECFA"/><text x="939" y="344" text-anchor="middle" class="label">Autoregressive Generator × N</text>
+    <rect x="742" y="382" width="180" height="94" rx="11" fill="#F8FAFC" stroke="#B1BECC"/><text x="832" y="414" text-anchor="middle" class="body" font-weight="650">Self-Attention</text><text x="832" y="440" text-anchor="middle" class="small">causal sequence</text><text x="832" y="462" text-anchor="middle" class="small">dependency</text>
+    <path d="M922 429H956" stroke="#718198" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="968" y="382" width="168" height="94" rx="11" fill="#FFF5ED" stroke="#DB9A6B"/><text x="1052" y="414" text-anchor="middle" class="body" font-weight="650">FFN / MoE</text><text x="1052" y="440" text-anchor="middle" class="small">dense or sparse</text><text x="1052" y="462" text-anchor="middle" class="small">experts</text>
+  </g>
+  <path d="M939 516V551" stroke="#718198" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <rect x="720" y="563" width="438" height="87" rx="13" fill="#FFF" stroke="#A9B6C5"/>
+  <text x="742" y="593" class="label">Session-wise Generation</text>
+  <g fill="#F4EEFC" stroke="#9B83C5"><rect x="742" y="608" width="59" height="28" rx="7"/><rect x="812" y="608" width="59" height="28" rx="7"/><rect x="882" y="608" width="59" height="28" rx="7"/><rect x="952" y="608" width="59" height="28" rx="7"/><rect x="1022" y="608" width="59" height="28" rx="7"/></g><text x="1103" y="629" class="small">… EOS</text>
+  <path d="M1184 394H1212" stroke="#4D78C4" stroke-width="2.5" marker-end="url(#blueArrow)"/>
+
+  <!-- output -->
+  <g filter="url(#shadow)"><rect x="1216" y="104" width="322" height="588" rx="18" fill="#FFF" stroke="#D0A483"/></g>
+  <text x="1242" y="141" class="title">Recommended Session</text>
+  <g>
+    <rect x="1242" y="174" width="270" height="96" rx="13" fill="#FFF5ED" stroke="#DB9A6B"/><rect x="1258" y="190" width="67" height="64" rx="9" fill="#F0C9AE"/><circle cx="1281" cy="211" r="8" fill="#FFF1E6"/><path d="M1266 247l17-18 10 10 11-15 13 23z" fill="#FFF1E6"/><text x="1344" y="211" class="label">Item 1</text><text x="1344" y="238" class="small">semantic codes</text>
+    <rect x="1242" y="284" width="270" height="96" rx="13" fill="#F4EEFC" stroke="#9B83C5"/><rect x="1258" y="300" width="67" height="64" rx="9" fill="#D7C9ED"/><path d="M1278 317l28 15-28 15z" fill="#FFF"/><text x="1344" y="321" class="label">Item 2</text><text x="1344" y="348" class="small">conditioned on Item 1</text>
+    <rect x="1242" y="394" width="270" height="96" rx="13" fill="#EAF3FF" stroke="#83A4D7"/><rect x="1258" y="410" width="67" height="64" rx="9" fill="#BFD6F1"/><path d="M1268 460l16-18 12 10 12-19 10 27z" fill="#FFF"/><text x="1344" y="431" class="label">Item 3</text><text x="1344" y="458" class="small">conditioned on 1…2</text>
+    <text x="1377" y="532" text-anchor="middle" font-size="33" fill="#9AA8B8">···</text>
+    <rect x="1242" y="564" width="270" height="72" rx="13" fill="#F5F7F9" stroke="#AEB9C6"/><text x="1377" y="595" text-anchor="middle" class="label">Item K / EOS</text><text x="1377" y="620" text-anchor="middle" class="small">ordered · valid · diverse</text>
+  </g>
+
+  <!-- training and alignment lane -->
+  <text x="62" y="747" class="section" fill="#5F6F82">TRAINING &amp; PREFERENCE ALIGNMENT</text>
+  <rect x="62" y="770" width="1476" height="157" rx="18" fill="#FFF" stroke="#C6D0DC" filter="url(#shadow)"/>
+  <g>
+    <rect x="91" y="798" width="233" height="96" rx="13" fill="#EAF3FF" stroke="#83A4D7"/><text x="207" y="831" text-anchor="middle" class="label">NTP / SFT</text><text x="207" y="858" text-anchor="middle" class="small">learn logged sessions</text><text x="207" y="880" text-anchor="middle" class="small">and item language</text>
+    <path d="M324 846H381" stroke="#718198" stroke-width="2.2" marker-end="url(#arrow)"/>
+    <rect x="393" y="798" width="250" height="96" rx="13" fill="#F4EEFC" stroke="#9B83C5"/><text x="518" y="831" text-anchor="middle" class="label">Reward / Preference</text><text x="518" y="858" text-anchor="middle" class="small">DPO · GRPO · GBPO</text><text x="518" y="880" text-anchor="middle" class="small">list-level objectives</text>
+    <path d="M643 846H700" stroke="#718198" stroke-width="2.2" marker-end="url(#arrow)"/>
+    <rect x="712" y="798" width="250" height="96" rx="13" fill="#FFF2E8" stroke="#DB9A6B"/><text x="837" y="831" text-anchor="middle" class="label">Online Exposure</text><text x="837" y="858" text-anchor="middle" class="small">watch time · interaction</text><text x="837" y="880" text-anchor="middle" class="small">explicit negative feedback</text>
+    <path d="M962 846H1019" stroke="#718198" stroke-width="2.2" marker-end="url(#arrow)"/>
+    <rect x="1031" y="798" width="477" height="96" rx="13" fill="#EEF7EA" stroke="#84AF70"/><text x="1269" y="831" text-anchor="middle" class="label">Feedback Loop</text><text x="1269" y="858" text-anchor="middle" class="small">reward shaping → preference pairs → policy update</text><text x="1269" y="880" text-anchor="middle" class="small">持续回流真实用户行为，修正代理奖励偏差</text>
+  </g>
+  <path d="M1377 692V746H1269V786" fill="none" stroke="#D27D45" stroke-width="2.2" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+  <path d="M1031 894H939V706" fill="none" stroke="#6D9D59" stroke-width="2.2" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">OneRec 系列技术演进路线</title>
+  <desc id="desc">从 OneRec V1 的端到端生成出发，经过工业化、计算效率和真实反馈优化，再分化为推荐推理与开放基础模型两条路线，并在 OneReason 汇合为推荐专用推理模型。</desc>
+  <defs>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif;fill:#263548}.title{font-size:26px;font-weight:700}.date{font-size:16px;font-weight:750;letter-spacing:.7px}.label{font-size:19px;font-weight:650}.body{font-size:16px}.small{font-size:14px;fill:#66768A}.tiny{font-size:13px;fill:#718096}.axis{font-size:15px;font-weight:700;letter-spacing:1px}
+    </style>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="6.2" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0 0L7 3.5 0 7Z" fill="#687B91"/></marker>
+    <marker id="blueArrow" markerWidth="7" markerHeight="7" refX="6.2" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0 0L7 3.5 0 7Z" fill="#4F7ECD"/></marker>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#19324E" flood-opacity=".08"/></filter>
+    <linearGradient id="mainRoad" x1="0" x2="1"><stop stop-color="#628FD8"/><stop offset=".55" stop-color="#927BC0"/><stop offset="1" stop-color="#D1784B"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+
+  <!-- phase band -->
+  <text x="70" y="55" class="axis" fill="#687B91">EVOLUTION OF GENERATIVE RECOMMENDATION</text>
+  <g><rect x="70" y="76" width="486" height="44" rx="22" fill="#E9F2FF"/><text x="313" y="104" text-anchor="middle" class="label" fill="#4D73B1">统一生成范式</text><rect x="570" y="76" width="380" height="44" rx="22" fill="#FFF0E6"/><text x="760" y="104" text-anchor="middle" class="label" fill="#AF6B3F">效率与真实反馈</text><rect x="964" y="76" width="566" height="44" rx="22" fill="#F2ECFC"/><text x="1247" y="104" text-anchor="middle" class="label" fill="#745D9D">基础模型与推荐推理</text></g>
+
+  <!-- main road -->
+  <path d="M114 440H1481" stroke="#D4DAE2" stroke-width="10" stroke-linecap="round"/><path d="M114 440H1481" stroke="url(#mainRoad)" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- V1 -->
+  <circle cx="160" cy="440" r="13" fill="#5683CE" stroke="#FFF" stroke-width="5"/>
+  <path d="M160 427V379" stroke="#5683CE" stroke-width="2.2"/>
+  <g filter="url(#shadow)"><rect x="70" y="164" width="300" height="215" rx="17" fill="#FFF" stroke="#7E9FD4" stroke-width="1.5"/></g>
+  <rect x="70" y="164" width="300" height="42" rx="17" fill="#EAF3FF"/><path d="M70 189H370V206H70Z" fill="#EAF3FF"/>
+  <text x="94" y="191" class="date" fill="#4F76B7">2025.02</text><text x="94" y="241" class="title">OneRec / V1</text>
+  <g><rect x="94" y="262" width="252" height="35" rx="8" fill="#F4F7FB"/><text x="220" y="285" text-anchor="middle" class="body">Encoder–Decoder + MoE</text><rect x="94" y="307" width="117" height="34" rx="17" fill="#EAF3FF"/><text x="153" y="329" text-anchor="middle" class="small" font-weight="700">Session NTP</text><rect x="220" y="307" width="126" height="34" rx="17" fill="#F2ECFC"/><text x="283" y="329" text-anchor="middle" class="small" font-weight="700">DPO alignment</text></g>
+  <text x="94" y="363" class="small">召回与排序统一为序列生成</text>
+
+  <!-- TR -->
+  <circle cx="430" cy="440" r="13" fill="#70A55A" stroke="#FFF" stroke-width="5"/>
+  <path d="M430 453V500" stroke="#70A55A" stroke-width="2.2"/>
+  <g filter="url(#shadow)"><rect x="302" y="500" width="300" height="210" rx="17" fill="#FFF" stroke="#8DB37A" stroke-width="1.5"/></g>
+  <rect x="302" y="500" width="300" height="42" rx="17" fill="#EEF7EA"/><path d="M302 525H602V542H302Z" fill="#EEF7EA"/>
+  <text x="326" y="527" class="date" fill="#658E53">2025.06</text><text x="326" y="577" class="title">Technical Report</text>
+  <g><rect x="326" y="598" width="252" height="35" rx="8" fill="#F4F7F2"/><text x="452" y="621" text-anchor="middle" class="body">Tokenizer · Scaling · Infra</text><rect x="326" y="643" width="120" height="34" rx="17" fill="#EEF7EA"/><text x="386" y="665" text-anchor="middle" class="small" font-weight="700">工业化 V1</text><rect x="456" y="643" width="122" height="34" rx="17" fill="#F5F7F9"/><text x="517" y="665" text-anchor="middle" class="small" font-weight="700">Reward System</text></g>
+  <text x="326" y="696" class="small">补齐训练、部署与成本体系</text>
+
+  <!-- V2 -->
+  <circle cx="708" cy="440" r="13" fill="#DE874C" stroke="#FFF" stroke-width="5"/>
+  <path d="M708 427V379" stroke="#DE874C" stroke-width="2.2"/>
+  <g filter="url(#shadow)"><rect x="580" y="164" width="320" height="215" rx="17" fill="#FFF" stroke="#DF9661" stroke-width="1.5"/></g>
+  <rect x="580" y="164" width="320" height="42" rx="17" fill="#FFF1E7"/><path d="M580 189H900V206H580Z" fill="#FFF1E7"/>
+  <text x="604" y="191" class="date" fill="#B36A39">2025.08</text><text x="604" y="241" class="title">OneRec-V2</text>
+  <g><rect x="604" y="262" width="272" height="35" rx="8" fill="#FFF7F1"/><text x="740" y="285" text-anchor="middle" class="body">Lazy Decoder-Only · 0.5–8B</text><rect x="604" y="307" width="115" height="34" rx="17" fill="#FFF1E7"/><text x="662" y="329" text-anchor="middle" class="small" font-weight="700">−94% FLOPs</text><rect x="729" y="307" width="147" height="34" rx="17" fill="#F2ECFC"/><text x="803" y="329" text-anchor="middle" class="small" font-weight="700">DARS + GBPO</text></g>
+  <text x="604" y="363" class="small">将计算集中到生成侧并接入真实反馈</text>
+
+  <!-- branching hub -->
+  <circle cx="955" cy="440" r="17" fill="#8B75B7" stroke="#FFF" stroke-width="5"/>
+  <text x="955" y="477" text-anchor="middle" class="tiny">capability expansion</text>
+  <path d="M955 423V333C955 306 977 284 1004 284H1040" fill="none" stroke="#8B75B7" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <path d="M955 457V548C955 575 977 597 1004 597H1040" fill="none" stroke="#42A1A1" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+  <!-- Think branch -->
+  <g filter="url(#shadow)"><rect x="1052" y="177" width="300" height="214" rx="17" fill="#FFF" stroke="#9A83C4" stroke-width="1.5"/></g>
+  <rect x="1052" y="177" width="300" height="42" rx="17" fill="#F2ECFC"/><path d="M1052 202H1352V219H1052Z" fill="#F2ECFC"/>
+  <text x="1076" y="204" class="date" fill="#745D9D">2025.10</text><text x="1076" y="254" class="title">OneRec-Think</text>
+  <rect x="1076" y="275" width="252" height="35" rx="8" fill="#F7F3FC"/><text x="1202" y="298" text-anchor="middle" class="body">Itemic Alignment</text>
+  <g><rect x="1076" y="320" width="107" height="34" rx="17" fill="#F2ECFC"/><text x="1130" y="342" text-anchor="middle" class="small" font-weight="700">reasoning</text><path d="M1183 337H1211" stroke="#8B75B7" stroke-width="1.8" marker-end="url(#arrow)"/><rect x="1221" y="320" width="107" height="34" rx="17" fill="#EEF7EA"/><text x="1275" y="342" text-anchor="middle" class="small" font-weight="700">item tokens</text></g>
+  <text x="1076" y="376" class="small">显式分析兴趣后再生成物品</text>
+
+  <!-- Open branch -->
+  <g filter="url(#shadow)"><rect x="1052" y="506" width="300" height="214" rx="17" fill="#FFF" stroke="#48A8A7" stroke-width="1.5"/></g>
+  <rect x="1052" y="506" width="300" height="42" rx="17" fill="#E9F7F6"/><path d="M1052 531H1352V548H1052Z" fill="#E9F7F6"/>
+  <text x="1076" y="533" class="date" fill="#348888">2025.12 / 2026.01</text><text x="1076" y="583" class="title">OpenOneRec</text>
+  <rect x="1076" y="604" width="252" height="35" rx="8" fill="#F0FAF9"/><text x="1202" y="627" text-anchor="middle" class="body">Qwen3 · 1.7B / 8B</text>
+  <g><rect x="1076" y="649" width="76" height="34" rx="17" fill="#E9F7F6"/><text x="1114" y="671" text-anchor="middle" class="small" font-weight="700">Model</text><rect x="1160" y="649" width="76" height="34" rx="17" fill="#E9F7F6"/><text x="1198" y="671" text-anchor="middle" class="small" font-weight="700">Data</text><rect x="1244" y="649" width="84" height="34" rx="17" fill="#E9F7F6"/><text x="1286" y="671" text-anchor="middle" class="small" font-weight="700">Benchmark</text></g>
+  <text x="1076" y="705" class="small">开放推荐基础模型完整链路</text>
+
+  <!-- merge to OneReason -->
+  <path d="M1352 284H1392C1420 284 1442 306 1442 334V412" fill="none" stroke="#8B75B7" stroke-width="2.2"/>
+  <path d="M1352 613H1392C1420 613 1442 591 1442 563V468" fill="none" stroke="#42A1A1" stroke-width="2.2"/>
+  <circle cx="1442" cy="440" r="15" fill="#CD7147" stroke="#FFF" stroke-width="5"/>
+  <path d="M1457 440H1480" stroke="#CD7147" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <g filter="url(#shadow)"><rect x="1230" y="755" width="300" height="112" rx="17" fill="#FFF" stroke="#D1784B" stroke-width="1.7"/></g>
+  <path d="M1442 455V742" stroke="#CD7147" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <rect x="1230" y="755" width="88" height="112" rx="17" fill="#FFF0E8"/><text x="1274" y="788" text-anchor="middle" class="date" fill="#B35E38">2026.06</text><text x="1340" y="795" class="title">OneReason</text><text x="1340" y="823" class="body">Perception → Cognition</text><text x="1340" y="847" class="small">推荐专用 CoT</text><text x="1340" y="865" class="tiny">Specialize-then-Unify RL</text>
+
+  <!-- legend / axis labels -->
+  <text x="70" y="796" class="axis" fill="#687B91">CORE QUESTION</text>
+  <g><rect x="70" y="815" width="235" height="36" rx="18" fill="#EAF3FF"/><text x="188" y="839" text-anchor="middle" class="small" font-weight="700">能否统一生成？</text><path d="M305 833H352" stroke="#718198" stroke-width="1.8" marker-end="url(#arrow)"/><rect x="364" y="815" width="235" height="36" rx="18" fill="#EEF7EA"/><text x="482" y="839" text-anchor="middle" class="small" font-weight="700">能否工业 Scaling？</text><path d="M599 833H646" stroke="#718198" stroke-width="1.8" marker-end="url(#arrow)"/><rect x="658" y="815" width="235" height="36" rx="18" fill="#FFF1E7"/><text x="776" y="839" text-anchor="middle" class="small" font-weight="700">能否优化真实反馈？</text><path d="M893 833H940" stroke="#718198" stroke-width="1.8" marker-end="url(#arrow)"/><rect x="952" y="815" width="235" height="36" rx="18" fill="#F2ECFC"/><text x="1070" y="839" text-anchor="middle" class="small" font-weight="700">能否理解并推理？</text></g>
+</svg>
