@@ -1,0 +1,293 @@
+单元,阶段,类型,名称,概要,课程,前置,完成标志,官网,课件,YouTube
+A01,数学与数据表示,基础,向量与矩阵,用向量表示样本，理解矩阵的行、列与维度。,LA18,,能写出样本矩阵的形状。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/vector.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/vector.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/matrix.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/matrix.pdf","https://youtu.be/tpNFMU7KsEU
+https://youtu.be/FInagysEI0o"
+A02,数学与数据表示,基础,线性方程组与矩阵向量乘积,把多个线性方程统一写成矩阵与向量的乘积。,LA18,A01,能把方程组写成 Ax=b。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/equation.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/equation.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/product.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/product.pdf","https://youtu.be/ZexDYHpmID8
+https://youtu.be/K2zzvo28X0g"
+A03,数学与数据表示,基础,解的存在性与线性无关,联系张成空间和线性无关，判断方程有没有解、解是否唯一。,LA18,A02,能判断向量组是否线性无关。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/span%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/span%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/independent%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/independent%20%28v2%29.pdf","https://youtu.be/-E67rZSjTNI
+https://youtu.be/34HlThINCsc"
+A04,数学与数据表示,基础,消元与 RREF,通过行变换求解，并从阶梯形矩阵读出自由变量。,LA18,A03,能用消元法求解一个小方程组。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/solving%20linear%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/solving%20linear%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/rref%20%28v6%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/rref%20%28v6%29.pdf","https://youtu.be/zuTH1WdREkY
+https://youtu.be/YzAg9l9FO7Y
+https://youtu.be/ObibwhRY8xc
+https://youtu.be/G-afSDZgEVI
+https://youtu.be/UaBRpTMX98c
+https://youtu.be/mSMh27SxKbM"
+A05,数学与数据表示,基础,矩阵乘法与逆矩阵,理解线性变换的复合，以及逆变换存在的条件。,LA18,A02,能检查矩阵相乘的维度。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/matrix%20multiplication%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/matrix%20multiplication%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/inverse%20%28v3%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/inverse%20%28v3%29.pdf","https://www.youtube.com/watch?v=yO8lDzf4jMs
+https://youtu.be/fOK-bLERPUM
+https://youtu.be/d43mGvCnuBU
+https://youtu.be/vV2ff0xFPbw"
+A06,数学与数据表示,基础,向量空间、基与维度,用基和坐标描述向量空间，把维度与秩联系起来。,LA18,A03,能为一个子空间找出一组基。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/space%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/space%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/basis%20%28v3%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/basis%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/associated.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/associated.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/coordinate%20%28v3%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/coordinate%20%28v3%29.pdf","https://youtu.be/pXtXnY2b2-E
+https://youtu.be/GB48DyvC14o
+https://youtu.be/aW0JVmpIxas
+https://www.youtube.com/watch?v=im3kTm9jGEM"
+A07,数学与数据表示,基础,线性变换,把矩阵理解为输入空间到输出空间的线性映射。,LA18,"A05,A06",能解释一个矩阵如何改变向量。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/function.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/function.pdf",https://www.youtube.com/watch?v=IrAdVhE6VqI
+A08,数学与数据表示,基础,行列式、特征值与特征向量,分析线性变换中的缩放方向及可逆性。,LA18,"A05,A07",能计算一个二阶矩阵的特征值。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/det%20%28v5%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/det%20%28v5%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/eigen.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/eigen.pdf","https://www.youtube.com/watch?v=7fXtSUrKND0
+https://www.youtube.com/watch?v=005nG8ZZVDE
+https://www.youtube.com/watch?v=1RyHRIP8QGg"
+A09,数学与数据表示,选修,对角化与 PageRank,理解通过换基简化矩阵运算，并观察特征向量的应用。,LA18,A08,能说明对角化需要什么条件。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/diagonalization%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/diagonalization%20%28v2%29.pdf
+官网原链失效：https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/PageRank%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/PageRank%20%28v2%29.pdf","https://www.youtube.com/watch?v=TsB5_BiMFoo
+https://www.youtube.com/watch?v=L7Y8wB3xzEc
+https://www.youtube.com/watch?v=pSg9TG_U_fY"
+A10,数学与数据表示,基础,正交、投影与最小二乘,用投影寻找无精确解时的近似解，连接线性回归。,LA18,A06,能解释最小二乘解的几何意义。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonality.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonality.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonal%20projection%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonal%20projection%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonal%20basis%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/orthogonal%20basis%20%28v2%29.pdf","https://www.youtube.com/watch?v=hxI7stenqaw
+https://www.youtube.com/watch?v=6WJikUaKKNo
+https://www.youtube.com/watch?v=98-0Q1ed3sM
+https://www.youtube.com/watch?v=PzqVLldlHTE"
+A11,数学与数据表示,基础,奇异值分解 SVD,将矩阵分解为两个正交变换和伸缩，理解低秩近似。,LA18,"A08,A10",能用截断 SVD 做小矩阵近似。,https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/SVD.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2018/Lecture/SVD.pdf",https://www.youtube.com/watch?v=OEJ0wxxLO7M
+B01,机器学习基本方法,主线,回归：从案例建立模型,选择模型、定义损失，再通过训练数据确定参数。,ML16,A02,独立完成一个线性回归基线。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Regression%20%28v6%29.pdf,https://www.youtube.com/watch?v=fegAeph9UaA
+B02,机器学习基本方法,主线,梯度下降,用导数确定参数更新方向，观察学习率对训练的影响。,ML16,B01,手算一次参数更新。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Gradient%20Descent%20%28v2%29.pdf,https://www.youtube.com/watch?v=yKKNr-QKz2Q
+B03,机器学习基本方法,主线,误差从哪里来,用偏差与方差分析拟合能力和数据不足造成的误差。,ML16,B01,能区分欠拟合与过拟合。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Bias%20and%20Variance%20%28v2%29.pdf,https://www.youtube.com/watch?v=D_S6y0Jm6dQ
+B04,机器学习基本方法,主线,概率生成式分类,通过类别先验和条件分布推导分类决策。,ML16,B01,能说明训练阶段在估计哪些分布。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Classification%20%28v3%29.pdf,https://www.youtube.com/watch?v=fZAZUYEeIMg
+B05,机器学习基本方法,主线,Logistic Regression,将线性打分转换为类别概率，连接交叉熵与优化。,ML16,"B02,B04",能写出二分类损失。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Logistic%20Regression%20%28v3%29.pdf,https://www.youtube.com/watch?v=hSXFuypLukA
+B06,机器学习基本方法,选修,支持向量机 SVM,理解最大间隔分类及核方法的作用。,ML16,B05,能解释间隔和支持向量。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/SVM%20%28v5%29.pdf,https://www.youtube.com/watch?v=QSEPStBgwRQ
+B07,机器学习基本方法,选修,Ensemble,通过组合多个模型改善预测，观察模型差异的价值。,ML16,B03,能说明集成为什么可能减少误差。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Ensemble%20%28v6%29.pdf,https://www.youtube.com/watch?v=QsO2zyED7Lw
+B08,机器学习基本方法,选修,线性降维,联系低维子空间、重建误差和数据表示。,ML16,"A10,A11",能解释 PCA 保留了什么信息。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/dim%20reduction%20%28v5%29.pdf,https://www.youtube.com/watch?v=iwh5o_M4BNU
+B09,机器学习基本方法,补充,机器学习与深度学习基本概念,复习训练流程，明确模型、损失和优化之间的关系。,ML21,"B01,B02",能用同一流程描述回归与神经网络。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/regression%20%28v16%29.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/regression%20%28v16%29.pdf","https://youtu.be/Ye018rCVvOo
+https://youtu.be/bHcJCp2Fyxs"
+B10,机器学习基本方法,主线,机器学习任务攻略,通过训练与验证表现定位问题，再决定是否增加模型能力或控制过拟合。,ML21,B03,能根据学习曲线提出下一步实验。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/overfit-v6.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/overfit-v6.pdf",https://www.youtube.com/watch?v=WeHM2xpYQpw
+B11,机器学习基本方法,选修,半监督学习与迁移学习,利用未标注数据或源任务知识，扩展监督学习的使用条件。,ML16,"B05,B10",能区分两类方法利用的额外信息。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/semi%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/transfer%20%28v3%29.pdf","https://www.youtube.com/watch?v=fX_guE7JNnY&list=PLJV_el3uVTsPy9oCRY30oBPNLCo89yu49&index=14
+https://www.youtube.com/watch?v=qD6iD4TFsdQ"
+C01,深度学习与 Transformer,主线,神经网络基本结构,将多个可学习的线性变换与非线性组合起来。,ML16,"A05,B02,B05",能说明层数、宽度和参数的关系。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/DL%20%28v2%29.pdf,https://www.youtube.com/watch?v=Dr-WRlEFefw
+C02,深度学习与 Transformer,主线,Backpropagation,沿计算图应用链式法则，计算参数梯度。,ML16,C01,手算一个两层网络的梯度。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/BP.pdf,https://www.youtube.com/watch?v=ibJpTrp5mcE
+C03,深度学习与 Transformer,选修,计算图,用计算图组织前向计算和反向传播。,DS18,C02,能画出一个简单损失的计算图。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Graph.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Graph.pptx",https://youtu.be/-yhm3WdGFok
+C04,深度学习与 Transformer,主线,局部最小值与鞍点,分析梯度很小时的不同情形，理解训练停滞的原因。,ML21,C02,能区分驻点与良好的训练结果。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/small-gradient-v7.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/small-gradient-v7.pdf",https://www.youtube.com/watch?v=QW6uINn7uGk
+C05,深度学习与 Transformer,主线,Batch 与 Momentum,比较小批次梯度估计和动量更新的作用。,ML21,"B02,C02",能解释 batch size 的基本取舍。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/optimizer_v4.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/optimizer_v4.pdf",https://www.youtube.com/watch?v=zzbr1h9sF54
+C06,深度学习与 Transformer,主线,自适应学习率,观察优化器如何按参数调整更新尺度。,ML21,C05,能解释自适应更新与固定步长的区别。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/optimizer_v4.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/optimizer_v4.pdf",https://www.youtube.com/watch?v=HYUXEeh3kwY
+C07,深度学习与 Transformer,主线,分类损失函数,分析分类损失如何影响梯度及学习过程。,ML21,"B05,C02",能比较两种分类损失的梯度行为。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/classification_v2.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/classification_v2.pdf",https://www.youtube.com/watch?v=O2VkP8dJ5FE
+C08,深度学习与 Transformer,主线,Normalization,理解标准化在网络训练中的位置及作用。,ML21,"C01,C05",能区分标准化计算与模型参数更新。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/normalization_v4.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/normalization_v4.pdf",https://www.youtube.com/watch?v=BABPWOkSbLE
+C09,深度学习与 Transformer,主线,卷积神经网络 CNN,利用局部连接和参数共享处理图像。,ML21,C01,能计算一个卷积层的输出形状。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/cnn_v4.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/cnn_v4.pdf",https://www.youtube.com/watch?v=OP5HcXJg2Aw
+C10,深度学习与 Transformer,主线,循环神经网络 RNN,用随序列更新的隐藏状态表示历史信息。,ML16,"C01,C02",能展开三步 RNN 的前向过程。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/RNN%20%28v2%29.pdf,"https://www.youtube.com/watch?v=xCGidAeyS4M
+https://www.youtube.com/watch?v=rTqmWlnwz_0"
+C11,深度学习与 Transformer,主线,Seq-to-seq Learning,将可变长输入转换为可变长输出，比较训练与生成过程。,DS18,C10,能解释编码器、解码器和逐步生成。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Seq%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Seq%20%28v2%29.pptx",https://youtu.be/ZjfjPzXw6og
+C12,深度学习与 Transformer,补充,Attention-based Model,根据当前需求对输入表示进行加权汇总。,DS18,C11,能说清 Query、Key、Value 的作用。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Attention.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Attention.pptx",https://youtu.be/jd9DtlR90ak
+C13,深度学习与 Transformer,主线,Self-Attention,通过序列内部位置之间的交互生成表示。,ML21,"C01,A05",能算出 QKᵀ 和注意力输出的形状。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/self_v7.pdf","https://www.youtube.com/watch?v=hYdO9CscNes
+https://www.youtube.com/watch?v=gmsMY5kc-zw"
+C14,深度学习与 Transformer,主线,Transformer,连接注意力、FFN、残差与编解码结构，理解训练和推理。,ML21,"C08,C11,C13",能画出一个 Transformer block。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/seq2seq_v9.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/seq2seq_v9.pdf","https://www.youtube.com/watch?v=n9TlOhRjYoc
+https://youtu.be/N6aRv06iv2g"
+C15,深度学习与 Transformer,补充,语言模型如何做文字接龙,从语言生成任务回看 Transformer 的整体运作。,GA24,C14,能描述输入 Token 到下一 Token 分布的过程。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0503/0503_transformer.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0503/0503_transformer.pptx",https://youtu.be/uhNsUCb2fJI
+C16,深度学习与 Transformer,主线,位置编码与长输入,比较绝对、相对、RoPE 及无显式位置编码方案。,ML26,C14,能解释顺序信息如何进入注意力计算。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/pos.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/pos.pdf",https://youtu.be/Ll-wk8x3G_g
+C17,深度学习与 Transformer,补充,神经网络训练技巧总览,结合训练问题复习正则化、优化与预训练等方法。,GM25,"C04,C05,C06,C08",能用训练现象选择一个合理改进。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/TrainingTip.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/TrainingTip.pptx",https://youtu.be/mPWvAN4hzzY?si=tdJgKU4GXcQY_n1T
+D01,大模型训练、适配、评估与效率,主线,自监督学习概览,从数据自身构造学习目标，建立预训练与下游任务的联系。,ML21,C14,能举出两个无需人工标签的学习任务。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pdf",https://youtu.be/e422eloJ0W4
+D02,大模型训练、适配、评估与效率,主线,BERT 简介,理解掩码语言建模和双向表示的使用方法。,ML21,D01,能区分预训练目标与下游任务。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pdf",https://youtu.be/gh0hewYkjgo
+D03,大模型训练、适配、评估与效率,补充,BERT 的应用与现象,观察预训练表示的迁移能力及实际应用方式。,ML21,D02,能设计一个使用 BERT 的下游任务。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pdf",https://youtu.be/ExXA05i8DEQ
+D04,大模型训练、适配、评估与效率,主线,GPT 的野望,理解自回归预训练与少样本使用方式。,ML21,"D01,D02",能比较 BERT 与 GPT 的训练目标。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/bert_v8.pdf",https://youtu.be/WY_E0Sd4K80
+D05,大模型训练、适配、评估与效率,主线,语言模型训练：预训练,通过大量文本的预测任务学习基础能力。,GA24,D04,能说出预训练的数据和监督信号。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://drive.google.com/file/d/1myvHjoeFOpIl1uGU9H1t4OpDErkhF0zO/view
+https://docs.google.com/presentation/d/11qJGo3TnKKvkQL5yVN3RB-NQtXnrxZOG/edit?usp=sharing&ouid=115046073158939078465&rtpof=true&sd=true",https://youtu.be/cCpErV7To2o
+D06,大模型训练、适配、评估与效率,主线,语言模型训练：指令微调,通过示范数据引导模型遵循指令并完成任务。,GA24,D05,能构造一条指令微调样本。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://drive.google.com/file/d/1SOXBQhsC_L6aHXcLx2rltaDdcO6N2FmJ/view
+https://docs.google.com/presentation/d/1V3AiL0EJ-Bzp9aF2vAINHo5GuS22p9RN/edit?usp=sharing&ouid=115046073158939078465&rtpof=true&sd=true",https://youtu.be/Q9cNkUPXUB8
+D07,大模型训练、适配、评估与效率,按需补,Policy Gradient,利用回报调整策略，为偏好对齐补充强化学习基础。,DS18,"B02,B05",能说明策略梯度在优化什么。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/PPO%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/PPO%20%28v3%29.pptx",https://youtu.be/z95ZYgPgXOY
+D08,大模型训练、适配、评估与效率,按需补,PPO,通过限制策略变化改善训练稳定性，联系后续 RLHF。,DS18,D07,能解释新旧策略概率比的作用。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/PPO%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/PPO%20%28v3%29.pptx",https://youtu.be/OAKAZhFmYoI
+D09,大模型训练、适配、评估与效率,主线,语言模型训练：RLHF,将人类偏好转化为训练信号，进一步调整回答行为。,GA24,"D06,D07,D08",能区分示范监督与偏好监督。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0412/0412_LLMtraining_part3.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0412/0412_LLMtraining_part3.pptx",https://youtu.be/v12IKvF6Cj8
+D10,大模型训练、适配、评估与效率,主线,Pretrain–Alignment 的强大与极限,分析预训练与对齐带来的能力及这套范式的局限。,ML25,"D05,D06,D09",能提出一个验证能力来源的实验。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/pretrain.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/pretrain.pdf",https://youtu.be/Ozos6M1JtIE
+D11,大模型训练、适配、评估与效率,选修,模型规模、数据规模与能力,讨论规模扩大时的能力变化及实验解释。,ML23,D05,能区分实验观察与普遍规律。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/LargeLM-v7.pdf,"https://youtu.be/SaZTJJNOCOY
+https://youtu.be/qycxA-xX_OY"
+D12,大模型训练、适配、评估与效率,补充,大模型的学习历程,把不同训练阶段连接为完整流程。,GM25,"D05,D06,D09",能画出预训练到后训练的流程。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/LLMtraining.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/LLMtraining.pptx",https://youtu.be/YJoegm7kiUM
+E01,大模型训练、适配、评估与效率,主线,Finetuning vs. Prompting,比较改变输入和更新参数两类模型适配方式。,ML23,D06,能为具体任务说明适配方法的选择依据。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/Prompt%20%28v3%29.pdf,"https://youtu.be/F58vJcGgjt0
+https://youtu.be/aZ_jXZvxyVg
+https://youtu.be/HnzDaEiN_eg"
+E02,大模型训练、适配、评估与效率,主线,后训练与遗忘,观察学习新任务时的能力增益与旧能力退化。,ML25,E01,能同时评估新旧任务的效果。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/post_training.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/post_training.pdf",https://youtu.be/Z6b5-77EfGk
+E03,大模型训练、适配、评估与效率,补充,通用模型的终身学习,将模型更新放在持续学习过程里理解。,GM25,E02,能解释单次微调与持续学习的差异。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Post.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Post.pptx",https://youtu.be/EnWz5XuOnIQ
+E04,大模型训练、适配、评估与效率,主线,Reasoning 能力如何形成,以 DeepSeek-R1 类模型为例理解推理训练和使用。,ML25,"D09,D10",能区分推理过程、训练信号和最终答案。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reasoning.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reasoning.pdf",https://youtu.be/bJFtcwLSNxI
+E05,大模型训练、适配、评估与效率,主线,推理过程够用就好,分析思考长度、效果和计算成本之间的关系。,ML25,E04,能用正确率和耗时比较两种推理设置。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reason_shorter.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reason_shorter.pdf",https://youtu.be/ip3XnTpcxoA
+E06,大模型训练、适配、评估与效率,主线,评估生成式 AI 的常见问题,建立任务集、评分标准与对照实验意识。,GM25,D04,能整理一组有标准答案或评分规则的题目。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Evaluation.pdf
+官网原链失效：https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Evalutaion.pptx",https://youtu.be/dWQVY_h0YXU
+E07,大模型训练、适配、评估与效率,主线,大型语言模型评估专题,追问评分系统测量了什么，以及得分与真实任务的距离。,ML25,E06,能解释一个评估结论的适用边界。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reason_eval.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/reason_eval.pdf",https://youtu.be/s266BzGNKKc
+E08,大模型训练、适配、评估与效率,主线,Flash Attention,从注意力计算的实现和内存访问入手提高效率。,ML26,"C13,C14",能说明其优化重点和注意力公式的关系。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/inference.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/inference.pdf",https://youtu.be/vXb2QYOUzl4
+E09,大模型训练、适配、评估与效率,主线,KV Cache,缓存历史 Key 与 Value，减少自回归生成中的重复计算。,ML26,"C14,D04",能分别说明 prefill 和 decode 阶段的计算。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/inference.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/inference.pdf",https://youtu.be/fDQaadKysSA
+E10,大模型训练、适配、评估与效率,选修,Speculative Decoding,用草稿生成和目标模型验证加速解码。,GA24,E09,能解释草稿模型与目标模型的分工。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0517/0517_strategy.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0517/0517_strategy.pptx",https://youtu.be/MAbGgsWKrg8
+E11,大模型训练、适配、评估与效率,选修,多 GPU 训练与工程优化（延伸视频）,了解 DeepSpeed、量化和相关训练优化工具的职责。,ML25,"D05,E08",能区分训练显存问题与生成速度问题。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,,https://youtu.be/mpuRca2UZtI
+E12,大模型训练、适配、评估与效率,选修,Model Editing,针对性修改模型知识或行为，观察修改范围与副作用。,ML25,"E02,E06",能设计修改目标和保留能力两组测试。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/edit.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/edit.pdf",https://youtu.be/9HPsz7F0mJg
+E13,大模型训练、适配、评估与效率,选修,Model Merging 与 Task Vector,通过参数和任务向量组合调整模型能力。,ML25,"E02,E06",能说明模型融合的输入和评估方式。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/merging.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/merging.pdf",https://youtu.be/jFUwoCkdqAo
+E14,大模型训练、适配、评估与效率,选修,Transformer 的竞争者们,比较 Mamba 等架构与 Transformer 的状态处理方式。,ML25,"C10,C14,E09",能比较两种架构如何保存历史信息。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/mamba.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/mamba.pdf",https://youtu.be/gjsdVi90yQo
+E15,大模型训练、适配、评估与效率,选修,语言模型内部机制,从神经元与表示分析语言模型内部运作。,ML25,"D05,C14",能区分可观察的关联与因果解释。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/model_inside.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/model_inside.pdf",https://youtu.be/Xnil63UDW2o
+F01,RAG 与 Agent 系统,主线,提示工程：提供信息,通过任务说明、示例和补充信息改善输入。,GA24,D04,能写出一份可重复使用的任务提示。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0301/0301_prompt_part1.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0301/0301_prompt_part1.pptx",https://youtu.be/A3Yx35KrSN0
+F02,RAG 与 Agent 系统,主线,提示工程：拆解问题与使用工具,把复杂任务拆成步骤，并把外部工具接入处理过程。,GA24,F01,能把任务拆成可检查的中间结果。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0308/0308_prompt_part2.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0308/0308_prompt_part2.pptx",https://youtu.be/lwe3_x50_uw
+F03,RAG 与 Agent 系统,选修,提示工程：模型协作,组合多个语言模型调用，探索分工与相互检查。,GA24,F02,能比较单次调用和协作流程的效果。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://drive.google.com/file/d/1dMxMAewRtcUM2xktVm77txSk1leepgD1/view
+https://docs.google.com/presentation/d/1IY1izDUtRBTD9ATyObucetJZOU6koq3-/edit?usp=sharing&ouid=115046073158939078465&rtpof=true&sd=true",https://youtu.be/inebiWdQW-4
+F04,RAG 与 Agent 系统,补充,以语言模型打造 Agent,将目标、观察和行动组织成连续运行过程。,GA24,F02,能说明一次行动之后系统如何继续决策。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0412/0412_agent.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0412/0412_agent.pptx",https://youtu.be/bJZTJ7MjYqg
+F05,RAG 与 Agent 系统,主线,一堂课搞懂 AI Agent,串联工具使用、计划和经验调整等能力。,ML25,"F02,E06",能画出观察、决策、行动的闭环。,https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/ai_agent.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2025-course-data/ai_agent.pdf",https://youtu.be/M2Yg1kwPpts
+F06,RAG 与 Agent 系统,主线,以 OpenClaw 为例理解 Agent,通过具体系统分析模型、工具和运行流程如何配合。,ML26,F05,能区分模型推理和系统执行的职责。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/intro.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/intro.pdf",https://youtu.be/2rcJdFuNbZQ
+F07,RAG 与 Agent 系统,主线,Context Engineering,组织指令、历史和外部信息，控制模型当前能看到什么。,GM25,F05,能列出一次调用应提供的上下文。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Agent.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Agent.pptx",https://youtu.be/lVdajtNpaGI
+F08,RAG 与 Agent 系统,选修,KNNLM,观察外部检索如何影响语言模型的预测。,ML23,D04,能比较 KNNLM 与文档式 RAG 的检索位置。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/LargeLM-v7.pdf,https://youtu.be/V-3ksGCjehU
+F09,RAG 与 Agent 系统,实践,实践：基础 RAG 系统,按 HW2 学习分块、BM25、Embedding 与混合检索，检查检索结果与回答依据。,GM25,"F07,E06",能比较直接问答与检索增强的表现。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/hw2.pdf,https://youtu.be/88WzdTuQMyM
+F10,RAG 与 Agent 系统,主线,上下文工程基本概念,将上下文管理放入连续执行的 Agent 运行过程。,ML26,"F06,F07",能说明如何选择和压缩历史信息。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/agent_era.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/agent_era.pdf",https://youtu.be/urwDLyNa9FU
+F11,RAG 与 Agent 系统,主线,Harness Engineering,通过运行环境、反馈和流程安排帮助模型完成任务。,ML26,"F06,F10",能说明上下文与运行环境各负责什么。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/harness.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/harness.pdf",https://youtu.be/R6fZR_9kmIw
+F12,RAG 与 Agent 系统,选修,Agent 之间的互动,比较分工、通信和结果汇总的协作方式。,ML26,"F03,F11",能用同一评估集检验协作的收益与成本。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/agent_era.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/agent_era.pdf",https://youtu.be/mmPmNezjCi0
+F13,RAG 与 Agent 系统,主线,安全性：偏见与风险,观察语言模型输出中的偏见与相关使用风险。,GA24,E06,能为具体应用列出需要评估的风险类型。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_ethical.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_ethical.pptx",https://youtu.be/MSnvknLywUc
+F14,RAG 与 Agent 系统,主线,安全性：欺骗语言模型,理解外部输入与恶意指令如何影响模型行为。,GA24,"F05,F13",能构造安全测试并检查工具调用边界。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0517/0517_injection.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0517/0517_injection.pptx",https://youtu.be/CNTondxaguo
+F15,RAG 与 Agent 系统,主线,Self-Correction,比较解码、工作流和推理过程中的自我修正方法。,ML26,"F11,E06",能比较重试与有效反馈带来的改进。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/Self-Correction.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/Self-Correction.pdf",https://youtu.be/m3i2mk5hs8U
+F16,RAG 与 Agent 系统,选修,Self-Improving：上,把训练、反馈和评估连接到模型能力提升。,ML26,"F15,D10",能区分单次答案修正与持续能力提升。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/Self-Improving.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/Self-Improving.pdf",https://youtu.be/s06mSAGN4gM
+F17,RAG 与 Agent 系统,选修,Self-Improving：下,继续讨论 Agent 的自我演化及其评估。,ML26,F16,能提出一个跨后续任务的验证方案。,https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php,"官网原链失效：https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/self-evolving-agent.ptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/self-evolving-agent.pdf",https://youtu.be/cQLKVzbwN7I
+F18,RAG 与 Agent 系统,选修,早期工具调用与自主规划,通过 WebGPT、Toolformer 和自主规划了解 Agent 的技术演进。,ML23,F05,能把历史方案对应到 Agent 运行循环。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/NewBing%20%28v4%29.pdf
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/LLM-plan-v5.pdf","https://youtu.be/ZID220t_MpI
+https://youtu.be/eQNADlR0jSs"
+G01,生成、多模态与研究分支,选修,GAN 基础、理论与应用,理解生成器和判别器的对抗训练及生成效果评估。,ML21,C02,能解释两类网络各自的目标。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/gan_v10.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/gan_v10.pdf","https://youtu.be/4OWp0wDu6Xw
+https://youtu.be/jNY1WBb8l4U
+https://www.youtube.com/watch?v=MP0BnVH2yOo
+https://youtu.be/wulqhgnDr7E"
+G02,生成、多模态与研究分支,选修,Auto-Encoder,通过重建学习表示，连接压缩和异常检测。,ML21,C01,能说明潜变量与重建误差的作用。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/auto_v8.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/auto_v8.pdf","https://youtu.be/3oHlf8-J3Nc
+https://youtu.be/JZvEzb5PV3U"
+G03,生成、多模态与研究分支,选修,VAE 与深度生成模型,从潜变量分布学习可采样的生成过程。,ML16,G02,能区分普通自编码器与概率生成模型。,https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php,https://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/VAE%20%28v5%29.pdf,"https://www.youtube.com/watch?v=YNUek8ioAJk
+https://www.youtube.com/watch?v=8zomhgKrsmQ"
+G04,生成、多模态与研究分支,选修,图像与视频生成,建立影像生成概览，联系 VAE、Flow、Diffusion 和 GAN。,GA24,"G01,G03",能为四类生成方法各写出基本流程。,https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0531/0531_vision.pdf
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0531/0531_vision.pptx","https://youtu.be/5H2bVEmYDNg
+https://youtu.be/OYN_GvAqv-A"
+G05,生成、多模态与研究分支,选修,Diffusion 直观原理,理解逐步加噪与去噪的生成过程。,ML23,G03,能解释训练输入和监督目标。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/DiffusionModel%20%28v2%29.pdf,https://youtu.be/azBugJzmz-o
+G06,生成、多模态与研究分支,选修,Diffusion 数学原理,通过四讲深入理解扩散模型的概率建模与训练。,ML23,G05,能连接前向过程、反向过程与损失。,https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php,https://speech.ee.ntu.edu.tw/~hylee/ml/ml2023-course-data/DDPM%20%28v7%29.pdf,"https://youtu.be/ifCDXFdeaaM
+https://youtu.be/73qwu77ZsTM
+https://youtu.be/m6QchXTx6wA
+https://youtu.be/67_M2qP5ssY"
+G07,生成、多模态与研究分支,选修,影像和声音的生成策略,比较自回归与 Diffusion、Flow Matching 等生成路线。,GM25,"D04,G05",能按数据类型说明生成策略的取舍。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Generation.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Generation.pptx",https://youtu.be/ccqCDD9LqCA
+G08,生成、多模态与研究分支,选修,语音识别,连接声学输入、语言信息和输出文本。,HLP20,"C11,C14",能画出一个语音识别系统的输入输出。,https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/ASR%20%28v12%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/ASR2%20%28v6%29.pdf","https://youtu.be/AIKu43goh-8
+https://youtu.be/BdUeBa6NbXA
+https://youtu.be/CGuLuBaLIeI
+https://youtu.be/XWTGY_PNABo
+https://youtu.be/5SSVra6IJY4
+https://youtu.be/L519dCHUCog"
+G09,生成、多模态与研究分支,选修,语音转换、分离与合成,比较不同语音任务要保留和改变的信息。,HLP20,G08,能区分三个任务的训练样本。,https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/Voice%20Conversion%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/SP%20%28v3%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/TTS%20%28v4%29.pdf","https://youtu.be/Jj6blc8UijY
+https://youtu.be/JUWVuF2ucTk
+https://youtu.be/tovg5ZxNgIo
+https://youtu.be/G0O1A7lONSY
+https://youtu.be/DMxKeHW8KdM
+https://youtu.be/Eau1Fr2x86Y"
+G10,生成、多模态与研究分支,选修,语言理解与非自回归生成,扩展 BERT 家族与序列生成任务的理解。,HLP20,"D02,C11",能比较自回归与并行生成。,https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/DLHLP20/BERT%20train%20%28v8%29.pdf
+https://docs.google.com/presentation/d/1lnXSxPL3hZQ_OHyV_Lksz3UcOmPyiDqC1eg29Q5IAr0/edit?usp=sharing","https://youtu.be/1_gRK9EIQpc
+https://youtu.be/Bywo7m6ySlk
+https://youtu.be/jvyKmU4OM3c"
+G11,生成、多模态与研究分支,选修,语音语言模型发展史,连接传统语音处理与现代语音语言模型。,GM25,"G08,D04",能说明语音与文本表示怎样衔接。,https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php,"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/SpeechLLM.pdf
+https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/SpeechLLM.pptx",https://youtu.be/CbIPjrOj2Tc
+G12,生成、多模态与研究分支,选修,深层结构的表达能力,分析浅层和深层网络能够表示什么函数。,DS18,C01,能解释表示能力与容易训练的区别。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/DeepStructure%20%28v9%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/DeepStructure%20%28v9%29.pptx","https://youtu.be/KKT2VkTdFyc
+https://youtu.be/FN8jclCrqY0
+https://youtu.be/qpuLxXrHQB4"
+G13,生成、多模态与研究分支,选修,优化与泛化理论,分析驻点、损失曲面及泛化能力相关问题。,DS18,"C04,B10",能区分优化误差与泛化误差。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Optimization%20%28v6%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/Optimization%20%28v6%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/GeneralizationObs%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/GeneralizationObs%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/GeneralizationInd%20%28v4%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/GeneralizationInd%20%28v4%29.pptx","https://youtu.be/XSdkBG6Vvr0
+https://youtu.be/0O6nYRC7GeY
+https://youtu.be/NmelPQkUark
+https://youtu.be/_VuWvQUMQVk
+https://youtu.be/XysGHdNOTbg
+https://youtu.be/9dtxv4HLq_8
+https://youtu.be/pivB5jEBOQw"
+G14,生成、多模态与研究分支,选修,Q-Learning、Actor-Critic 与模仿学习,补充强化学习的价值估计、策略优化与示范学习路线。,DS18,D07,能比较基于价值与直接优化策略的方法。,https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php,"https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/QLearning%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/QLearning%20%28v2%29.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/AC.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/AC.pptx
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/IRL%20%28v2%29.pdf
+https://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2018/Lecture/IRL%20%28v2%29.pptx","https://youtu.be/o_g9JUMw1Oc
+https://youtu.be/2-zGCx4iv_k
+https://youtu.be/tnPVcec22cg
+https://youtu.be/-5cCWhu0OaM
+https://youtu.be/rl_ozvqQUU8"
+G15,生成、多模态与研究分支,选修,可解释性与对抗攻击,分析预测依据，以及输入扰动对模型表现的影响。,ML21,"C09,E06",能对同一模型做解释与鲁棒性检查。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/xai_v4.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/xai_v4.pdf
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/attack_v3.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/attack_v3.pdf","https://youtu.be/WQY85vaQfTI
+https://youtu.be/0ayIPqbdHYQ
+https://youtu.be/xGQKhbjrFRk
+https://youtu.be/z-Q9ia5H2Ig"
+G16,生成、多模态与研究分支,选修,领域适配与终身学习,观察数据分布变化、任务迁移和持续学习。,ML21,"B11,E02",能设计跨域或跨任务的评估。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/da_v6.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/da_v6.pdf
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/life_v2.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/life_v2.pdf","https://youtu.be/Mnk_oUrgppM
+https://youtu.be/rWF9sg5w6Zk
+https://youtu.be/Y9Jay_vxOsM"
+G17,生成、多模态与研究分支,选修,模型压缩,比较减少模型存储和计算需求的基本方法。,ML21,"C01,E06",能同时比较压缩前后的精度与开销。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/tiny_v7.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/tiny_v7.pdf","https://youtu.be/utk3EnAUh-g
+https://youtu.be/xrlbLPaq_Og"
+G18,生成、多模态与研究分支,选修,Meta Learning,理解利用多个任务学习适应新任务的方法。,ML21,"B11,C02",能区分任务内学习与跨任务学习。,https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php,"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/meta_v3.pptx
+https://speech.ee.ntu.edu.tw/~hylee/ml/ml2021-course-data/meta_v3.pdf","https://youtu.be/xoastiYx9JU
+https://www.youtube.com/watch?v=Q68Eh-wm1Ts"

@@ -76,3 +76,58 @@
 ) tbody tr:last-child td {
   border-bottom: none;
 }
+
+/* Wide course directories keep readable columns and scroll within the theme wrapper. */
+#article-container :is(.lee-course-table-title, .lee-path-table-title) + .table-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) {
+  min-width: 840px;
+  table-layout: fixed;
+}
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) {
+  min-width: 1220px;
+  table-layout: fixed;
+}
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(1) { width: 75px; }
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(2) { width: 115px; }
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(3) { width: 160px; }
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(4) { width: 85px; }
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(5) { width: 340px; }
+#article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(6) { width: 65px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(1) { width: 75px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(2) { width: 170px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(3) { width: 260px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(4) { width: 100px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(5) { width: 220px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(6) { width: 65px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(7) { width: 260px; }
+
+/* Supplementary teacher profile: collapsed by default, outside the reading flow. */
+#article-container .lee-teacher-profile {
+  margin: 20px 0 26px;
+  border: 1px solid var(--light-grey, #dce4e4);
+  border-radius: 8px;
+  background: var(--blockquote-bg, #f5f8fa);
+  font-size: 14px;
+}
+#article-container .lee-teacher-profile summary {
+  padding: 11px 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+#article-container .lee-teacher-profile summary:focus-visible {
+  outline: 2px solid var(--theme-color, #177c7a);
+  outline-offset: 3px;
+}
+#article-container .lee-teacher-profile details[open] > summary {
+  border-bottom: 1px solid var(--light-grey, #dce4e4);
+}
+#article-container .lee-teacher-profile-body {
+  padding: 5px 18px 12px;
+}
+#article-container .lee-teacher-profile-body ul {
+  margin: 8px 0;
+  padding-left: 1.4em;
+}
