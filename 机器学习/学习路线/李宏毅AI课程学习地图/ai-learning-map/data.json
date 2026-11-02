@@ -6,7 +6,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2016 春",
-      "summary": "向量、矩阵、方程组、线性空间、特征值、正交与 SVD。",
+      "summary": "从向量、矩阵和线性方程组入手，逐步讲清子空间、基、坐标变换、特征值和正交投影，再介绍 SVD；通过机器学习与 PageRank 的例子理解线性代数的用途。",
       "audience": "高中代数；可作为线代主课。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/la/2016-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/la/2016-spring.php"
@@ -16,7 +16,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2018 秋",
-      "summary": "方程组、向量空间、线性变换、特征值、正交投影与 SVD，包含 PageRank 等应用。",
+      "summary": "围绕方程组有没有解、如何求解展开，串起矩阵运算、向量空间和线性变换，再学习对角化、正交投影与 SVD；用 PageRank 等应用连接计算方法与实际问题。",
       "audience": "高中代数；适合作为线性代数主课。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/la/2018-fall.php"
@@ -26,7 +26,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2019 秋",
-      "summary": "矩阵、方程组、向量空间、特征分析和近似求解。",
+      "summary": "从线性系统的输入与输出理解矩阵，依次讨论解空间、基与坐标、行列式、特征值、正交投影和 SVD，配合 PageRank 与 Python 应用练习巩固概念。",
       "audience": "与 LA18 重叠较多，按主题补充。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/la/2019-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/la/2019-fall.php"
@@ -36,7 +36,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2020 秋",
-      "summary": "线性系统、行列式、向量空间、特征值与近似求解。",
+      "summary": "以线性系统为主线，学习方程组求解、行列式、子空间、基与维度、特征值，以及无精确解时的近似求解；通过 Python 作业练习线性代数的应用。",
       "audience": "用于了解课程安排；学习线代可选择 LA18 或 LA23。",
       "url": "http://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2020/policy.pdf",
       "menuUrl": "http://speech.ee.ntu.edu.tw/~tlkagk/courses/LA_2020/policy.pdf"
@@ -46,7 +46,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2021 秋",
-      "summary": "矩阵与线性方程组、行列式、向量空间、特征值、正交投影与矩阵分解。",
+      "summary": "把矩阵、向量空间、特征值与正交投影拆成定义、例题和证明逐步讲解，再延伸到一般向量空间与 SVD；作业包含余弦变换、线性回归和图像压缩。",
       "audience": "适合按知识点查缺补漏。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/la/2021-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/la/2021-fall.php"
@@ -56,7 +56,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2022 秋",
-      "summary": "线性方程组、向量空间、特征值与正交投影，应用包括 PageRank、线性回归和图像压缩。",
+      "summary": "系统讲解方程组、线性变换、特征值、正交投影与 SVD，并结合 PageRank、线性回归和图像压缩说明应用；另有 AlphaTensor 矩阵乘法与章节复习专题。",
       "audience": "与 LA21、LA23 选择一版即可。",
       "url": "https://googly-mingto.github.io/LA_2022_fall/2022-fall.html",
       "menuUrl": "https://googly-mingto.github.io/LA_2022_fall/2022-fall.html"
@@ -66,7 +66,7 @@
       "category": "数学基础",
       "name": "线性代数",
       "term": "2023 秋",
-      "summary": "线性方程组、向量空间、特征值、正交投影与矩阵分解。",
+      "summary": "从线性系统、矩阵运算学到向量空间、特征值、正交投影与 SVD；通过环检测、Hill 密码、线性变换和 PageRank 等编程作业，把抽象运算用到具体问题中。",
       "audience": "适合按章节查阅与复习。",
       "url": "https://eric-lam.com/LA_2023_fall/2023-fall.html",
       "menuUrl": "https://voidful.github.io/LA_2023_fall/2023-fall.html"
@@ -76,7 +76,7 @@
       "category": "机器学习",
       "name": "Machine Learning",
       "term": "2016 秋",
-      "summary": "回归、梯度下降、分类、神经网络、降维、词向量、SVM、结构化学习和强化学习入门。",
+      "summary": "用回归案例讲清模型、损失函数、梯度下降和误差分析，再进入分类与神经网络；后续覆盖降维、词向量、迁移学习、SVM、结构化预测和强化学习入门。",
       "audience": "微积分与概率基础；适合补传统 ML 主干。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2016-fall.php"
@@ -86,7 +86,7 @@
       "category": "机器学习",
       "name": "Machine Learning",
       "term": "2017 春",
-      "summary": "回归、分类、深度学习、无监督学习和序列建模。",
+      "summary": "从回归、分类与反向传播建立基础，再讨论 CNN 和 RNN；无监督学习部分涵盖 PCA、词向量、自编码器与生成模型，并补充矩阵分解、集成学习和强化学习。",
       "audience": "可用于补充基础方法与序列建模。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2017-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2017-spring.php"
@@ -96,7 +96,7 @@
       "category": "机器学习",
       "name": "Machine Learning",
       "term": "2017 秋",
-      "summary": "深度网络训练、RNN、迁移学习、降维和生成模型。",
+      "summary": "先讲回归、分类、神经网络训练及误差分析，再学习 CNN、RNN 和带 Attention 的 Seq2seq；结合半监督、迁移、强化学习与生成模型，扩展可处理的任务类型。",
       "audience": "与早期课程重叠，按主题选学。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2017-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2017-fall.php"
@@ -106,7 +106,7 @@
       "category": "机器学习",
       "name": "Machine Learning",
       "term": "2019 春",
-      "summary": "回归、分类与深度学习，以及异常检测、对抗攻击、可解释性、终身学习、元学习、模型压缩、Transformer 和 BERT。",
+      "summary": "在回顾回归、分类和神经网络的同时，重点展开异常检测、可解释性、对抗攻击、终身学习、元学习和模型压缩，后期引入 Transformer 与 BERT。",
       "audience": "已有基础时学习拓展专题。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2019-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2019-spring.php"
@@ -116,7 +116,7 @@
       "category": "机器学习",
       "name": "Machine Learning",
       "term": "2020 春",
-      "summary": "回归、分类、序列建模、生成模型、迁移学习、元学习和强化学习。",
+      "summary": "以 15 项作业串起学习过程，从回归、分类、CNN 和序列模型走向自编码器、GAN 与迁移学习，同时练习可解释性、对抗攻击、模型压缩、元学习和强化学习。",
       "audience": "适合结合课程作业练习。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2020-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2020-spring.php"
@@ -126,7 +126,7 @@
       "category": "深度学习主干",
       "name": "Machine Learning",
       "term": "2021 春",
-      "summary": "训练技巧、CNN、Self-Attention、Transformer、GAN、自监督学习、迁移和强化学习等。",
+      "summary": "以深度学习为主线，先解决网络如何训练、训练失败怎样排查，再讲 CNN、Self-Attention、Transformer、GAN 与 BERT/GPT；后续扩展到适配、强化学习、压缩和持续学习。",
       "audience": "需 Python 与基础微积分；适合作为深度学习主课。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php"
@@ -136,7 +136,7 @@
       "category": "深度学习主干",
       "name": "Machine Learning",
       "term": "2022 春",
-      "summary": "神经网络训练、CNN、Transformer、生成模型、自监督学习、可解释性、对抗攻击、强化学习与元学习。",
+      "summary": "围绕图像、序列、生成与自监督任务学习深度学习，并配套 15 项作业；专题进一步讨论语音与图像自监督、训练与验证、NLP 对抗攻击及元学习。",
       "audience": "与 ML21 选一版为主，另一版补专题。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php"
@@ -146,7 +146,7 @@
       "category": "生成式 AI 与大模型",
       "name": "Machine Learning",
       "term": "2023 春",
-      "summary": "ChatGPT、预训练、Prompting 与微调、规模与数据、Diffusion、工具使用和自主规划。",
+      "summary": "从 ChatGPT 的预训练与使用方式出发，比较 Prompting 和微调，讨论模型与数据规模、Diffusion、工具调用和自主规划；作业仍覆盖回归、CNN、Transformer 等深度学习基础。",
       "audience": "已有深度学习基础后，可用于学习生成式 AI。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php"
@@ -156,7 +156,7 @@
       "category": "大模型进阶",
       "name": "Machine Learning",
       "term": "2025 春",
-      "summary": "Agent、内部机制、Mamba、预训练与对齐、遗忘、Reasoning、模型编辑和融合。",
+      "summary": "围绕大模型能力如何形成和改进展开，讨论预训练与对齐、微调遗忘、推理与评估、模型编辑和融合，也分析 Agent、模型内部机制与 Mamba；配套 RAG、训练和微调实验。",
       "audience": "已有 Transformer 与预训练基础。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php"
@@ -166,7 +166,7 @@
       "category": "Agent 与模型改进",
       "name": "Machine Learning",
       "term": "2026 春",
-      "summary": "Agent、上下文工程、推理加速、位置编码、Harness、自我纠错和自我提升。",
+      "summary": "以 OpenClaw 说明 Agent 的运行方式，深入上下文管理、协作、Harness、自我纠错与自我提升；同时讲解 Flash Attention、KV Cache 和位置编码，连接系统能力与模型效率。",
       "audience": "先学大模型主干，再按系统与模型专题选学。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php"
@@ -176,7 +176,7 @@
       "category": "深度学习进阶",
       "name": "MLDS",
       "term": "2015 秋",
-      "summary": "神经网络、RNN、结构化学习、语言建模、注意力及相关应用。",
+      "summary": "将神经网络训练与结构化预测结合起来：前半部分讲 DNN、反向传播和 RNN，后半部分深入结构化 SVM、序列标注与图模型，并延伸到语言建模和 Attention。",
       "audience": "神经网络基础；适合补充序列模型与结构化学习。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2015-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2015-fall.php"
@@ -186,7 +186,7 @@
       "category": "深度学习进阶",
       "name": "MLDS",
       "term": "2017 春",
-      "summary": "计算图、语言模型、特殊结构、条件生成、GAN、强化学习和模仿学习。",
+      "summary": "聚焦如何生成相互关联的序列与图像，学习计算图、语言模型、条件生成和 GAN，再延伸到强化学习与模仿学习；作业包括语言建模、视频描述、动漫图像生成和聊天机器人。",
       "audience": "神经网络基础；旧框架实践按历史资料阅读。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2017-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2017-spring.php"
@@ -196,7 +196,7 @@
       "category": "理论、生成与强化学习",
       "name": "MLDS",
       "term": "2018 春",
-      "summary": "表达能力、优化与泛化、结构化网络、GAN、Policy Gradient、PPO、Q-Learning。",
+      "summary": "先从表达能力、优化和泛化理解深度网络，再学习 Seq2seq、Attention、GAN 与强化学习；其中 GAN 和 Policy Gradient、PPO、Q-Learning 等内容展开较细。",
       "audience": "神经网络基础；理论和强化学习方向选修。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/mlds/2018-spring.php"
@@ -206,7 +206,7 @@
       "category": "语音与语言处理",
       "name": "DLHLP",
       "term": "2020 春",
-      "summary": "语音识别、转换、分离、合成、说话人验证、BERT、非自回归生成和对话任务。",
+      "summary": "围绕机器如何处理语音与文字展开：语音部分涵盖识别、转换、分离、合成和说话人验证；文本部分讨论 BERT、非自回归生成、风格迁移、问答与对话系统。",
       "audience": "序列模型基础；面向语音或 NLP 专题。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.php"
@@ -216,7 +216,7 @@
       "category": "生成式 AI 入门",
       "name": "Generative AI",
       "term": "2024 春",
-      "summary": "提示工程、语言模型的预训练与后训练、Agent、Transformer、评估、安全、图像与视频生成。",
+      "summary": "从生成式 AI 的用途和提示方法讲起，逐步解释预训练、指令微调、RLHF、Transformer 与 Agent，再讨论能力评估、可解释性、安全及图像和视频生成。",
       "audience": "适合建立全貌；已有 ML 基础可跳过入门重复部分。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php"
@@ -226,7 +226,7 @@
       "category": "生成式 AI 与 ML 入门",
       "name": "GenAI-ML",
       "term": "2025 秋",
-      "summary": "生成式 AI、机器学习与深度学习基础，以及大模型训练、终身学习、图像与语音生成。",
+      "summary": "先认识生成式 AI、上下文工程与能力评估，再回到机器学习、神经网络训练和大模型学习过程；后续讨论终身学习、影像与语音生成，配套 RAG、分类、微调和生成作业。",
       "audience": "零基础现代 AI 入口；与 2025 春 ML 的定位不同。",
       "url": "https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php",
       "menuUrl": "https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php"
