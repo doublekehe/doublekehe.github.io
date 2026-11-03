@@ -87,7 +87,7 @@
   table-layout: fixed;
 }
 #article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) {
-  min-width: 1220px;
+  min-width: 1155px;
   table-layout: fixed;
 }
 #article-container :is(.lee-course-table-title + table, .lee-course-table-title + .table-wrap > table) :is(th, td):nth-child(1) { width: 75px; }
@@ -100,8 +100,7 @@
 #article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(3) { width: 260px; }
 #article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(4) { width: 100px; }
 #article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(5) { width: 220px; }
-#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(6) { width: 65px; }
-#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(7) { width: 260px; }
+#article-container :is(.lee-path-table-title + table, .lee-path-table-title + .table-wrap > table) :is(th, td):nth-child(6) { width: 260px; }
 
 /* Supplementary teacher profile: collapsed by default, outside the reading flow. */
 #article-container .lee-teacher-profile {
