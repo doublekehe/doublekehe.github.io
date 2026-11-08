@@ -174,7 +174,7 @@
   .paper-table-note { margin:8px 2px 18px 2px; font-size:13px; line-height:1.65; color:#555; }
 </style>
 <div style="text-align:center">
-  <style>.cticchhzdbod{max-width:1000px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/cover.png" class="cticchhzdbod" alt="用户行为和短视频被转换为Token，经过统一生成模型后输出推荐列表">
+  <style>.ygisnaqmibar{max-width:1000px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/cover.png" class="ygisnaqmibar" alt="用户行为和短视频被转换为Token，经过统一生成模型后输出推荐列表">
 </div>
 <blockquote>
 <p>OneRec 将推荐从“召回候选、逐条打分、逐级筛选”改写为“读取用户历史、生成一个推荐 Session”。围绕这条主线，快手先后完成了 V1、V2、OneRec-Think、OpenOneRec 和 OneReason，模型的重点也从统一召回与排序，逐步转向计算效率、真实反馈、基础模型和推荐推理。</p>
@@ -191,7 +191,7 @@
 <p>第三，Point-wise 打分天然围绕单个候选展开。推荐结果却是一个有顺序的列表：前面已经推荐了什么，会影响后面的内容选择。传统系统往往把这部分交给规则或单独的重排模型。</p>
 <p>第四，碎片化的小模型和小算子不容易沿用 LLM 的 Scaling 路线。增加参数不一定增加有效计算，强化学习也很难跨越多阶段链路直接作用于最终推荐结果。</p>
 <div style="text-align:center">
-  <style>.gomciobapagk{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/cascade-vs-onerec.png" class="gomciobapagk" alt="传统多阶段级联推荐和OneRec端到端生成架构对比">
+  <style>.tjhhhwzlyirv{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/cascade-vs-onerec.png" class="tjhhhwzlyirv" alt="传统多阶段级联推荐和OneRec端到端生成架构对比">
   <div style="font-size:14px;color:#666;margin-top:6px;">图1：传统推荐逐阶段筛选候选，OneRec将用户历史转成Token后直接生成推荐Session。本文绘制。</div>
 </div>
 <h3 id="1-2-把推荐改写成序列生成">1.2 把推荐改写成序列生成</h3>
@@ -207,7 +207,7 @@ P_\theta(i_t\mid H_u,C,i_{&lt;t}).
 <h2 id="2-OneRec的整体技术框架">2. OneRec的整体技术框架</h2>
 <p>OneRec 系列跨越了多种架构：V1 使用 Encoder–Decoder，V2 改成 Lazy Decoder-Only，OpenOneRec 和 OneReason又建立在 Qwen 系列 LLM 上。具体模块一直在变，但它们共享一条数据流：<strong>用户与物品表示 → Token 化 → 自回归生成 → 偏好对齐 → 推荐 Session</strong>。</p>
 <div style="text-align:center">
-  <style>.ffodvvtpqtzp{max-width:920px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/onerec-core-framework.png" class="ffodvvtpqtzp" alt="OneRec系列的输入、Token化、生成Backbone、偏好对齐和输出">
+  <style>.fhngekaqtfwd{max-width:920px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/onerec-core-framework.png" class="fhngekaqtfwd" alt="OneRec系列的输入、Token化、生成Backbone、偏好对齐和输出">
   <div style="font-size:14px;color:#666;margin-top:6px;">图2：OneRec系列的统一技术骨架。各版本的具体Backbone和训练算法不同。本文绘制。</div>
 </div>
 <h3 id="2-1-输入：用户历史不是一串裸ID">2.1 输入：用户历史不是一串裸ID</h3>
@@ -317,14 +317,14 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v600 v585 h43z"/></svg></span></span>
 </table>
 <div class="paper-table-note"><strong>注：</strong>时间按论文或技术报告首次公开时间整理。OneRec Technical Report后续修订版包含比2025年2月原始论文更完整的工业实现，因此它既属于V1体系，也不能简单看成原始论文的重复版本。</div>
 <div style="text-align:center">
-  <style>.ufgbdcevgeei{max-width:1000px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/onerec-evolution.png" class="ufgbdcevgeei" alt="从OneRec原始论文到OneReason的版本演进时间线">
+  <style>.nvihmwwpcegl{max-width:1000px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/onerec-evolution.png" class="nvihmwwpcegl" alt="从OneRec原始论文到OneReason的版本演进时间线">
   <div style="font-size:14px;color:#666;margin-top:6px;">图3：OneRec系列从端到端生成、架构效率和真实反馈，逐步走向基础模型与推荐推理。本文绘制。</div>
 </div>
 <h2 id="4-OneRec-V1：统一召回与排序">4. OneRec-V1：统一召回与排序</h2>
 <h3 id="4-1-Encoder–Decoder与Sparse-MoE">4.1 Encoder–Decoder与Sparse MoE</h3>
 <p>OneRec 原始论文的模型接近 T5。Encoder 使用 Fully Visible Self-Attention 编码用户行为序列，Decoder 先通过 Causal Self-Attention 读取已生成 Token，再通过 Cross-Attention访问 Encoder 输出。Decoder 的 FFN 被 Sparse MoE 替代，由 Router 为每个 Token 选择少量专家，在不按相同比例增加激活 FLOPs 的情况下扩大总参数量。</p>
 <div style="text-align:center">
-  <style>.nldiroghnykt{max-width:980px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-v1-framework.png" class="nldiroghnykt" alt="OneRec原始论文Figure 2，包含Encoder-Decoder、MoE和迭代偏好对齐">
+  <style>.hrwhmjyocewr{max-width:980px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-v1-framework.png" class="hrwhmjyocewr" alt="OneRec原始论文Figure 2，包含Encoder-Decoder、MoE和迭代偏好对齐">
   <div style="font-size:14px;color:#666;margin-top:6px;">图4：OneRec原始论文Figure 2。上半部分是Encoder–Decoder与Sparse MoE，下半部分是Iterative Preference Alignment。</div>
 </div>
 <h3 id="4-2-Session-wise-Generation">4.2 Session-wise Generation</h3>
@@ -345,7 +345,7 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v600 v585 h43z"/></svg></span></span>
 <h3 id="4-4-技术报告补全了工业系统">4.4 技术报告补全了工业系统</h3>
 <p>2025年6月发布的技术报告把 OneRec 从论文方法扩展为完整系统。它详细介绍了协同增强多模态 Tokenizer、多尺度 Encoder、Decoder、Reward System、预训练与后训练、训练基础设施和在线推理。</p>
 <div style="text-align:center">
-  <style>.dwttkmverzjp{max-width:950px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-tech-overview.png" class="dwttkmverzjp" alt="OneRec技术报告Figure 2，比较传统级联系统与OneRec工业架构">
+  <style>.qqvgmshbbgip{max-width:950px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-tech-overview.png" class="qqvgmshbbgip" alt="OneRec技术报告Figure 2，比较传统级联系统与OneRec工业架构">
   <div style="font-size:14px;color:#666;margin-top:6px;">图5：OneRec Technical Report Figure 2。传统系统的多阶段漏斗被单一Encoder–Decoder与Reward System替代。</div>
 </div>
 <p>报告给出了几个能说明工程价值的数据：训练和推理 MFU 分别达到23.7%和28.8%；相对传统复杂推荐管线，OPEX 降至10.6%；系统承担约25%的总QPS，并在快手和快手极速版上分别带来0.54%和1.24%的App Stay Time提升。报告中的这些指标与2月论文的1.6% Watch Time不是同一实验口径，不能直接横向比较。</p>
@@ -356,7 +356,7 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v600 v585 h43z"/></svg></span></span>
 <h3 id="5-2-Lazy-Decoder-Only">5.2 Lazy Decoder-Only</h3>
 <p>V2 使用 Context Processor 将用户、上下文和物品路径整理成统一表示，再交给 Lazy Decoder。Lazy Decoder 保留 Self-Attention 和面向上下文的 Cross-Attention，但去掉 Cross-Attention 中重复的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>K</mi></msub></mrow><annotation encoding="application/x-tex">W_K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>V</mi></msub></mrow><annotation encoding="application/x-tex">W_V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 投影，并积极共享上下文 Key/Value。上下文不再像标准 Decoder-Only 模型那样在所有深层 Block 中反复执行完整 Self-Attention。</p>
 <div style="text-align:center">
-  <style>.tkpyggsoxndh{max-width:930px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-v2-framework.png" class="tkpyggsoxndh" alt="OneRec-V2 Figure 2，Lazy Decoder-Only与真实用户反馈偏好对齐">
+  <style>.ucwecpukpvrj{max-width:930px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-v2-framework.png" class="ucwecpukpvrj" alt="OneRec-V2 Figure 2，Lazy Decoder-Only与真实用户反馈偏好对齐">
   <div style="font-size:14px;color:#666;margin-top:6px;">图6：OneRec-V2 Technical Report Figure 2。左侧是Lazy Decoder-Only，右侧把真实反馈接入偏好对齐。</div>
 </div>
 <p>报告给出的结果是：总计算量降低94%，实际训练资源降低90%；在相近计算预算下，参数规模从0.5B扩展到8B。0.1B到8B模型的收敛损失随规模平滑下降，说明新的计算分配方式更适合继续Scaling。</p>
@@ -376,7 +376,7 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v600 v585 h43z"/></svg></span></span>
 <h2 id="6-OneRec-Think：先分析兴趣，再生成物品">6. OneRec-Think：先分析兴趣，再生成物品</h2>
 <p>V1和V2主要在Semantic Token空间中预测。模型可能学会“哪些Token经常接在一起”，但推理过程不可读，也很难通过自然语言指令控制。OneRec-Think把自然语言Reasoning和Itemic Token放进同一次自回归生成：先产生兴趣分析，再生成目标物品。</p>
 <div style="text-align:center">
-  <style>.bjepxienbywa{max-width:940px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-think-framework.png" class="bjepxienbywa" alt="OneRec-Think Figure 2，包含Itemic Alignment、Reasoning Activation和Reasoning Enhancement">
+  <style>.tqbkcubudmxq{max-width:940px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onerec-think-framework.png" class="tqbkcubudmxq" alt="OneRec-Think Figure 2，包含Itemic Alignment、Reasoning Activation和Reasoning Enhancement">
   <div style="font-size:14px;color:#666;margin-top:6px;">图7：OneRec-Think Figure 2。三个阶段依次完成Itemic Alignment、Reasoning Activation和Reasoning Enhancement。</div>
 </div>
 <p>第一阶段是 Itemic Alignment。模型通过用户画像与Itemic Token交错数据、序列偏好建模、物品描述和通用语言数据，建立物品Token与语言语义之间的联系。</p>
@@ -390,7 +390,7 @@ s_{n+1}\sim P_\theta(s_{n+1}\mid H_u,I,\tau),
 <h2 id="7-OpenOneRec：开放推荐基础模型">7. OpenOneRec：开放推荐基础模型</h2>
 <p>OpenOneRec不只是“把V2代码开源”。它把问题从快手Feed中的端到端生成，扩展成Recommendation Foundation Model：同一个模型需要理解物品、执行多个推荐任务、遵循指令、生成推荐解释，并尽量保留通用LLM能力。</p>
 <div style="text-align:center">
-  <style>.wqesitrpoddu{max-width:940px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-openonerec-framework.png" class="wqesitrpoddu" alt="OpenOneRec Figure 2，展示预训练、后训练与评测框架">
+  <style>.rexebkfcyffu{max-width:940px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-openonerec-framework.png" class="rexebkfcyffu" alt="OpenOneRec Figure 2，展示预训练、后训练与评测框架">
   <div style="font-size:14px;color:#666;margin-top:6px;">图8：OpenOneRec Technical Report Figure 2。Qwen3依次经过Itemic-Text Alignment、Co-Pretraining、SFT、On-policy Distillation和Rec-RL。</div>
 </div>
 <h3 id="7-1-模型与数据">7.1 模型与数据</h3>
@@ -407,7 +407,7 @@ s_{n+1}\sim P_\theta(s_{n+1}\mid H_u,I,\tau),
 <li><strong>Cognition</strong>：把用户行为重新组织为兴趣点，并推断兴趣如何变化。</li>
 </ul>
 <div style="text-align:center">
-  <style>.mrlbdccgejnx{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onereason-framework.png" class="mrlbdccgejnx" alt="OneReason Figure 2，展示预训练、SFT、RL和R0到R3评测">
+  <style>.cjcbyydyymrf{max-width:900px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/%E5%BF%AB%E6%89%8BOneRec%E6%BC%94%E8%BF%9B/paper-onereason-framework.png" class="cjcbyydyymrf" alt="OneReason Figure 2，展示预训练、SFT、RL和R0到R3评测">
   <div style="font-size:14px;color:#666;margin-top:6px;">图9：OneReason Technical Report Figure 2。训练由多粒度预训练、推荐CoT SFT和四领域RL组成，评测覆盖R0到R3。</div>
 </div>
 <p>预训练数据按Token、Item、Relation和User四种粒度组织：Token粒度学习码字语义，Item粒度理解完整物品，Relation粒度学习物品之间的关系，User粒度学习长行为中的兴趣结构。</p>
