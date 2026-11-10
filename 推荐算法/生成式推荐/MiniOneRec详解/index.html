@@ -203,7 +203,7 @@
 </table>
 <h2 id="1-MiniOneRec-整体架构">1. MiniOneRec 整体架构</h2>
 <div style="text-align:center">
-  <style>.xsqfdpjvjniq{max-width:980px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/MiniOneRec%E8%AF%A6%E8%A7%A3/minionerec-framework.png" class="xsqfdpjvjniq" alt="MiniOneRec 论文框架图">
+  <style>.ndkumptplwip{max-width:980px;width:100%;height:auto;}</style><img src="/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/%E7%94%9F%E6%88%90%E5%BC%8F%E6%8E%A8%E8%8D%90/MiniOneRec%E8%AF%A6%E8%A7%A3/minionerec-framework.png" class="ndkumptplwip" alt="MiniOneRec 论文框架图">
   <div style="font-size:14px;color:#666;margin-top:6px;">图 1：MiniOneRec 整体框架，左侧构建 SID 并训练 LLM，右侧使用 constrained beam search、混合奖励和 GRPO。</div>
 </div>
 <p>图 1 展示了 MiniOneRec 从商品离散化到推荐强化学习的完整架构。左侧先通过 LLM Encoder 将商品文本编码为语义向量，再用 RQ-VAE 生成 SID；中间由 LLM 学习用户的 SID 序列和文本语义；右侧通过 constrained beam search 生成合法候选，并使用 ACC、rank reward 和 GRPO 优化候选排序。</p>
